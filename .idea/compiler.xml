@@ -22,7 +22,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="streaming-example-java" />
+        <module name="utils" />
       </profile>
       <profile default="false" name="Annotation profile for utils" enabled="true">
         <sourceOutputDir name="target\generated-sources\annotations" />
@@ -33,7 +33,6 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8">
-      <module name="streaming-example-java" target="1.8" />
       <module name="utils" target="1.8" />
     </bytecodeTargetLevel>
   </component>
