@@ -1,5 +1,3 @@
-
-import util.Parameters;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
@@ -8,7 +6,6 @@ import java.io.IOException;
  * Created by PEDRO GUTIERREZ on 27/08/2015.
  */
 public class Init {
-    public Parameters parameters;
     public String rootPath;
     public String targetPath;
     public static Init instance;
@@ -21,7 +18,6 @@ public class Init {
     }
 
     public Init() {
-        parameters=new Parameters();
         loadRoutes();
     }
 
