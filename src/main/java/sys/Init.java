@@ -1,3 +1,5 @@
+package sys;
+
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;

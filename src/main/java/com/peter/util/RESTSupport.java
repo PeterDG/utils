@@ -3,6 +3,9 @@ package com.peter.util;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 import static com.jayway.restassured.RestAssured.given;
 
 /**
@@ -40,11 +43,11 @@ public class RESTSupport {
         return r;
     }
 
-    public Response get( String header,String headerValue,String param1,String param1Value) {
+    public Response get( Map<String,String> headers, Map<String,String> params) {
         Response r =
                 given().
-                        header(header, headerValue).
-                        param(param1,param1Value).
+                        headers(headers).
+                        params(params).
                         when().
                         get().
                         then().

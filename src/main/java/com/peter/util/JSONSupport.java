@@ -3,7 +3,6 @@ package com.peter.util;
 import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.path.json.config.JsonPathConfig;
 import com.jayway.restassured.response.Response;
-//import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,7 +39,7 @@ public class JSONSupport {
     public JSONSupport(String path, String fileName) {
         fileSupport = new FileSupport(path+"/"+fileName);
         jsonPath = new JsonPath(fileSupport.file)
-        .using(config);
+                .using(config);
         jsonPath.config = new JsonPathConfig("UTF-8").numberReturnType(JsonPathConfig.NumberReturnType.BIG_DECIMAL);
     }
 
@@ -66,7 +65,7 @@ public class JSONSupport {
         return "";
     }
 
-//    private static final Configuration configuration = Configuration.builder()
+    //    private static final Configuration configuration = Configuration.builder()
 //            .jsonProvider(new JacksonJsonNodeJsonProvider())
 //            .mappingProvider(new JacksonMappingProvider())
 //            .build();
@@ -92,14 +91,25 @@ public class JSONSupport {
         return  jsonObj;
     }
 
-    public void jsonToCsv(String csvPathFile,String keyForSuffix,String suffix){
-        flatJson = JSONFlattener.parseJson(fileSupport.file, "UTF-8", keyForSuffix, suffix);
-        CSVWriter.writeToFile(CSVWriter.getCSV(flatJson, ";"), csvPathFile);
+    public void geFlatJson(String csvPathFile,String keyForSuffix,String suffix){
+        flatJson = JSONFlattener.parseJson(fileSupport.file, "UTF-8",keyForSuffix,suffix);
     }
 
-    public void jsonToCsv(String csvPathFile){
+    public void geFlatJson(String csvPathFile){
         flatJson = JSONFlattener.parseJson(fileSupport.file, "UTF-8","","");
-        CSVWriter.writeToFile(CSVWriter.getCSV(flatJson, ";"), csvPathFile);
+    }
+
+    public void geFlatJson(){
+        adaptJsonForFlatten();
+        flatJson = JSONFlattener.parseJson(jsonPath.prettify(),"","");
+    }
+
+    public void adaptJsonForFlatten(){
+        if (getJsonObj().keySet().size()==1){
+          String keyName=(String) getJsonObj().keySet().toArray()[0];
+          create(jsonObj.get(keyName).toString());
+        }
+
     }
 
     public void appendJsonMap(String jsonPathFile,String keyForSuffix,String suffix){
@@ -108,6 +118,6 @@ public class JSONSupport {
     }
 
     public void exportCsv(String csvPathFile){
-        CSVWriter.writeToFile(CSVWriter.getCSV(flatJson, ";"), csvPathFile);
+        CSVWriter.writeToFile(CSVWriter.getCSV(flatJson, ","), csvPathFile);
     }
 }

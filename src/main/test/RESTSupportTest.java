@@ -6,6 +6,10 @@ import org.junit.Before;
 import org.junit.Test;
 import com.peter.util.JSONSupport;
 import com.peter.util.RESTSupport;
+import sys.Init;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Peter on 11/20/15.
@@ -13,7 +17,6 @@ import com.peter.util.RESTSupport;
 public class RESTSupportTest {
     public String accessPointHost;
     public String accessPointPort;
-    public String pricesService;
     public RESTSupport rest;
     private String accessPointToken;
     private String queryInstruments;
@@ -22,10 +25,9 @@ public class RESTSupportTest {
     public void setUp() throws Exception {
         accessPointHost="https://api-fxpractice.oanda.com/v1";
         accessPointPort="80";
-        pricesService="prices";
         accessPointToken="96adf2bb5787f47f8a42e8a188ddbe27-6abfff05cf00171e5bee37d64ffa2eca";
         queryInstruments="EUR_USD,USD_JPY,USD_CAD,";
-        rest = new RESTSupport(accessPointHost, accessPointPort, pricesService);
+
     }
 
     @After
@@ -35,8 +37,16 @@ public class RESTSupportTest {
 
     @Test
     public void testGet() throws Exception {
-        Response response = rest.get("Authorization","Bearer "+accessPointToken,"instruments",queryInstruments);
+        rest = new RESTSupport(accessPointHost, accessPointPort, "prices");
+        Map<String, String> headersMaps = new HashMap<String,String>() {{put("Authorization", "Bearer "+accessPointToken);}};
+        Map<String, String> paramsMaps = new HashMap<String,String>() {{put("instruments",queryInstruments);}};
+        Response response = rest.get(headersMaps,paramsMaps);
+//        paramsMaps = new HashMap<String,String>() {{put("accountId","8978014");}};
+//        rest = new RESTSupport(accessPointHost, accessPointPort, "instruments");
+//        response = rest.get(headersMaps,paramsMaps);
         JSONSupport json = new JSONSupport(response);
+        json.geFlatJson();
+        json.exportCsv(Init.getInstance().rootPath +  "\\"+"test"+".csv");
         json.jsonPath.prettyPrint();
     }
 }
