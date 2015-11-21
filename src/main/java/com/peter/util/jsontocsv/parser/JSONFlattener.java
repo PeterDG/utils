@@ -14,7 +14,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package org.peter.util.jsontocsv.parser;
+package com.peter.util.jsontocsv.parser;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;

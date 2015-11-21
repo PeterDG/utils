@@ -1,4 +1,4 @@
-package org.peter.util;
+package com.peter.util;
 
 
 import java.io.*;

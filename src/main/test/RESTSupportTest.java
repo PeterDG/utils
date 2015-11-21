@@ -4,8 +4,8 @@ import com.jayway.restassured.response.Response;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.peter.util.JSONSupport;
-import org.peter.util.RESTSupport;
+import com.peter.util.JSONSupport;
+import com.peter.util.RESTSupport;
 
 /**
  * Created by Peter on 11/20/15.

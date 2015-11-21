@@ -1,4 +1,4 @@
-package org.peter.util;
+package com.peter.util;
 
 import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.path.json.config.JsonPathConfig;
@@ -7,8 +7,8 @@ import com.jayway.restassured.response.Response;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.peter.util.jsontocsv.parser.JSONFlattener;
-import org.peter.util.jsontocsv.writer.CSVWriter;
+import com.peter.util.jsontocsv.parser.JSONFlattener;
+import com.peter.util.jsontocsv.writer.CSVWriter;
 
 import java.io.File;
 import java.util.ArrayList;
