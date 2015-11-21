@@ -1,20 +1,16 @@
-package util;
+package org.peter.util;
 
 import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.path.json.config.JsonPathConfig;
 import com.jayway.restassured.response.Response;
 //import org.apache.commons.io.FileUtils;
-import org.json.CDL;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import util.jsontocsv.parser.JSONFlattener;
-import util.jsontocsv.writer.CSVWriter;
+import org.peter.util.jsontocsv.parser.JSONFlattener;
+import org.peter.util.jsontocsv.writer.CSVWriter;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

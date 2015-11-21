@@ -1,15 +1,9 @@
-package util;
+package org.peter.util;
 
 import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.path.json.config.JsonPathConfig;
 import com.jayway.restassured.response.Response;
 
-import static com.jayway.restassured.RestAssured.basic;
 import static com.jayway.restassured.RestAssured.given;
-
-
-import java.io.IOException;
 
 /**
  * Created by PEDRO GUTIERREZ on 26/08/2015.
