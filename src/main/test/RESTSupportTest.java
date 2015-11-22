@@ -46,6 +46,5 @@ public class RESTSupportTest {
 //        response = rest.get(headersMaps,paramsMaps);
         JSONSupport json = new JSONSupport(response);
         json.exportCsv(Init.getInstance().rootPath +  "\\"+"test"+".csv");
-        json.jsonPath.prettyPrint();
     }
 }
