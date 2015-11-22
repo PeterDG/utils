@@ -91,15 +91,7 @@ public class JSONSupport {
         return  jsonObj;
     }
 
-    public void geFlatJson(String csvPathFile,String keyForSuffix,String suffix){
-        flatJson = JSONFlattener.parseJson(fileSupport.file, "UTF-8",keyForSuffix,suffix);
-    }
-
-    public void geFlatJson(String csvPathFile){
-        flatJson = JSONFlattener.parseJson(fileSupport.file, "UTF-8","","");
-    }
-
-    public void geFlatJson(){
+    public void getFlatJson(){
         adaptJsonForFlatten();
         flatJson = JSONFlattener.parseJson(jsonPath.prettify(),"","");
     }
@@ -118,6 +110,7 @@ public class JSONSupport {
     }
 
     public void exportCsv(String csvPathFile){
+        getFlatJson();
         CSVWriter.writeToFile(CSVWriter.getCSV(flatJson, ","), csvPathFile);
     }
 }

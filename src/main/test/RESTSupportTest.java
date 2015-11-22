@@ -45,7 +45,6 @@ public class RESTSupportTest {
 //        rest = new RESTSupport(accessPointHost, accessPointPort, "instruments");
 //        response = rest.get(headersMaps,paramsMaps);
         JSONSupport json = new JSONSupport(response);
-        json.geFlatJson();
         json.exportCsv(Init.getInstance().rootPath +  "\\"+"test"+".csv");
         json.jsonPath.prettyPrint();
     }
