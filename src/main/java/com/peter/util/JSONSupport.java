@@ -23,7 +23,8 @@ public class JSONSupport {
     public JSONObject jsonObj;
     public JsonPathConfig config = new JsonPathConfig("UTF-8").numberReturnType(JsonPathConfig.NumberReturnType.BIG_DECIMAL);
     public FileSupport fileSupport;
-    public List<Map<String, String>>  flatJson=new ArrayList<Map<String, String>> ();
+    public List<Map<String, String>> flatJson = new ArrayList<Map<String, String>>();
+
     public JSONSupport(String json) {
         create(json);
     }
@@ -32,12 +33,13 @@ public class JSONSupport {
         String json = response.getBody().asString();
         create(json);
     }
-    public JSONSupport(){
+
+    public JSONSupport() {
 
     }
 
     public JSONSupport(String path, String fileName) {
-        fileSupport = new FileSupport(path+"/"+fileName);
+        fileSupport = new FileSupport(path + "/" + fileName);
         jsonPath = new JsonPath(fileSupport.file)
                 .using(config);
         jsonPath.config = new JsonPathConfig("UTF-8").numberReturnType(JsonPathConfig.NumberReturnType.BIG_DECIMAL);
@@ -69,47 +71,51 @@ public class JSONSupport {
 //            .jsonProvider(new JacksonJsonNodeJsonProvider())
 //            .mappingProvider(new JacksonMappingProvider())
 //            .build();
-    public void put(String path,String value){
-        jsonObj=new JSONObject(toString());
+    public void put(String path, String value) {
+        jsonObj = new JSONObject(toString());
         List<String> nodes = Arrays.asList(path.split("[,\\.]"));
         JSONObject tmp = null;
-        for (int i=0;i<nodes.size()-1;i++){
-            tmp=jsonObj.getJSONObject(nodes.get(i));
+        for (int i = 0; i < nodes.size() - 1; i++) {
+            tmp = jsonObj.getJSONObject(nodes.get(i));
         }
-        String finalNode=nodes.get(nodes.size() - 1);
+        String finalNode = nodes.get(nodes.size() - 1);
         tmp.put(finalNode, value);
-        jsonPath=new JsonPath(jsonObj.toString());
+        jsonPath = new JsonPath(jsonObj.toString());
     }
 
-    public JSONObject getJsonObj(){
+    public JSONObject getJsonObj() {
         try {
             jsonObj = new JSONObject(jsonPath.prettyPrint());
-        } catch (JSONException e){
-            jsonObj=new JSONObject();
-            jsonObj.put("",new JSONArray(jsonPath.prettyPrint()));
+        } catch (JSONException e) {
+            jsonObj = new JSONObject();
+            jsonObj.put("", new JSONArray(jsonPath.prettyPrint()));
         }
-        return  jsonObj;
+        return jsonObj;
     }
 
-    public void getFlatJson(){
+    public void getFlatJson() {
         adaptJsonForFlatten();
-        flatJson = JSONFlattener.parseJson(jsonPath.prettify(),"","");
+        flatJson = JSONFlattener.parseJson(jsonPath.prettify(), "", "");
     }
 
-    public void adaptJsonForFlatten(){
-        if (getJsonObj().keySet().size()==1){
-          String keyName=(String) getJsonObj().keySet().toArray()[0];
-          create(jsonObj.get(keyName).toString());
+    public void adaptJsonForFlatten() {
+        String arrayKey = null;
+        for (Object key : getJsonObj().keySet()) {
+            if (jsonObj.get((String) key).getClass() == JSONArray.class) {
+                arrayKey = (String) key;
+            }
+            ;
         }
+        if (arrayKey != null) create(jsonObj.get(arrayKey).toString());
 
     }
 
-    public void appendJsonMap(String jsonPathFile,String keyForSuffix,String suffix){
-        List<Map<String, String>>  flatJsonTemp = JSONFlattener.parseJson(new File(jsonPathFile), "UTF-8",keyForSuffix,suffix);
+    public void appendJsonMap(String jsonPathFile, String keyForSuffix, String suffix) {
+        List<Map<String, String>> flatJsonTemp = JSONFlattener.parseJson(new File(jsonPathFile), "UTF-8", keyForSuffix, suffix);
         flatJson.addAll(flatJsonTemp);
     }
 
-    public void exportCsv(String csvPathFile){
+    public void exportCsv(String csvPathFile) {
         getFlatJson();
         CSVWriter.writeToFile(CSVWriter.getCSV(flatJson, ","), csvPathFile);
     }

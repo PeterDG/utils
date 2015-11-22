@@ -26,7 +26,7 @@ public class RESTSupportTest {
         accessPointHost="https://api-fxpractice.oanda.com/v1";
         accessPointPort="80";
         accessPointToken="96adf2bb5787f47f8a42e8a188ddbe27-6abfff05cf00171e5bee37d64ffa2eca";
-        queryInstruments="EUR_USD,USD_JPY,USD_CAD,";
+        queryInstruments="EUR_USD";
 
     }
 
@@ -37,9 +37,9 @@ public class RESTSupportTest {
 
     @Test
     public void testGet() throws Exception {
-        rest = new RESTSupport(accessPointHost, accessPointPort, "prices");
+        rest = new RESTSupport(accessPointHost, accessPointPort, "candles");
         Map<String, String> headersMaps = new HashMap<String,String>() {{put("Authorization", "Bearer "+accessPointToken);}};
-        Map<String, String> paramsMaps = new HashMap<String,String>() {{put("instruments",queryInstruments);}};
+        Map<String, String> paramsMaps = new HashMap<String,String>() {{put("instrument",queryInstruments);}};
         Response response = rest.get(headersMaps,paramsMaps);
 //        paramsMaps = new HashMap<String,String>() {{put("accountId","8978014");}};
 //        rest = new RESTSupport(accessPointHost, accessPointPort, "instruments");
