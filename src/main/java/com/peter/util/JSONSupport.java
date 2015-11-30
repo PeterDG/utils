@@ -10,10 +10,7 @@ import com.peter.util.jsontocsv.parser.JSONFlattener;
 import com.peter.util.jsontocsv.writer.CSVWriter;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by PEDRO GUTIERREZ on 27/08/2015.
@@ -96,6 +93,18 @@ public class JSONSupport {
     public void getFlatJson() {
         adaptJsonForFlatten();
         flatJson = JSONFlattener.parseJson(jsonPath.prettify(), "", "");
+    }
+
+    public HashMap<String, List<Object>> getDataList(String keyData){
+        List<Object> keyList;
+        HashMap<String, List<Object>> dataList = new HashMap<String, List<Object>>();
+        Iterator iterator = getJsonObj().getJSONArray(keyData).getJSONObject(0).keys();
+        while(iterator.hasNext()) {
+            String key = (String) iterator.next();
+            keyList=jsonPath.get(keyData+"."+key);
+            dataList.put(key,keyList);
+        }
+        return dataList;
     }
 
     public void adaptJsonForFlatten() {
