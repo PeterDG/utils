@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -16,19 +17,19 @@ import java.util.stream.Stream;
 /**
  * Created by Peter on 5/13/2015.
  */
-public class FileSupport {
+public class File {
 
-    public File file;
+    public java.io.File file;
     public String path;
 
-    public FileSupport(String path, String nameFile) {
-        this.file = new File(path, nameFile);
+    public File(String path, String nameFile) {
+        this.file = new java.io.File(path, nameFile);
         this.path = path;
     }
 
-    public FileSupport(String path) {
+    public File(String path) {
         ArrayList<String> data = getFileName(path);
-        this.file = new File(data.get(0), data.get(1));
+        this.file = new java.io.File(data.get(0), data.get(1));
         this.path = path;
     }
 
@@ -77,8 +78,8 @@ public class FileSupport {
 
     public List<String> getListFilesOfDirectory() {
         List<String> fileNames = new ArrayList<String>();
-        File folder = new File(path);
-        File[] listOfFiles = folder.listFiles();
+        java.io.File folder = new java.io.File(path);
+        java.io.File[] listOfFiles = folder.listFiles();
 
         for (int i = 0; i < listOfFiles.length; i++) {
             if (listOfFiles[i].isFile()) {
@@ -92,15 +93,15 @@ public class FileSupport {
     }
 
     public boolean moveFile(String target){
-        new File(target).mkdirs();
-        File targetFile=new File(target +"/"+ file.getName());
+        new java.io.File(target).mkdirs();
+        java.io.File targetFile=new java.io.File(target +"/"+ file.getName());
         return file.renameTo(targetFile);
     }
 
     public void moveDir(String target){
         List<String> fileNames=getListFilesOfDirectory();
         for (int i = 0; i < fileNames.size(); i++) {
-           FileSupport file= new FileSupport(path,fileNames.get(i));
+           File file= new File(path,fileNames.get(i));
             file.moveFile(target);
         }
     }
@@ -109,7 +110,7 @@ public class FileSupport {
         List<String> fileNames = getListFilesOfDirectory().stream()
                 .filter(p -> p.contains("." + extension)).collect(Collectors.toList());
         for (int i = 0; i < fileNames.size(); i++) {
-            FileSupport file= new FileSupport(path,fileNames.get(i));
+            File file= new File(path,fileNames.get(i));
             file.moveFile(target);
         }
     }
@@ -124,13 +125,13 @@ public class FileSupport {
         List<String> fileNames = getListFilesOfDirectory().stream()
                 .filter(p -> p.contains("." + extension)).collect(Collectors.toList());
         for (int i = 0; i < fileNames.size(); i++) {
-            FileSupport file= new FileSupport(path,fileNames.get(i));
+            File file= new File(path,fileNames.get(i));
             file.getFile().delete();
         }
     }
 
-    public List<Object> getListLinesOfFile() {
-        List<Object> linesList = null;
+    public List<String> getListLinesOfFile() {
+        List<String> linesList = null;
         try {
             Stream<String> lines = Files.lines(Paths.get(path));
             linesList = lines.filter(x -> !x.isEmpty()).collect(Collectors.toList());
@@ -141,9 +142,16 @@ public class FileSupport {
         return linesList;
     }
 
-    public void replace(String inFilePath, String outFilePath, String text, String replaceWith) {
+    public void replaceTextLists(String outFilePath, ArrayList<String[]> pairsToReplace){
+        this.replace(this.path,outFilePath,pairsToReplace.get(0)[0],pairsToReplace.get(0)[1]);
+        for(int i=1;i<pairsToReplace.size();i++){
+            this.replace(outFilePath,outFilePath,pairsToReplace.get(i)[0],pairsToReplace.get(i)[1]);
+        }
+    }
+
+    private void replace(String inFilePath, String outFilePath, String text, String replaceWith) {
         try {
-            File file = new File(inFilePath);
+            java.io.File file = new java.io.File(inFilePath);
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line = "", oldtext = "";
             while ((line = reader.readLine()) != null) {
@@ -163,7 +171,7 @@ public class FileSupport {
     }
 
     ///////////////////Getters and Seters//////////////////
-    public void setFile(File file) {
+    public void setFile(java.io.File file) {
         this.file = file;
     }
 
@@ -171,7 +179,7 @@ public class FileSupport {
         this.path = path;
     }
 
-    public File getFile() {
+    public java.io.File getFile() {
         return file;
     }
 

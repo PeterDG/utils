@@ -1,0 +1,1 @@
+CREATE DATABASE "p_dbName" WITH OWNER = p_dbOwner

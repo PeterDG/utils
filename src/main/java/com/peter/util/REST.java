@@ -11,13 +11,13 @@ import static com.jayway.restassured.RestAssured.given;
 /**
  * Created by PEDRO GUTIERREZ on 26/08/2015.
  */
-public class RESTSupport {
+public class REST {
     public String host;
     public String port;
     public String service;
 
 
-    public RESTSupport(String host, String port, String service) {
+    public REST(String host, String port, String service) {
         this.host = host;
         this.port = port;
         this.service = service;

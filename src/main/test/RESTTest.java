@@ -1,11 +1,11 @@
 package test;
 
 import com.jayway.restassured.response.Response;
+import com.peter.util.REST;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import com.peter.util.JSONSupport;
-import com.peter.util.RESTSupport;
+import com.peter.util.JSON;
 import sys.Init;
 
 import java.util.HashMap;
@@ -14,10 +14,10 @@ import java.util.Map;
 /**
  * Created by Peter on 11/20/15.
  */
-public class RESTSupportTest {
+public class RESTTest {
     public String accessPointHost;
     public String accessPointPort;
-    public RESTSupport rest;
+    public REST rest;
     private String accessPointToken;
     private String queryInstruments;
 
@@ -37,14 +37,14 @@ public class RESTSupportTest {
 
     @Test
     public void testGet() throws Exception {
-        rest = new RESTSupport(accessPointHost, accessPointPort, "candles");
+        rest = new REST(accessPointHost, accessPointPort, "candles");
         Map<String, String> headersMaps = new HashMap<String,String>() {{put("Authorization", "Bearer "+accessPointToken);}};
         Map<String, String> paramsMaps = new HashMap<String,String>() {{put("instrument",queryInstruments);}};
         Response response = rest.get(headersMaps,paramsMaps);
 //        paramsMaps = new HashMap<String,String>() {{put("accountId","8978014");}};
-//        rest = new RESTSupport(accessPointHost, accessPointPort, "instruments");
+//        rest = new REST(accessPointHost, accessPointPort, "instruments");
 //        response = rest.get(headersMaps,paramsMaps);
-        JSONSupport json = new JSONSupport(response);
+        JSON json = new JSON(response);
         json.exportCsv(Init.getInstance().rootPath +  "\\"+"test"+".csv");
     }
 }

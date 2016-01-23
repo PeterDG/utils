@@ -1,33 +1,29 @@
-import com.jayway.restassured.response.Response;
-import com.peter.util.JSONSupport;
-import com.peter.util.RESTSupport;
-import org.json.JSONArray;
+import com.peter.util.JSON;
+import com.peter.util.REST;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import sys.Init;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static junit.framework.TestCase.assertTrue;
 
 /**
  * Created by Peter on 11/20/15.
  */
-public class JSONSupportTest {
+public class JSONTest {
     public String accessPointHost;
     public String accessPointPort;
-    public RESTSupport rest;
+    public REST rest;
     private String accessPointToken;
     private String queryInstruments;
-    public JSONSupport json;
+    public JSON json;
 
 
     @Before
     public void setUp() throws Exception {
-       json=new JSONSupport(jsonStr);
+       json=new JSON(jsonStr);
 
     }
 

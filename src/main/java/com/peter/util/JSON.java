@@ -9,35 +9,34 @@ import org.json.JSONObject;
 import com.peter.util.jsontocsv.parser.JSONFlattener;
 import com.peter.util.jsontocsv.writer.CSVWriter;
 
-import java.io.File;
 import java.util.*;
 
 /**
  * Created by PEDRO GUTIERREZ on 27/08/2015.
  */
-public class JSONSupport {
+public class JSON {
     public JsonPath jsonPath;
     public JSONObject jsonObj;
     public JsonPathConfig config = new JsonPathConfig("UTF-8").numberReturnType(JsonPathConfig.NumberReturnType.BIG_DECIMAL);
-    public FileSupport fileSupport;
+    public File file;
     public List<Map<String, String>> flatJson = new ArrayList<Map<String, String>>();
 
-    public JSONSupport(String json) {
+    public JSON(String json) {
         create(json);
     }
 
-    public JSONSupport(Response response) {
+    public JSON(Response response) {
         String json = response.getBody().asString();
         create(json);
     }
 
-    public JSONSupport() {
+    public JSON() {
 
     }
 
-    public JSONSupport(String path, String fileName) {
-        fileSupport = new FileSupport(path + "/" + fileName);
-        jsonPath = new JsonPath(fileSupport.file)
+    public JSON(String path, String fileName) {
+        file = new File(path + "/" + fileName);
+        jsonPath = new JsonPath(file.file)
                 .using(config);
         jsonPath.config = new JsonPathConfig("UTF-8").numberReturnType(JsonPathConfig.NumberReturnType.BIG_DECIMAL);
     }
@@ -120,7 +119,7 @@ public class JSONSupport {
     }
 
     public void appendJsonMap(String jsonPathFile, String keyForSuffix, String suffix) {
-        List<Map<String, String>> flatJsonTemp = JSONFlattener.parseJson(new File(jsonPathFile), "UTF-8", keyForSuffix, suffix);
+        List<Map<String, String>> flatJsonTemp = JSONFlattener.parseJson(new java.io.File(jsonPathFile), "UTF-8", keyForSuffix, suffix);
         flatJson.addAll(flatJsonTemp);
     }
 
