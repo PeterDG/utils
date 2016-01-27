@@ -20,7 +20,7 @@ public interface DBManager {
  boolean existDB(String dbName);
  void createTable(String table, String columnNamesAndTypes, Optional<String> primaryKey);
  void deleteTable(String dbName);
- void insetTable(String table, String columnNames, String values);
+ void insertTable(String table, String columnNames, String values);
  void updateTable(String table, String columnNames, String values,  Optional<String> where);
  List<HashMap> selectTable(String table, String columnNames, Optional<String> where);
  void cleanTable(String dbName);

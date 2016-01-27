@@ -8,11 +8,7 @@ import java.io.*;
 
 public class CMD {
 
-    public CMD() {
-
-    }
-
-    public String execute(String cmdLine) {
+    public static String execute(String cmdLine) {
         StringBuffer output = new StringBuffer();
         Process p;
         try {

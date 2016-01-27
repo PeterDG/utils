@@ -99,7 +99,7 @@ public class PostgresDBManagerImplTest {
     @Test
     public void test10InsetTable() throws Exception {
         db.getConnection();
-        db.insetTable("testTable","code","1110");
+        db.insertTable("testTable","code","1110");
         assertTrue(db.isQuerySuccessful());
     }
 

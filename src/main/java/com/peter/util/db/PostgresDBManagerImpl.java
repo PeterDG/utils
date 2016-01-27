@@ -84,7 +84,7 @@ public class PostgresDBManagerImpl implements DBManager {
         return executeSQLFile(scripts.tmpSQL.filePath);
     }
 
-    public void insetTable(String table, String columnNames, String values) {
+    public void insertTable(String table, String columnNames, String values) {
         String query = "INSERT INTO " + table + " ( " + columnNames + " ) " + "VALUES" + " ( " + values + " ) ";
         executeQuery(query);
     }

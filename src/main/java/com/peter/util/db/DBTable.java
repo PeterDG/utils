@@ -100,4 +100,10 @@ public class DBTable {
         Double nRnd = r.nextDouble()*(max - min) + min;
         return Double.toString(nRnd);
     }
+
+    public DBTable clone(){
+        DBTable table = new DBTable();
+        table.setList(this.getAsList());
+        return table;
+    }
 }
