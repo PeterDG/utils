@@ -131,9 +131,8 @@ public class MongoDBManagerImpl implements DBManager {
 
     public List<String> findOperatorsPrecedence(String query) {
         List<String> groups = new ArrayList<>();
-        splitByList(query, precedenceOperatorsJDBC);
+        ArrayList<String[]> group = splitByList(query, precedenceOperatorsJDBC);
         groups = Arrays.asList(query.split("\\(|\\)"));
-
         return groups;
     }
 
@@ -193,10 +192,14 @@ public class MongoDBManagerImpl implements DBManager {
         return filteredList;
     }
 
-
     public Bson setFilter(String conditions) {
         Bson filter = null;
-        findOperatorsPrecedence(conditions);
+        List<String> conditionsList = findOperatorsPrecedence(conditions);
+//        switch (conditionsList[0]) {
+//            case "WHERE":
+//            default:
+//                filter = setFilter(cmd[1]);
+//                break;
         return filter;
     }
 
@@ -236,6 +239,11 @@ public class MongoDBManagerImpl implements DBManager {
     }
 
     @Override
+    public void insertTable(String table, String columnNames, ArrayList<String> valuesList) {
+
+    }
+
+    @Override
     public void updateTable(String table, String columnNames, String values, Optional<String> where) {
 
     }
@@ -253,6 +261,16 @@ public class MongoDBManagerImpl implements DBManager {
     @Override
     public boolean isQuerySuccessful() {
         return false;
+    }
+
+    @Override
+    public void closeConnection() {
+
+    }
+
+    @Override
+    public void commit() {
+
     }
 
     public void createConnection() {

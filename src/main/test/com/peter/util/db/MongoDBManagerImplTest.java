@@ -74,5 +74,10 @@ public class MongoDBManagerImplTest {
         connectionWithDB.executeQuery("SELECT _id,date FROM historicalUsernMetrics WHERE (_id='dbetancourt' OR _id='dcastaneda') AND (date='2015-06-23T18:28:30.859Z' OR date='2015-06-23T03:52:07.796Z') ");
     }
 
+    @Test
+    public void testExecuteQuerySelectWithWhereComplex() throws Exception {
+        MongoClient mongoClient=(MongoClient) connectionWithDB.getConnection();
+        connectionWithDB.executeQuery("SELECT _id,date FROM historicalUsernMetrics WHERE ((_id='dbetancourt' AND date='2015-06-23T18:28:30.859Z') OR _id='dcastaneda') AND (date='2015-06-23T18:28:30.859Z' OR date='2015-06-23T03:52:07.796Z') ");
+    }
 
 }

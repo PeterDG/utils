@@ -21,8 +21,11 @@ public interface DBManager {
  void createTable(String table, String columnNamesAndTypes, Optional<String> primaryKey);
  void deleteTable(String dbName);
  void insertTable(String table, String columnNames, String values);
+ void insertTable(String table, String columnNames, ArrayList<String> valuesList);
  void updateTable(String table, String columnNames, String values,  Optional<String> where);
  List<HashMap> selectTable(String table, String columnNames, Optional<String> where);
  void cleanTable(String dbName);
  boolean isQuerySuccessful();
+ void closeConnection();
+ void commit();
 }

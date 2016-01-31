@@ -92,7 +92,7 @@ public class PostgresDBManagerImplTest {
     @Test
     public void test09CreateTable() throws Exception {
         db.getConnection();
-        db.createTable("testTable","id serial NOT NULL,code text", Optional.of("id"));
+        db.createTable("testTable","id serial NOT NULL,code text,name text", Optional.of("id"));
         assertTrue(db.isQuerySuccessful());
     }
 
@@ -100,6 +100,64 @@ public class PostgresDBManagerImplTest {
     public void test10InsetTable() throws Exception {
         db.getConnection();
         db.insertTable("testTable","code","1110");
+        assertTrue(db.isQuerySuccessful());
+    }
+
+    @Test
+    public void test10_1MultipleInsetTable() throws Exception {
+        db.getConnection();
+        ArrayList<String> strList = new ArrayList<String>();
+        strList.add("'1111','NameA'");
+        strList.add("'1112','NameB'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        strList.add("'1113','NameC'");
+        db.insertTable("testTable","code,name",strList);
         assertTrue(db.isQuerySuccessful());
     }
 

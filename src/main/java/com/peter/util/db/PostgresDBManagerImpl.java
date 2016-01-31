@@ -65,6 +65,22 @@ public class PostgresDBManagerImpl implements DBManager {
         return activeConnection;
     }
 
+    public void commit(){
+        try {
+            activeConnection.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void closeConnection(){
+        try {
+            activeConnection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public ArrayList<ArrayList<HashMap>> createDB(String dbName) {
         File file = new File(scripts.templateCreateDB.filePath);
         ArrayList pairsToReplace = new ArrayList() ;
@@ -86,6 +102,15 @@ public class PostgresDBManagerImpl implements DBManager {
 
     public void insertTable(String table, String columnNames, String values) {
         String query = "INSERT INTO " + table + " ( " + columnNames + " ) " + "VALUES" + " ( " + values + " ) ";
+        executeQuery(query);
+    }
+
+    public void insertTable(String table, String columnNames, ArrayList<String> valuesList) {
+        String query = "INSERT INTO " + table + " ( " + columnNames + " ) " + "VALUES";
+        for(String values:valuesList){
+            query+= " ( " + values + " ),";
+        }
+        query=query.substring(0, query.length() - 1);
         executeQuery(query);
     }
 

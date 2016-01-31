@@ -60,7 +60,11 @@
             <artifactId>postgresql</artifactId>
             <version>9.1-901-1.jdbc4</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
+            <version>4.5</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -106,7 +110,25 @@
                     </execution>
                 </executions>
             </plugin>
-
+            <plugin>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4-maven-plugin</artifactId>
+                <version>4.5.2-1</version>
+                <configuration>
+                    <sourceDirectory>${basedir}/src</sourceDirectory>
+                    <grammars>MySQL.g4</grammars>
+                    <visitor>true</visitor>
+                    <listener>true</listener>
+                    <libDirectory>${basedir}/src/main/antlr4/imports</libDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>antlr4</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
