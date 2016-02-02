@@ -1,4 +1,4 @@
-package com.peter.util;
+package com.peter.util.time;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;

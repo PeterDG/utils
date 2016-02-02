@@ -1,11 +1,11 @@
-package test;
+package com.peter.util.connection;
 
 import com.jayway.restassured.response.Response;
-import com.peter.util.REST;
+import com.peter.util.connection.REST;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import com.peter.util.JSON;
+import com.peter.util.data.JSON;
 import sys.Init;
 
 import java.util.HashMap;

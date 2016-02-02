@@ -1,8 +1,7 @@
-package com.peter.util;
+package com.peter.util.so;
 
+import com.peter.util.so.CMD;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by Peter on 1/23/2016.

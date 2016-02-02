@@ -1,4 +1,4 @@
-package com.peter.util;
+package com.peter.util.so;
 
 /**
  * Created by Peter on 6/23/2015.

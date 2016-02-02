@@ -1,4 +1,4 @@
-package com.peter.util;
+package com.peter.util.connection;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;

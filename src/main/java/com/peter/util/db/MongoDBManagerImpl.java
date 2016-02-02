@@ -7,14 +7,16 @@ import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.peter.util.db.antlr.SQLiteInterpreter;
 import org.apache.log4j.Logger;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-
+import org.joda.time.LocalDateTime;
+import static com.mongodb.client.model.Filters.*;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 /**
@@ -27,31 +29,10 @@ public class MongoDBManagerImpl implements DBManager {
 
     public ConnectionInfo connectionInfo;
     public MongoClient activeConnection;
-    public MongoDatabase activeDB;
     public MongoCollection activeCollection;
+    public MongoDatabase activeDB;
+    public SQLiteInterpreter sqLiteInterpreter;
 
-    public Bson filter;
-    public ArrayList<String> columnsFilter;
-
-    public ArrayList<String> cmdsJDBC = new ArrayList<String>(
-            Arrays.asList(new String[]{
-                    "SELECT", "INSERT", "UPDATE", "DROP", "TRUNCATE", "WHERE", "FROM"
-            }));
-
-    public ArrayList<String> logicOperatorsJDBC = new ArrayList<String>(
-            Arrays.asList(new String[]{
-                    "AND", "OR"
-            }));
-
-    public ArrayList<String> precedenceOperatorsJDBC = new ArrayList<String>(
-            Arrays.asList(new String[]{
-                    "(", ")"
-            }));
-
-    public ArrayList<String> comparativeOperatorsJDBC = new ArrayList<String>(
-            Arrays.asList(new String[]{
-                    "=", ">=", "=<", "<", ">"
-            }));
 
     public MongoDBManagerImpl() {
 
@@ -72,100 +53,23 @@ public class MongoDBManagerImpl implements DBManager {
 
     @Override
     public ArrayList<HashMap> executeQuery(String query) {
-        ArrayList<String[]> cmdQuery = splitByList(query, cmdsJDBC);
-        for (String[] str : cmdQuery) {
-            executeCmd(str);
-        }
+        sqLiteInterpreter = new SQLiteInterpreter(query);
+        sqLiteInterpreter.setQueryParameters();
+        Bson rowsFilter = sqLiteInterpreter.sqLtoMongoWalker.rowsFilter;
+        ArrayList<String> columnsFilter = sqLiteInterpreter.sqLtoMongoWalker.columnsFilter;
+        String tableName = sqLiteInterpreter.sqLtoMongoWalker.tableName;
+        activeCollection = activeDB.getCollection(tableName);
         MongoCursor result;
-        if (filter != null)
-            result = activeCollection.find(filter).iterator();
+        if (rowsFilter != null)
+            result = activeCollection.find(rowsFilter).iterator();
         else
             result = activeCollection.find().iterator();
         ArrayList<HashMap> documents = mongoCursorToArrayList(result);
-        if (columnsFilter != null)
+        if (columnsFilter != null && !columnsFilter.get(0).equals("*"))
             documents = filterMapListByEntries(documents, columnsFilter);
         return documents;
     }
 
-    public ArrayList<String[]> splitByList(String query, ArrayList<String> splitList) {
-        ArrayList<String[]> cmdsQuery = new ArrayList<String[]>();
-        HashMap<Integer,String> indexCMDs = new HashMap<>();
-        for (String cmd : splitList) {
-            int index = 0;
-            while (index != -1) {
-                index = query.indexOf(cmd, index);
-                if (index != -1) {
-                    indexCMDs.put(index,cmd);
-                    index++;
-                }
-            }
-        }
-        indexCMDs.put(query.length(),"LastIndex");
-        Comparator<Map.Entry<Integer,String>> valueComparator =
-                (e1, e2) -> e1.getKey().compareTo(e2.getKey());
-
-        HashMap<Integer,String> sortedMap = indexCMDs.entrySet().stream()
-                .sorted(valueComparator).
-                        collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-                                (e1, e2) -> e2, LinkedHashMap::new));
-        Object[] cmds = sortedMap.values().toArray();
-        Object[] indexs = sortedMap.keySet().toArray();
-        for(int i=0;i<sortedMap.size()-1;i++){
-            String cmd=(String)cmds[i];
-            Integer index=(Integer)indexs[i];
-            String subStr=query.substring(index,(Integer)indexs[i+1]).trim();
-            subStr = subStr.replace(cmd,"");
-            cmdsQuery.add(new String[]{cmd,subStr});
-        }
-        return cmdsQuery;
-    }
-
-
-    public ArrayList<String[]> getFilterList(String queryFilters) {
-        ArrayList<String[]> cmdsFilters = new ArrayList<String[]>();
-        List<String> splitUpperCase = Arrays.asList(queryFilters.toUpperCase().split(" "));
-        List<String> split = Arrays.asList(queryFilters.split(" "));
-
-        return cmdsFilters;
-    }
-
-    public List<String> findOperatorsPrecedence(String query) {
-        List<String> groups = new ArrayList<>();
-        ArrayList<String[]> group = splitByList(query, precedenceOperatorsJDBC);
-        groups = Arrays.asList(query.split("\\(|\\)"));
-        return groups;
-    }
-
-    public void executeCmd(String[] cmd) {
-        switch (cmd[0]) {
-            case "WHERE":
-            default:
-                filter = setFilter(cmd[1]);
-                break;
-            case "FROM":
-                activeCollection = activeDB.getCollection(cmd[1]);
-                break;
-            case "SELECT":
-                switch (cmd[1]) {
-                    case "*":
-                        break;
-                    default:
-                        columnsFilter = new ArrayList<String>(Arrays.asList(cmd[1].split(",")));
-                        break;
-                }
-                break;
-            case "INSERT":
-                break;
-            case "UPDATE":
-                break;
-            case "DROP":
-                break;
-            case "TRUNCATE":
-                break;
-
-        }
-
-    }
 
     public ArrayList<HashMap> mongoCursorToArrayList(MongoCursor iterator) {
         ArrayList documents = new ArrayList<>();
@@ -192,16 +96,6 @@ public class MongoDBManagerImpl implements DBManager {
         return filteredList;
     }
 
-    public Bson setFilter(String conditions) {
-        Bson filter = null;
-        List<String> conditionsList = findOperatorsPrecedence(conditions);
-//        switch (conditionsList[0]) {
-//            case "WHERE":
-//            default:
-//                filter = setFilter(cmd[1]);
-//                break;
-        return filter;
-    }
 
     @Override
     public ArrayList<ArrayList<HashMap>> executeSQLFile(String filePath) {

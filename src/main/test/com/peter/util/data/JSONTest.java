@@ -1,5 +1,7 @@
-import com.peter.util.JSON;
-import com.peter.util.REST;
+package com.peter.util.data;
+
+import com.peter.util.data.JSON;
+import com.peter.util.connection.REST;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

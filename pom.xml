@@ -53,7 +53,7 @@
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
-            <version>3.0.2</version>
+            <version>3.2.1</version>
         </dependency>
         <dependency>
             <groupId>postgresql</groupId>
@@ -64,6 +64,11 @@
             <groupId>org.antlr</groupId>
             <artifactId>antlr4-runtime</artifactId>
             <version>4.5</version>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.8.2</version>
         </dependency>
     </dependencies>
 
@@ -115,7 +120,7 @@
                 <artifactId>antlr4-maven-plugin</artifactId>
                 <version>4.5.2-1</version>
                 <configuration>
-                    <sourceDirectory>${basedir}/src</sourceDirectory>
+                    <sourceDirectory>${basedir}</sourceDirectory>
                     <grammars>MySQL.g4</grammars>
                     <visitor>true</visitor>
                     <listener>true</listener>

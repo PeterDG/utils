@@ -1,15 +1,19 @@
 package com.peter.util.db.antlr;
 
-import main.antlr4.*;
+
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
+import src.main.antlr4.SQLiteLexer;
+import src.main.antlr4.SQLiteParser;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Peter on 1/31/2016.
  */
-public class SQLiteWalkerTest {
+public class SQLtoMongoWalkerTest {
 
     @Test
     public void testEnterParser() throws Exception {
@@ -25,6 +29,7 @@ public class SQLiteWalkerTest {
         ParseTree tree = parser.parse();
         ParseTreeWalker walker = new ParseTreeWalker();
         //Set Listener
-        walker.walk( new SQLiteWalker(), tree );
+        walker.walk( new SQLtoMongoWalker(), tree );
+
     }
 }

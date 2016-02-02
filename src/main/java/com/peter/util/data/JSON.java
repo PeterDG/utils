@@ -1,4 +1,4 @@
-package com.peter.util;
+package com.peter.util.data;
 
 import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.path.json.config.JsonPathConfig;
