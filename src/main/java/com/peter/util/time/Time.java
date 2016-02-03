@@ -7,6 +7,7 @@ import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -90,6 +91,13 @@ public class Time {
         if (null == date)
             return "";
         return DateTimeFormat.forPattern(format).print(date);
+    }
+
+    public static String date2String(Date date, String format) {
+        if (null == date)
+            return "";
+        DateFormat df = new SimpleDateFormat(format);
+        return df.format(date);
     }
 
     public static String localDateTime2String(LocalDateTime date) {

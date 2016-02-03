@@ -27,7 +27,6 @@ public class RESTTest {
         accessPointPort="80";
         accessPointToken="96adf2bb5787f47f8a42e8a188ddbe27-6abfff05cf00171e5bee37d64ffa2eca";
         queryInstruments="EUR_USD";
-
     }
 
     @After
