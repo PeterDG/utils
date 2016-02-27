@@ -28,16 +28,12 @@ public class Settings {
     @Value("${database.jdbc.password}")
     public String jdbcPassword;
 
-    public String rootPath;
-    public String targetPath;
-
     public static Settings instance;
 
     public static Settings getInstance() {
         if (instance == null) {
             AnnotationConfigApplicationContext annotationContext = new AnnotationConfigApplicationContext(Settings.class);
             instance = (Settings)annotationContext.getBean("settings");
-            instance.loadRoutes();
         }
         return instance;
     }
@@ -70,16 +66,6 @@ public class Settings {
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
         return new PropertySourcesPlaceholderConfigurer();
-    }
-
-    public void loadRoutes(){
-        ClassPathResource contextPath = new ClassPathResource("");
-        try {
-            targetPath = contextPath.getFile().toString()+"\\";
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        rootPath= targetPath.replaceAll("target+.*","");
     }
 
 }

@@ -7,29 +7,29 @@ import java.io.IOException;
 /**
  * Created by PEDRO GUTIERREZ on 27/08/2015.
  */
-public class Init {
+public class Environment {
     public String rootPath;
     public String targetPath;
-    public static Init instance;
+    public static Environment instance;
 
-    public static Init getInstance() {
+    public static Environment getInstance() {
         if (instance == null) {
-            instance = new Init();
+            instance = new Environment();
         }
         return instance;
     }
 
-    public Init() {
+    public Environment() {
         loadRoutes();
     }
 
     public void loadRoutes(){
         ClassPathResource contextPath = new ClassPathResource("");
         try {
-            targetPath = contextPath.getFile().toString()+"\\";
+            this.targetPath = contextPath.getFile().toString()+"\\";
         } catch (IOException e) {
             e.printStackTrace();
         }
-        rootPath= targetPath.replaceAll("target+.*","");
+        this.rootPath= targetPath.replaceAll("target+.*","");
     }
 }

@@ -1,12 +1,11 @@
 package com.peter.util.connection;
 
 import com.jayway.restassured.response.Response;
-import com.peter.util.connection.REST;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import com.peter.util.data.JSON;
-import sys.Init;
+import sys.Environment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,6 +43,6 @@ public class RESTTest {
 //        rest = new REST(accessPointHost, accessPointPort, "instruments");
 //        response = rest.get(headersMaps,paramsMaps);
         JSON json = new JSON(response);
-        json.exportCsv(Init.getInstance().rootPath +  "\\"+"test"+".csv");
+        json.exportCsv(Environment.getInstance().rootPath +  "\\"+"test"+".csv");
     }
 }

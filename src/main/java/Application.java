@@ -1,13 +1,13 @@
 
 
-import sys.Init;
+import sys.Environment;
 
 import java.io.IOException;
 
 
 public class Application {
     public static void main (String[]args) throws IOException {
-        Init init = new Init();
+        Environment environment = new Environment();
 
     }
 
