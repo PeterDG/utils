@@ -8,7 +8,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 
 /**
  * Created by Pedro Gutierrez on 2/26/2016.
@@ -25,12 +28,16 @@ public class Settings {
     @Value("${database.jdbc.password}")
     public String jdbcPassword;
 
+    public String rootPath;
+    public String targetPath;
+
     public static Settings instance;
 
     public static Settings getInstance() {
         if (instance == null) {
             AnnotationConfigApplicationContext annotationContext = new AnnotationConfigApplicationContext(Settings.class);
             instance = (Settings)annotationContext.getBean("settings");
+            instance.loadRoutes();
         }
         return instance;
     }
@@ -63,6 +70,16 @@ public class Settings {
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
         return new PropertySourcesPlaceholderConfigurer();
+    }
+
+    public void loadRoutes(){
+        ClassPathResource contextPath = new ClassPathResource("");
+        try {
+            targetPath = contextPath.getFile().toString()+"\\";
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        rootPath= targetPath.replaceAll("target+.*","");
     }
 
 }

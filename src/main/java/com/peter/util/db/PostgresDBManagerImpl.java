@@ -3,6 +3,7 @@ package com.peter.util.db;
 
 import com.google.common.base.Optional;
 import com.peter.util.data.File;
+import sys.Settings;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -28,7 +29,17 @@ public class PostgresDBManagerImpl implements DBManager {
         public final String filePath;
 
         scripts(final String scriptFileName) {
-            this.filePath = "src/main/resources/db/scripts/postgres/" + scriptFileName.toString();
+            String dir;
+            switch(scriptFileName){
+                default:
+                    dir = "src/main/resources/db/scripts/postgres/";
+                    break;
+                case "tmp.sql":
+                    dir = Settings.getInstance().targetPath;
+                    break;
+            }
+            dir +=scriptFileName;
+            this.filePath = dir;
         }
     }
 

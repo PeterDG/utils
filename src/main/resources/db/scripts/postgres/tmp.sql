@@ -1,1 +1,0 @@
-INSERT INTO client (cli_description, cli_date_added, cli_shared_key, cli_email, cli_status, cli_validation_attempts, cli_last_activity_date, gld_id) VALUES ( 'testUserDescription', '2016-02-27 12:56:49.221', 'testUserSharedKey', 'testUserEmail', 1010, 0, NULL, NULL);
