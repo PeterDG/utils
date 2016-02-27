@@ -21,9 +21,9 @@ public class MongoDBManagerImplTest {
     @Before
     public void before(){
         connectionInfo=new ConnectionInfo("jdbc:mongo://192.168.243.197:27017", Optional.absent());
-        connection =DBManagerFactory.buildDBManager(DBManagerType.MONGO,Optional.of(connectionInfo));
+        connection =DBManagerFactory.buildDBManager(connectionInfo);
         connectionInfoWithDB=new ConnectionInfo("jdbc:mongo://192.168.243.197:27017/historicContext", Optional.absent());
-        connectionWithDB =DBManagerFactory.buildDBManager(DBManagerType.MONGO,Optional.of(connectionInfoWithDB));
+        connectionWithDB =DBManagerFactory.buildDBManager(connectionInfoWithDB);
     }
     @Test
     public void testGetConnection() throws Exception {
@@ -35,7 +35,7 @@ public class MongoDBManagerImplTest {
     public void testCloseConnection() throws Exception {
         MongoClient mongoClient=(MongoClient) connection.getConnection();
         mongoClient.close();
-        DBManager dbA = DBManagerFactory.buildDBManager(DBManagerType.MONGO,Optional.of(connectionInfo));
+        DBManager dbA = DBManagerFactory.buildDBManager(connectionInfo);
         MongoClient mongoClientA=(MongoClient) connection.getConnection();
         assertTrue(mongoClient!=mongoClientA);
     }
@@ -43,7 +43,7 @@ public class MongoDBManagerImplTest {
     @Test
     public void testNotCloseConnection() throws Exception {
         MongoClient mongoClient=(MongoClient) connection.getConnection();
-        DBManager dbA = DBManagerFactory.buildDBManager(DBManagerType.MONGO,Optional.of(connectionInfo));
+        DBManager dbA = DBManagerFactory.buildDBManager(connectionInfo);
         MongoClient mongoClientA=(MongoClient) connection.getConnection();
         assertTrue(mongoClient==mongoClientA);
     }

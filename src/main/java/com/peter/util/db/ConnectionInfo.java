@@ -30,27 +30,36 @@ public class ConnectionInfo {
     }
 
     public String getDBName() {
-        String[] split =jdbcUrl.split(":*/*/");
-        if(split.length==3) return split[2];
+        String[] split = jdbcUrl.split(":*/*/");
+        if (split.length == 3) return split[2];
         else return "";
     }
 
-    public String getJDBCUrlWithDBName(){
-        String dbName=getDBName();
+    public DBManagerType getDBType() {
+        String[] split = jdbcUrl.split(":");
+        String strDBType = split[1].toLowerCase();
+        DBManagerType type = DBManagerType.OTHER;
+        if (strDBType.contains("mongo")) type = DBManagerType.MONGO;
+        if (strDBType.contains("postgres")) type = DBManagerType.POSTGRES;
+        return type;
+    }
+
+    public String getJDBCUrlWithDBName() {
+        String dbName = getDBName();
         String url;
-        if(dbName!=null)  url=jdbcUrl.replace(dbName,"");
+        if (dbName != null) url = jdbcUrl.replace(dbName, "");
         else url = this.getJdbcUrl();
         char lastChar = url.charAt(url.length() - 1);
-        if(!(lastChar=='/')) url+="/";
+        if (!(lastChar == '/')) url += "/";
         return url;
     }
 
 
-    public String getServer(){
+    public String getServer() {
         return jdbcUrl.split(":*/*/")[1].split(":")[0];
     }
 
-    public Integer getPort(){
+    public Integer getPort() {
         return Integer.parseInt(jdbcUrl.split(":*/*/")[1].split(":")[1]);
     }
 

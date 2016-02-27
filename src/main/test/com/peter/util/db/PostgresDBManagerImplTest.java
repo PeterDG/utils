@@ -27,7 +27,7 @@ public class PostgresDBManagerImplTest {
         settings= Settings.getInstance();
         Credentials credentials = new Credentials(settings.getJdbcUsername(),settings.getJdbcPassword());
         ConnectionInfo connectionInfo=new ConnectionInfo(settings.jdbcURL, Optional.of(credentials));
-        db =DBManagerFactory.buildDBManager(DBManagerType.POSTGRES, Optional.of(connectionInfo));
+        db =DBManagerFactory.buildDBManager(connectionInfo);
     }
 
     @Test
@@ -62,7 +62,7 @@ public class PostgresDBManagerImplTest {
     public void test05CreateDBWithoutDBName() throws Exception {
         Credentials credentials = new Credentials(settings.getJdbcUsername(),settings.getJdbcPassword());
         ConnectionInfo connectionInfo=new ConnectionInfo(settings.jdbcURL.replaceAll("/"+settings.jdbcURL.split("/")[3],""), Optional.of(credentials));
-        db =DBManagerFactory.buildDBManager(DBManagerType.POSTGRES, Optional.of(connectionInfo));
+        db =DBManagerFactory.buildDBManager(connectionInfo);
         db.getConnection();
         db.createDB("testABCD");
         assertTrue(db.isQuerySuccessful());

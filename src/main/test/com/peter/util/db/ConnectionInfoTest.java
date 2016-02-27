@@ -70,4 +70,17 @@ public class ConnectionInfoTest {
         assertTrue(url.equals("jdbc:mongo://ds029847.mongolab.com:29847/"));
     }
 
+    @Test
+    public void testGetDBTypeMongo() throws Exception {
+        connectionInfo= new ConnectionInfo("jdbc:mongo://ds029847.mongolab.com:29847/tpch",Optional.of(credentials));
+        DBManagerType type =connectionInfo.getDBType();
+        assertTrue(type.equals(DBManagerType.MONGO));
+    }
+
+    @Test
+    public void testGetDBTypePostgres() throws Exception {
+        connectionInfo= new ConnectionInfo("jdbc:postgresql://ds029847.mongolab.com:29847/tpch",Optional.of(credentials));
+        DBManagerType type =connectionInfo.getDBType();
+        assertTrue(type.equals(DBManagerType.POSTGRES));
+    }
 }
