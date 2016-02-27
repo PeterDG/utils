@@ -105,7 +105,10 @@ public class PostgresDBManagerImpl implements DBManager {
         executeQuery(query);
     }
 
-    public void insertTable(String table, String columnNames, ArrayList<String> valuesList) {
+    public void insertTable(String table, ArrayList<String> columnNamesList, ArrayList<String> valuesList) {
+        String columnNames = "";
+        for(String name:columnNamesList) columnNames+=name+",";
+        columnNames=columnNames.substring(0,columnNames.length()-1);
         String query = "INSERT INTO " + table + " ( " + columnNames + " ) " + "VALUES";
         for(String values:valuesList){
             query+= " ( " + values + " ),";

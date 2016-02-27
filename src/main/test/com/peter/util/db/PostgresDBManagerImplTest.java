@@ -9,6 +9,7 @@ import sys.Settings;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -158,7 +159,8 @@ public class PostgresDBManagerImplTest {
         strList.add("'1113','NameC'");
         strList.add("'1113','NameC'");
         strList.add("'1113','NameC'");
-        db.insertTable("testTable","code,name",strList);
+        ArrayList<String> columnNamesList=new ArrayList<>(Arrays.asList(new String[] { "code" , "name" }));
+        db.insertTable("testTable",columnNamesList,strList);
         assertTrue(db.isQuerySuccessful());
     }
 

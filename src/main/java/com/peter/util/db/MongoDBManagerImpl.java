@@ -133,7 +133,7 @@ public class MongoDBManagerImpl implements DBManager {
     }
 
     @Override
-    public void insertTable(String table, String columnNames, ArrayList<String> valuesList) {
+    public void insertTable(String table, ArrayList<String> columnNamesList, ArrayList<String> valuesList) {
 
     }
 
