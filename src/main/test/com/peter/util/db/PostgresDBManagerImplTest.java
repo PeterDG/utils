@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import sys.Settings;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -20,12 +21,12 @@ import static org.junit.Assert.*;
 public class PostgresDBManagerImplTest {
     public DBManager db;
     public String testMachine;
+    public Settings settings;
     @Before
     public void before() throws Exception {
-//        testMachine="192.168.99.100";
-        testMachine="localhost";
-        Credentials credentials = new Credentials("detectid","detectid");
-        ConnectionInfo connectionInfo=new ConnectionInfo("jdbc:postgresql://"+testMachine+":5432/detectid", Optional.of(credentials));
+        settings= Settings.getInstance();
+        Credentials credentials = new Credentials(settings.getJdbcUsername(),settings.getJdbcPassword());
+        ConnectionInfo connectionInfo=new ConnectionInfo(settings.jdbcURL, Optional.of(credentials));
         db =DBManagerFactory.buildDBManager(DBManagerType.POSTGRES, Optional.of(connectionInfo));
     }
 
@@ -33,7 +34,7 @@ public class PostgresDBManagerImplTest {
     public void test01ExecuteQuery() throws Exception {
         db.getConnection();
         ArrayList<HashMap> data = db.executeQuery("select * from channel_factor");
-        assertTrue(data.size()==16);
+        assertTrue(data.size()==14);
     }
 
     @Test
@@ -59,8 +60,8 @@ public class PostgresDBManagerImplTest {
 
     @Test
     public void test05CreateDBWithoutDBName() throws Exception {
-        Credentials credentials = new Credentials("detectid","detectid");
-        ConnectionInfo connectionInfo=new ConnectionInfo("jdbc:postgresql://"+testMachine+":5432", Optional.of(credentials));
+        Credentials credentials = new Credentials(settings.getJdbcUsername(),settings.getJdbcPassword());
+        ConnectionInfo connectionInfo=new ConnectionInfo(settings.jdbcURL.replaceAll("/"+settings.jdbcURL.split("/")[3],""), Optional.of(credentials));
         db =DBManagerFactory.buildDBManager(DBManagerType.POSTGRES, Optional.of(connectionInfo));
         db.getConnection();
         db.createDB("testABCD");
