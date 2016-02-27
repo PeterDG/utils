@@ -172,6 +172,12 @@ public class PostgresDBManagerImpl implements DBManager {
         return list;
     }
 
+    public ArrayList<ArrayList<HashMap>> executeSQLFile(String filePath, ArrayList<String[]> pairsToReplace) {
+        File file = new File(filePath);
+        file.replaceTextLists(scripts.tmpSQL.filePath,pairsToReplace);
+        return executeSQLFile(scripts.tmpSQL.filePath);
+    }
+
 
     public ArrayList<HashMap> executeQuery(String query) {
         querySuccessful=true;

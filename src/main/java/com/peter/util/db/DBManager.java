@@ -15,6 +15,7 @@ public interface DBManager {
  Object getConnection();
  ArrayList<HashMap> executeQuery(String query);
  ArrayList<ArrayList<HashMap>> executeSQLFile(String filePath);
+ ArrayList<ArrayList<HashMap>> executeSQLFile(String filePath, ArrayList<String[]> pairsToReplace);
  ArrayList<ArrayList<HashMap>> createDB(String dbName);
  ArrayList<ArrayList<HashMap>> deleteDB(String dbName);
  boolean existDB(String dbName);

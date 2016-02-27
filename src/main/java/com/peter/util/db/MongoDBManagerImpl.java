@@ -103,6 +103,11 @@ public class MongoDBManagerImpl implements DBManager {
     }
 
     @Override
+    public ArrayList<ArrayList<HashMap>> executeSQLFile(String filePath, ArrayList<String[]> pairsToReplace) {
+        return null;
+    }
+
+    @Override
     public ArrayList<ArrayList<HashMap>> createDB(String dbName) {
         return null;
     }

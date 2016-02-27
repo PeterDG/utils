@@ -207,4 +207,19 @@ public class PostgresDBManagerImplTest {
         assertTrue(db.isQuerySuccessful());
     }
 
+
+    @Test
+    public void test17ExecuteSQLFileReplaceParameters() throws Exception {
+        db.getConnection();
+        ArrayList pairsToReplace = new ArrayList() ;
+        pairsToReplace.add(new String []{"p_cli_description","testUserDescription"});
+        pairsToReplace.add(new String []{"p_cli_date_added","2016-02-27 12:56:49.221"});
+        pairsToReplace.add(new String []{"p_cli_shared_key","testUserSharedKey"});
+        pairsToReplace.add(new String []{"p_cli_email","testUserEmail"});
+        ArrayList<ArrayList<HashMap>> data = db.executeSQLFile("src/main/test/resources/db/postgres/insert.sql",pairsToReplace);
+        ArrayList<HashMap> dataAssertion =  db.executeQuery("SELECT count(*) FROM client WHERE cli_shared_key='testUserSharedKey'");
+        assertTrue(dataAssertion.get(0).get("count").equals(1L));
+        db.executeQuery("DELETE FROM client WHERE cli_shared_key='testUserSharedKey'");
+    }
+
 }
