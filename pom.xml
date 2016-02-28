@@ -81,6 +81,11 @@
             <version>9.1-901-1.jdbc4</version>
         </dependency>
         <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc7</artifactId>
+            <version>12.1.0.1</version>
+        </dependency>
+        <dependency>
             <groupId>org.antlr</groupId>
             <artifactId>antlr4-runtime</artifactId>
             <version>4.5</version>
@@ -110,6 +115,11 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
             <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.51</version>
         </dependency>
         <!-- spring dependencies -->
     </dependencies>
@@ -196,7 +206,4 @@
             </resource>
         </resources>
     </build>
-
-
-
 </project>
