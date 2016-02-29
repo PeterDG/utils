@@ -12,7 +12,9 @@ public class DBManagerFactory {
             case MONGO:
                 return new MongoDBManagerImpl( connInfo);
             case POSTGRES:
-                return new PostgresDBManagerImpl(connInfo);
+                return new JDBCDBManagerImpl(connInfo);
+            case ORACLE:
+                return new JDBCDBManagerImpl(connInfo);
             default:
                 try {
                     throw new Exception("Unrecognized type of DBManager");

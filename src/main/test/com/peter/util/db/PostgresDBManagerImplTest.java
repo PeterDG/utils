@@ -5,6 +5,8 @@ import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import org.springframework.context.annotation.Profile;
+import org.springframework.test.context.ActiveProfiles;
 import sys.Settings;
 
 import java.sql.Connection;
@@ -18,16 +20,16 @@ import static org.junit.Assert.*;
 /**
  * Created by Peter on 1/22/2016.
  */
+
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PostgresDBManagerImplTest {
     public DBManager db;
-    public String testMachine;
     public Settings settings;
     @Before
     public void before() throws Exception {
         settings= Settings.getInstance();
-        Credentials credentials = new Credentials(settings.getJdbcUsername(),settings.getJdbcPassword());
-        ConnectionInfo connectionInfo=new ConnectionInfo(settings.jdbcURL, Optional.of(credentials));
+        Credentials credentials = new Credentials(settings.getJdbcPostgresUsername(),settings.getJdbcPostgresPassword());
+        ConnectionInfo connectionInfo=new ConnectionInfo(settings.jdbcPostgresURL, Optional.of(credentials));
         db =DBManagerFactory.buildDBManager(connectionInfo);
     }
 
@@ -61,8 +63,8 @@ public class PostgresDBManagerImplTest {
 
     @Test
     public void test05CreateDBWithoutDBName() throws Exception {
-        Credentials credentials = new Credentials(settings.getJdbcUsername(),settings.getJdbcPassword());
-        ConnectionInfo connectionInfo=new ConnectionInfo(settings.jdbcURL.replaceAll("/"+settings.jdbcURL.split("/")[3],""), Optional.of(credentials));
+        Credentials credentials = new Credentials(settings.getJdbcPostgresUsername(),settings.getJdbcPostgresPassword());
+        ConnectionInfo connectionInfo=new ConnectionInfo(settings.jdbcPostgresURL.replaceAll("/"+settings.jdbcPostgresURL.split("/")[3],""), Optional.of(credentials));
         db =DBManagerFactory.buildDBManager(connectionInfo);
         db.getConnection();
         db.createDB("testABCD");

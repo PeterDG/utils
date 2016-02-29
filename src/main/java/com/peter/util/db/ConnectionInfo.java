@@ -38,9 +38,10 @@ public class ConnectionInfo {
     public DBManagerType getDBType() {
         String[] split = jdbcUrl.split(":");
         String strDBType = split[1].toLowerCase();
-        DBManagerType type = DBManagerType.OTHER;
+        DBManagerType type = null;
         if (strDBType.contains("mongo")) type = DBManagerType.MONGO;
         if (strDBType.contains("postgres")) type = DBManagerType.POSTGRES;
+        if (strDBType.contains("oracle")) type = DBManagerType.ORACLE;
         return type;
     }
 

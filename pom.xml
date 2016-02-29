@@ -20,6 +20,12 @@
                 <build.profile.id>local</build.profile.id>
             </properties>
         </profile>
+        <profile>
+            <id>unal</id>
+            <properties>
+                <build.profile.id>unal</build.profile.id>
+            </properties>
+        </profile>
         <!-- The configuration of the testing profile -->
         <profile>
             <id>docker</id>

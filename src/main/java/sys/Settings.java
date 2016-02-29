@@ -1,32 +1,40 @@
 package sys;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
+import org.springframework.test.context.ActiveProfiles;
 
 /**
  * Created by Pedro Gutierrez on 2/26/2016.
  */
+
 @Configuration
 @PropertySource("classpath:configuration.properties")
 @Service("settings")
 public class Settings {
 
-    @Value("${database.jdbc.url}")
-    public String jdbcURL;
-    @Value("${database.jdbc.username}")
-    public String jdbcUsername;
-    @Value("${database.jdbc.password}")
-    public String jdbcPassword;
+    @Value("${database.postgres.jdbc.url}")
+    public String jdbcPostgresURL;
+    @Value("${database.postgres.jdbc.username}")
+    public String jdbcPostgresUsername;
+    @Value("${database.postgres.jdbc.password}")
+    public String jdbcPostgresPassword;
+    @Value("${database.oracle.jdbc.url}")
+    public String jdbcOracleURL;
+    @Value("${database.oracle.jdbc.username}")
+    public String jdbcOracleUsername;
+    @Value("${database.oracle.jdbc.password}")
+    public String jdbcOraclePassword;
+    @Value("${connection.ssh.url}")
+    public String sshUrl;
+    @Value("${connection.ssh.password}")
+    public String sshPassword;
+
 
     public static Settings instance;
 
@@ -38,28 +46,28 @@ public class Settings {
         return instance;
     }
 
-    public void setJdbcURL(String jdbcURL) {
-        this.jdbcURL = jdbcURL;
+    public void setJdbcPostgresURL(String jdbcPostgresURL) {
+        this.jdbcPostgresURL = jdbcPostgresURL;
     }
 
-    public void setJdbcUsername(String jdbcUsername) {
-        this.jdbcUsername = jdbcUsername;
+    public void setJdbcPostgresUsername(String jdbcPostgresUsername) {
+        this.jdbcPostgresUsername = jdbcPostgresUsername;
     }
 
-    public void setJdbcPassword(String jdbcPassword) {
-        this.jdbcPassword = jdbcPassword;
+    public void setJdbcPostgresPassword(String jdbcPostgresPassword) {
+        this.jdbcPostgresPassword = jdbcPostgresPassword;
     }
 
-    public String getJdbcURL() {
-        return jdbcURL;
+    public String getJdbcPostgresURL() {
+        return jdbcPostgresURL;
     }
 
-    public String getJdbcPassword() {
-        return jdbcPassword;
+    public String getJdbcPostgresPassword() {
+        return jdbcPostgresPassword;
     }
 
-    public String getJdbcUsername() {
-        return jdbcUsername;
+    public String getJdbcPostgresUsername() {
+        return jdbcPostgresUsername;
     }
 
     //To resolve ${} in @Value
