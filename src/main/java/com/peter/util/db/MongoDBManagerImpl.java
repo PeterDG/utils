@@ -42,7 +42,7 @@ public class MongoDBManagerImpl implements DBManager {
         this.connectionInfo = connectionInfo;
     }
 
-    public Object getConnection() {
+    public Object connect() {
         try {
             activeConnection.getConnectPoint();
         } catch (Exception e) {

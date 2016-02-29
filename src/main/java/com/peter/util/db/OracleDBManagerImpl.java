@@ -62,7 +62,7 @@ public class OracleDBManagerImpl implements DBManager {
     public OracleDBManagerImpl() {
     }
 
-    public Connection getConnection() {
+    public Connection connect() {
         return this.getConnection(connectionInfo.getDBName());
     }
 

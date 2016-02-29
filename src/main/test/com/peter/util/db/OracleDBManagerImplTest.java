@@ -32,7 +32,7 @@ public class OracleDBManagerImplTest {
 
     @Test
     public void test02GetConnection() throws Exception {
-        Connection connection= (Connection) db.getConnection();
+        Connection connection= (Connection) db.connect();
         assertTrue(!connection.isClosed());
     }
 

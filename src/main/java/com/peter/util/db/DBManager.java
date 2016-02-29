@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface DBManager {
 
- Object getConnection();
+ Object connect();
  ArrayList<HashMap> executeQuery(String query);
  ArrayList<ArrayList<HashMap>> executeSQLFile(String filePath);
  ArrayList<ArrayList<HashMap>> executeSQLFile(String filePath, ArrayList<String[]> pairsToReplace);

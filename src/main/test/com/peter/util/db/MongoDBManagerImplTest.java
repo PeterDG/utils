@@ -27,24 +27,24 @@ public class MongoDBManagerImplTest {
     }
     @Test
     public void testGetConnection() throws Exception {
-        MongoClient mongoClient=(MongoClient) connection.getConnection();
+        MongoClient mongoClient=(MongoClient) connection.connect();
         assertTrue(mongoClient.getConnectPoint().equals("192.168.243.197:27017"));
     }
 
     @Test
     public void testCloseConnection() throws Exception {
-        MongoClient mongoClient=(MongoClient) connection.getConnection();
+        MongoClient mongoClient=(MongoClient) connection.connect();
         mongoClient.close();
         DBManager dbA = DBManagerFactory.buildDBManager(connectionInfo);
-        MongoClient mongoClientA=(MongoClient) connection.getConnection();
+        MongoClient mongoClientA=(MongoClient) connection.connect();
         assertTrue(mongoClient!=mongoClientA);
     }
 
     @Test
     public void testNotCloseConnection() throws Exception {
-        MongoClient mongoClient=(MongoClient) connection.getConnection();
+        MongoClient mongoClient=(MongoClient) connection.connect();
         DBManager dbA = DBManagerFactory.buildDBManager(connectionInfo);
-        MongoClient mongoClientA=(MongoClient) connection.getConnection();
+        MongoClient mongoClientA=(MongoClient) connection.connect();
         assertTrue(mongoClient==mongoClientA);
     }
 
@@ -56,14 +56,14 @@ public class MongoDBManagerImplTest {
 
     @Test
     public void testExecuteQuerySelectSimple() throws Exception {
-        MongoClient mongoClient=(MongoClient) connectionWithDB.getConnection();
+        MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
         ArrayList<HashMap> result = connectionWithDB.executeQuery("SELECT * FROM historicalPopulationMetrics");
         assertTrue(result.size()==2);
     }
 
     @Test
     public void testExecuteQuerySelectComplex() throws Exception {
-        MongoClient mongoClient=(MongoClient) connectionWithDB.getConnection();
+        MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
         ArrayList<HashMap> result = connectionWithDB.executeQuery("SELECT date,metrics FROM historicalPopulationMetrics");
         assertTrue(!result.get(0).containsKey("_id"));
         assertTrue(result.get(0).containsKey("date"));
@@ -72,7 +72,7 @@ public class MongoDBManagerImplTest {
 
     @Test
     public void testExecuteQuerySelectWithWhereOneStament() throws Exception {
-        MongoClient mongoClient=(MongoClient) connectionWithDB.getConnection();
+        MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
 //        ArrayList<HashMap> result = connectionWithDB.executeQuery("SELECT _id,date FROM historicalUsernMetrics WHERE (_id='dbetancourt' OR _id='dcastaneda') AND (date='2015-06-23T18:28:30.859Z' OR date='2015-06-23T03:52:07.796Z') ");
         ArrayList<HashMap> result = connectionWithDB.executeQuery("SELECT _id,date FROM historicalUserMetrics WHERE _id='dbetancourt'");
         assertTrue(!result.get(0).containsKey("metrics"));
@@ -83,42 +83,42 @@ public class MongoDBManagerImplTest {
 
     @Test
     public void testExecuteQuerySelectWithWhereWithRegExpPositive() throws Exception {
-        MongoClient mongoClient=(MongoClient) connectionWithDB.getConnection();
+        MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
         ArrayList<HashMap> result =  connectionWithDB.executeQuery("SELECT * FROM historicalUserMetrics WHERE _id ~'dbet.*ourt'");
         assertTrue(result.get(0).get("_id").equals("dbetancourt"));
     }
 
     @Test
     public void testExecuteQuerySelectWithWhereWithRegExpNegative() throws Exception {
-        MongoClient mongoClient=(MongoClient) connectionWithDB.getConnection();
+        MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
         ArrayList<HashMap> result =  connectionWithDB.executeQuery("SELECT * FROM historicalUserMetrics WHERE _id ~'dbet.*ou5rt'");
         assertTrue(result.size()==0);
     }
 
     @Test
     public void testExecuteQuerySelectWithWhereWithGT() throws Exception {
-        MongoClient mongoClient=(MongoClient) connectionWithDB.getConnection();
+        MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
         ArrayList<HashMap> result =  connectionWithDB.executeQuery("SELECT * FROM historicalUserMetrics WHERE date >'2015-06-23T18:28:30.859Z'");
         assertTrue(result.size()==2);
     }
 
     @Test
     public void testExecuteQuerySelectWithWhereWithGTE() throws Exception {
-        MongoClient mongoClient=(MongoClient) connectionWithDB.getConnection();
+        MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
         ArrayList<HashMap> result =  connectionWithDB.executeQuery("SELECT * FROM historicalUserMetrics WHERE date >='2015-06-23T18:28:30.859Z'");
         assertTrue(result.size()==3);
     }
 
     @Test
     public void testExecuteQuerySelectWithWhereWithLTE() throws Exception {
-        MongoClient mongoClient=(MongoClient) connectionWithDB.getConnection();
+        MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
         ArrayList<HashMap> result =  connectionWithDB.executeQuery("SELECT * FROM historicalUserMetrics WHERE date <='2015-06-23T18:28:30.859Z'");
         assertTrue(result.size()==3);
     }
 
     @Test
     public void testExecuteQuerySelectWithWhereWithLT() throws Exception {
-        MongoClient mongoClient=(MongoClient) connectionWithDB.getConnection();
+        MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
         ArrayList<HashMap> result =  connectionWithDB.executeQuery("SELECT * FROM historicalUserMetrics WHERE date <'2015-06-23T18:28:30.859Z'");
         assertTrue(result.size()==2);
     }

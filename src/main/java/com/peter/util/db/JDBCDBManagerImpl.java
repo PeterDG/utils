@@ -67,7 +67,7 @@ public class JDBCDBManagerImpl implements DBManager {
     public JDBCDBManagerImpl() {
     }
 
-    public Connection getConnection() {
+    public Connection connect() {
         return this.getConnection(connectionInfo.getDBName());
     }
 

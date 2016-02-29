@@ -63,7 +63,7 @@ public class PostgresDBManagerImpl implements DBManager {
     public PostgresDBManagerImpl() {
     }
 
-    public Connection getConnection() {
+    public Connection connect() {
         return this.getConnection(connectionInfo.getDBName());
     }
 

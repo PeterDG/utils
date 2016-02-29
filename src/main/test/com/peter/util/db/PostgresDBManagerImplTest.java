@@ -5,8 +5,6 @@ import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import org.springframework.context.annotation.Profile;
-import org.springframework.test.context.ActiveProfiles;
 import sys.Settings;
 
 import java.sql.Connection;
@@ -35,20 +33,20 @@ public class PostgresDBManagerImplTest {
 
     @Test
     public void test01ExecuteQuery() throws Exception {
-        db.getConnection();
+        db.connect();
         ArrayList<HashMap> data = db.executeQuery("select * from channel_factor");
         assertTrue(data.size()==14);
     }
 
     @Test
     public void test02GetConnection() throws Exception {
-        Connection connection= (Connection) db.getConnection();
+        Connection connection= (Connection) db.connect();
         assertTrue(!connection.isClosed());
     }
 
     @Test
     public void test03ExecuteSQLFile() throws Exception {
-        db.getConnection();
+        db.connect();
         ArrayList<ArrayList<HashMap>> data = db.executeSQLFile("src/main/test/resources/db/postgres/file.sql");
         assertTrue(data.size()==2);
         assertTrue(db.isQuerySuccessful());
@@ -56,7 +54,7 @@ public class PostgresDBManagerImplTest {
 
     @Test
     public void test04DCreateDB() throws Exception {
-        db.getConnection();
+        db.connect();
         db.createDB("testABC");
         assertTrue(db.isQuerySuccessful());
     }
@@ -66,14 +64,14 @@ public class PostgresDBManagerImplTest {
         Credentials credentials = new Credentials(settings.getJdbcPostgresUsername(),settings.getJdbcPostgresPassword());
         ConnectionInfo connectionInfo=new ConnectionInfo(settings.jdbcPostgresURL.replaceAll("/"+settings.jdbcPostgresURL.split("/")[3],""), Optional.of(credentials));
         db =DBManagerFactory.buildDBManager(connectionInfo);
-        db.getConnection();
+        db.connect();
         db.createDB("testABCD");
         assertTrue(db.isQuerySuccessful());
     }
 
     @Test
     public void test06DeleteDB() throws Exception {
-        db.getConnection();
+        db.connect();
         db.deleteDB("testABC");
         db.deleteDB("testABCD");
         assertTrue(db.isQuerySuccessful());
@@ -81,7 +79,7 @@ public class PostgresDBManagerImplTest {
 
     @Test
     public void test07ExistDB() throws Exception {
-        db.getConnection();
+        db.connect();
         String dbName="detectid";
         boolean flag =db.existDB(dbName);
         assertTrue(flag);
@@ -95,21 +93,21 @@ public class PostgresDBManagerImplTest {
 
     @Test
     public void test09CreateTable() throws Exception {
-        db.getConnection();
+        db.connect();
         db.createTable("testTable","id serial NOT NULL,code text,name text", Optional.of("id"));
         assertTrue(db.isQuerySuccessful());
     }
 
     @Test
     public void test10InsetTable() throws Exception {
-        db.getConnection();
+        db.connect();
         db.insertTable("testTable","code","1110");
         assertTrue(db.isQuerySuccessful());
     }
 
     @Test
     public void test10_1MultipleInsetTable() throws Exception {
-        db.getConnection();
+        db.connect();
         ArrayList<String> strList = new ArrayList<String>();
         strList.add("'1111','NameA'");
         strList.add("'1112','NameB'");
@@ -168,28 +166,28 @@ public class PostgresDBManagerImplTest {
 
     @Test
     public void test11UpdateTableWithWhere() throws Exception {
-        db.getConnection();
+        db.connect();
         db.updateTable("testTable","code","1234",Optional.of("code='1110'"));
         assertTrue(db.isQuerySuccessful());
     }
 
     @Test
     public void test12UpdateTableWithoutWhere() throws Exception {
-        db.getConnection();
+        db.connect();
         db.updateTable("testTable","code","1134",Optional.absent());
         assertTrue(db.isQuerySuccessful());
     }
 
     @Test
     public void test13SelectTableWithoutWhere() throws Exception {
-        db.getConnection();
+        db.connect();
         List<HashMap> data = db.selectTable("testTable", "*", Optional.absent());
         assertTrue(db.isQuerySuccessful());
     }
 
     @Test
     public void test14SelectTableWithWhere() throws Exception {
-        db.getConnection();
+        db.connect();
         List<HashMap> data = db.selectTable("testTable", "*", Optional.of("code='1034'"));
         assertTrue(db.isQuerySuccessful());
     }
@@ -197,14 +195,14 @@ public class PostgresDBManagerImplTest {
 
     @Test
     public void test15CleanTable() throws Exception {
-        db.getConnection();
+        db.connect();
         db.cleanTable("testTable");
         assertTrue(db.isQuerySuccessful());
     }
 
     @Test
     public void test16DeleteTable() throws Exception {
-        db.getConnection();
+        db.connect();
         db.deleteTable("testTable");
         assertTrue(db.isQuerySuccessful());
     }
@@ -212,7 +210,7 @@ public class PostgresDBManagerImplTest {
 
     @Test
     public void test17ExecuteSQLFileReplaceParameters() throws Exception {
-        db.getConnection();
+        db.connect();
         ArrayList pairsToReplace = new ArrayList() ;
         pairsToReplace.add(new String []{"p_cli_description","testUserDescription"});
         pairsToReplace.add(new String []{"p_cli_date_added","2016-02-27 12:56:49.221"});
