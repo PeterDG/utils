@@ -21,13 +21,16 @@ public class RESTTest {
     public REST rest;
     private String accessPointToken;
     private String queryInstruments;
+    private String url;
 
     @Before
     public void setUp() throws Exception {
         accessPointHost="https://api-fxpractice.oanda.com/v1";
         accessPointPort="443";
+        url="https://api-fxpractice.oanda.com:443/v1/candles";
         accessPointToken="96adf2bb5787f47f8a42e8a188ddbe27-6abfff05cf00171e5bee37d64ffa2eca";
         queryInstruments="EUR_USD";
+
     }
 
     @After
@@ -61,6 +64,15 @@ public class RESTTest {
     @Test
     public void testGetConstructorHostWithPort() throws Exception {
         rest = new REST("https://api-fxpractice.oanda.com"+":" +accessPointPort, "/v1/candles");
+        Map<String, String> headersMaps = new HashMap<String,String>() {{put("Authorization", "Bearer "+accessPointToken);}};
+        Map<String, String> paramsMaps = new HashMap<String,String>() {{put("instrument",queryInstruments);}};
+        Response response = rest.get(headersMaps,paramsMaps);
+        assertTrue(response!=null);
+    }
+
+    @Test
+    public void testGetConstructorURL() throws Exception {
+        rest = new REST(url);
         Map<String, String> headersMaps = new HashMap<String,String>() {{put("Authorization", "Bearer "+accessPointToken);}};
         Map<String, String> paramsMaps = new HashMap<String,String>() {{put("instrument",queryInstruments);}};
         Response response = rest.get(headersMaps,paramsMaps);

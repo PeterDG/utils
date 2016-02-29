@@ -15,6 +15,7 @@ public class REST {
     public String host;
     public String port;
     public String service;
+    public String url;
 
 
     public REST(String host, String port, String service) {
@@ -25,11 +26,29 @@ public class REST {
     }
 
     public REST(String host, String service) {
-        String [] split=host.split(":");
-        this.host = host.split(":\\d")[0];
-        if(split.length>2) this.port=split[split.length-1];
+        setData(host);
         this.service = service;
         init();
+    }
+
+    public REST(String url) {
+        setData(url);
+        init();
+    }
+
+    public void setData(String url){
+        this.url=url;
+        String tmp = url;
+        String [] splitHost= tmp.split(":\\d");
+        this.host =splitHost[0];
+        if(splitHost.length>1){
+            tmp=tmp.replace(host+":","");
+            String [] splitPort= tmp.split("/");
+            this.port=splitPort[0];
+            if(splitPort.length>1){
+                this.service = tmp.replace(port,"");
+            }
+        }
     }
 
     public void init() {
