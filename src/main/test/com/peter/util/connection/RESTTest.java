@@ -10,6 +10,8 @@ import sys.Environment;
 import java.util.HashMap;
 import java.util.Map;
 
+import static junit.framework.TestCase.assertTrue;
+
 /**
  * Created by Peter on 11/20/15.
  */
@@ -23,7 +25,7 @@ public class RESTTest {
     @Before
     public void setUp() throws Exception {
         accessPointHost="https://api-fxpractice.oanda.com/v1";
-        accessPointPort="80";
+        accessPointPort="443";
         accessPointToken="96adf2bb5787f47f8a42e8a188ddbe27-6abfff05cf00171e5bee37d64ffa2eca";
         queryInstruments="EUR_USD";
     }
@@ -44,5 +46,24 @@ public class RESTTest {
 //        response = rest.get(headersMaps,paramsMaps);
         JSON json = new JSON(response);
         json.exportCsv(Environment.getInstance().rootPath +  "\\"+"test"+".csv");
+        assertTrue(response!=null);
+    }
+
+    @Test
+    public void testGetConstructorOnlyHostWithoutPort() throws Exception {
+        rest = new REST(accessPointHost, "candles");
+        Map<String, String> headersMaps = new HashMap<String,String>() {{put("Authorization", "Bearer "+accessPointToken);}};
+        Map<String, String> paramsMaps = new HashMap<String,String>() {{put("instrument",queryInstruments);}};
+        Response response = rest.get(headersMaps,paramsMaps);
+        assertTrue(response!=null);
+    }
+
+    @Test
+    public void testGetConstructorHostWithPort() throws Exception {
+        rest = new REST("https://api-fxpractice.oanda.com"+":" +accessPointPort, "/v1/candles");
+        Map<String, String> headersMaps = new HashMap<String,String>() {{put("Authorization", "Bearer "+accessPointToken);}};
+        Map<String, String> paramsMaps = new HashMap<String,String>() {{put("instrument",queryInstruments);}};
+        Response response = rest.get(headersMaps,paramsMaps);
+        assertTrue(response!=null);
     }
 }

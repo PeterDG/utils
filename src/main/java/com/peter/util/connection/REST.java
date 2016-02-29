@@ -24,10 +24,18 @@ public class REST {
         init();
     }
 
+    public REST(String host, String service) {
+        String [] split=host.split(":");
+        this.host = host.split(":\\d")[0];
+        if(split.length>2) this.port=split[split.length-1];
+        this.service = service;
+        init();
+    }
+
     public void init() {
         RestAssured.baseURI = host;
-//        RestAssured.port = Integer.parseInt(port);
-        RestAssured.basePath = "/" + service;
+        RestAssured.basePath = service.charAt(0)=='/' ? service :"/" + service;
+        if(port!=null) RestAssured.port = Integer.parseInt(port);
     }
 
     public Response post(String jsonGivenBody) {
