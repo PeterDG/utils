@@ -70,6 +70,19 @@ public class REST {
         return r;
     }
 
+    public Response post(Map<String,String> headers,String strBody) {
+        Response r =
+                given().
+                        headers(headers).
+                        body(strBody).
+                        when().
+                        post().
+                        then().
+                        extract().
+                        response();
+        return r;
+    }
+
     public Response get( Map<String,String> headers, Map<String,String> params) {
         Response r =
                 given().
