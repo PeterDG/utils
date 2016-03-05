@@ -1,0 +1,53 @@
+package com.peter.util.data;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import sys.Environment;
+
+import static org.junit.Assert.*;
+
+/**
+ * Created by Peter on 3/4/2016.
+ */
+public class FileTest {
+    public String path;
+    public Environment environment;
+    public File file;
+
+    @Before
+    public void setUp() throws Exception {
+        environment = new Environment();
+
+    }
+
+    @After
+    public void tearDown() throws Exception {
+
+    }
+
+    @Test
+    public void testToString() throws Exception {
+        path = environment.rootPath + "src\\main\\resources\\db\\scripts\\postgres\\template_createDB.sql";
+        file = new File(path);
+        String strFile = file.toString();
+        String hoppedStr="CREATE DATABASE \"p_dbName\" WITH OWNER = p_dbOwner";
+        assertTrue(strFile.equals(hoppedStr));
+    }
+
+    @Test
+    public void testToStringMultiline() throws Exception {
+        path = environment.rootPath + "src\\main\\resources\\templates\\WSRiskScoringService.xsl";
+        file = new File(path);
+        String strFile = file.toString().replaceAll("[\r\n]+","");
+        String hoppedStr="<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ris=\"http://soap.easysol.net/detect/riskScoringService\">\r\n" +
+                "<soapenv:Body>\r\n" +
+                "    <ris:calculateRiskScore>\r\n" +
+                "        <sharedKey>1234</sharedKey>\r\n" +
+                "        <clientEnvironment>Environmet</clientEnvironment>\n" +
+                "    </ris:calculateRiskScore>\r\n" +
+                "</soapenv:Body>\r\n" +
+                "</soapenv:Envelope>";
+        assertTrue(strFile.equals(hoppedStr.replaceAll("[\r\n]+","")));
+    }
+}

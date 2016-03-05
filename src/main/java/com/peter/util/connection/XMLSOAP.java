@@ -22,16 +22,11 @@ public class XMLSoap {
 
     public void findReplacePosition() {
         replacePosition = 0;
-        Pattern pattern = Pattern.compile(" xmlns(.*?)>");
+        //Pattern pattern = Pattern.compile("xmlns:[\\w\\-_]+=\"http://[\\w_\\-%]*\\.?[\\w_\\-%]+\\.[\\w_\\-%]+\"");
+        Pattern pattern = Pattern.compile("xmlns:[\\w\\-_]+=\"http://[\\w_\\-%]*\\.?[\\w_\\-%]+\\.[\\w_\\-%]+(/[\\w_\\-%]+)*\"");
         Matcher matcher = pattern.matcher(strXML);
-        Boolean next = true;
-        while (next) {
-            if (matcher.find(replacePosition)) {
-                replacePosition = matcher.end();
-            } else {
-                next = false;
-            }
-        }
+        while (matcher.find())
+            replacePosition = matcher.end();
     }
 
     public void findReplaceTag() {
@@ -94,5 +89,17 @@ public class XMLSoap {
     public String getElement(String xPathExpression){
         return xml.getElement(xPathExpression);
     }
+
+    public void setParameter(String tagName, String value){
+        String xPath=findXPath();
+        setElement(xPath,value);
+    }
+
+    private String findXPath() {
+//        xml.
+
+        return null;
+    }
+
 
 }

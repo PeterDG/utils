@@ -32,7 +32,7 @@ public class File {
         this.path = path;
     }
 
-    public void clean(){
+    public void clean() {
         try {
             file.delete();
             file.createNewFile();
@@ -63,7 +63,7 @@ public class File {
     public void writeLines(List<String> content, boolean override) {
         try {
             if (override) {
-                if(file.exists()) file.delete();
+                if (file.exists()) file.delete();
                 file.createNewFile();
             }
 
@@ -91,40 +91,40 @@ public class File {
         return fileNames;
     }
 
-    public boolean moveFile(String target){
+    public boolean moveFile(String target) {
         new java.io.File(target).mkdirs();
-        java.io.File targetFile=new java.io.File(target +"/"+ file.getName());
+        java.io.File targetFile = new java.io.File(target + "/" + file.getName());
         return file.renameTo(targetFile);
     }
 
-    public void moveDir(String target){
-        List<String> fileNames=getListFilesOfDirectory();
+    public void moveDir(String target) {
+        List<String> fileNames = getListFilesOfDirectory();
         for (int i = 0; i < fileNames.size(); i++) {
-           File file= new File(path,fileNames.get(i));
+            File file = new File(path, fileNames.get(i));
             file.moveFile(target);
         }
     }
 
-    public void moveAllFilesByExtension(String target, String extension){
+    public void moveAllFilesByExtension(String target, String extension) {
         List<String> fileNames = getListFilesOfDirectory().stream()
                 .filter(p -> p.contains("." + extension)).collect(Collectors.toList());
         for (int i = 0; i < fileNames.size(); i++) {
-            File file= new File(path,fileNames.get(i));
+            File file = new File(path, fileNames.get(i));
             file.moveFile(target);
         }
     }
 
-    public List<String> getFileNamesBasedOnRegex(String regex){
+    public List<String> getFileNamesBasedOnRegex(String regex) {
         List<String> fileNames = getListFilesOfDirectory().stream()
                 .filter(p -> p.matches(regex)).collect(Collectors.toList());
         return fileNames;
     }
 
-    public void removeAllFilesByExtension(String target, String extension){
+    public void removeAllFilesByExtension(String target, String extension) {
         List<String> fileNames = getListFilesOfDirectory().stream()
                 .filter(p -> p.contains("." + extension)).collect(Collectors.toList());
         for (int i = 0; i < fileNames.size(); i++) {
-            File file= new File(path,fileNames.get(i));
+            File file = new File(path, fileNames.get(i));
             file.getFile().delete();
         }
     }
@@ -141,10 +141,10 @@ public class File {
         return linesList;
     }
 
-    public void replaceTextLists(String outFilePath, ArrayList<String[]> pairsToReplace){
-        this.replace(this.path,outFilePath,pairsToReplace.get(0)[0],pairsToReplace.get(0)[1]);
-        for(int i=1;i<pairsToReplace.size();i++){
-            this.replace(outFilePath,outFilePath,pairsToReplace.get(i)[0],pairsToReplace.get(i)[1]);
+    public void replaceTextLists(String outFilePath, ArrayList<String[]> pairsToReplace) {
+        this.replace(this.path, outFilePath, pairsToReplace.get(0)[0], pairsToReplace.get(0)[1]);
+        for (int i = 1; i < pairsToReplace.size(); i++) {
+            this.replace(outFilePath, outFilePath, pairsToReplace.get(i)[0], pairsToReplace.get(i)[1]);
         }
     }
 
@@ -187,22 +187,28 @@ public class File {
     }
 
     public String toString() {
-        String fileStr;
-        fileStr = file.toString();
-        return fileStr;
+        byte[] encoded = new byte[0];
+        String result = null;
+        try {
+            encoded = Files.readAllBytes(Paths.get(path));
+             result=new String(encoded, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
-    public ArrayList getFileName(String path){
-        ArrayList<String> list=new ArrayList<String>();
+    public ArrayList getFileName(String path) {
+        ArrayList<String> list = new ArrayList<String>();
         List<String> nodes = Arrays.asList(path.split("[\\\\,/]"));
-        String fileName= nodes.get(nodes.size() - 1);
-        String filePath=nodes.subList(0,nodes.size()-1).toString().replaceAll(", ","\\\\").replaceAll("[\\[,\\],]","");
+        String fileName = nodes.get(nodes.size() - 1);
+        String filePath = nodes.subList(0, nodes.size() - 1).toString().replaceAll(", ", "\\\\").replaceAll("[\\[,\\],]", "");
         list.add(filePath);
         list.add(fileName);
         return list;
     }
 
-    public void replaceTextFromFile(String regex,String replacement){
+    public void replaceTextFromFile(String regex, String replacement) {
         Path path = Paths.get(file.getAbsolutePath());
         Charset charset = StandardCharsets.UTF_8;
         try {
@@ -221,7 +227,7 @@ public class File {
         Charset charset = StandardCharsets.UTF_8;
         try {
             String content = new String(Files.readAllBytes(path), charset);
-            content = content.substring(0,content.length()-1);
+            content = content.substring(0, content.length() - 1);
             Files.write(path, content.getBytes(charset));
         } catch (IOException e) {
             e.printStackTrace();

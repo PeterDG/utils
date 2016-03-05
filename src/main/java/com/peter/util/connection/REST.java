@@ -62,7 +62,6 @@ public class REST {
                 given().
                         header("Content-Type", "application/json").
                         body(jsonGivenBody).
-                        when().
                         post().
                         then().
                         extract().
