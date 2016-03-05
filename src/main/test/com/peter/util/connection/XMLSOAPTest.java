@@ -1,5 +1,6 @@
 package com.peter.util.connection;
 
+import com.peter.util.connection.soap.XMLSoap;
 import org.junit.Before;
 import org.junit.Test;
 

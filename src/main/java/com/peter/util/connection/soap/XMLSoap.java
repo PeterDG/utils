@@ -1,4 +1,4 @@
-package com.peter.util.connection;
+package com.peter.util.connection.soap;
 
 import com.peter.util.data.XML;
 
@@ -22,7 +22,6 @@ public class XMLSoap {
 
     public void findReplacePosition() {
         replacePosition = 0;
-        //Pattern pattern = Pattern.compile("xmlns:[\\w\\-_]+=\"http://[\\w_\\-%]*\\.?[\\w_\\-%]+\\.[\\w_\\-%]+\"");
         Pattern pattern = Pattern.compile("xmlns:[\\w\\-_]+=\"http://[\\w_\\-%]*\\.?[\\w_\\-%]+\\.[\\w_\\-%]+(/[\\w_\\-%]+)*\"");
         Matcher matcher = pattern.matcher(strXML);
         while (matcher.find())
@@ -90,16 +89,7 @@ public class XMLSoap {
         return xml.getElement(xPathExpression);
     }
 
-    public void setParameter(String tagName, String value){
-        String xPath=findXPath();
-        setElement(xPath,value);
-    }
 
-    private String findXPath() {
-//        xml.
-
-        return null;
-    }
 
 
 }
