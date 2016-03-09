@@ -153,6 +153,11 @@ public class PostgresDBManagerImpl implements DBManager {
         executeQuery(query);
     }
 
+    @Override
+    public void insertTable(String testTable, ArrayList<DBTable> dbTables) {
+
+    }
+
     public void cleanTable(String table) {
         String query = "TRUNCATE TABLE " + table;
         executeQuery(query);

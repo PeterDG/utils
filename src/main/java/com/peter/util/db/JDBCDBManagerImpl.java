@@ -7,6 +7,7 @@ import sys.Environment;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -133,6 +134,17 @@ public class JDBCDBManagerImpl implements DBManager {
         }
         query=query.substring(0, query.length() - 1);
         executeQuery(query);
+    }
+
+    public void insertTable(String table,ArrayList<DBTable> columns){
+        ArrayList<String> columnNames = new ArrayList<>(Arrays.asList(columns.get(0).getAsStringList(false).split(",")));
+        ArrayList<String> columnValues = new ArrayList<>();
+        for (int i = 1; i < columns.size(); i++) {
+            DBTable t = columns.get(i).clone();
+            t.setValues();
+            columnValues.add(t.getAsStringList(true));
+        }
+        insertTable(table, columnNames, columnValues);
     }
 
     public void updateTable(String table, String columnNames, String values, Optional<String> where) {

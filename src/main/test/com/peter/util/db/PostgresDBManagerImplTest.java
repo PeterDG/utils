@@ -106,6 +106,23 @@ public class PostgresDBManagerImplTest {
     }
 
     @Test
+    public void test10InsetTableByColumns() throws Exception {
+        db.connect();
+        ArrayList<DBTable> dbTables = new ArrayList<DBTable>();
+        DBTable dbTableA = new DBTable();
+        DBTable dbTableB = new DBTable();
+        DBTable dbTableC = new DBTable();
+        dbTableA.column1="code";
+        dbTableB.column1="1116";
+        dbTableC.column1="1117";
+        dbTables.add(dbTableA);
+        dbTables.add(dbTableB);
+        dbTables.add(dbTableC);
+        db.insertTable("testTable",dbTables);
+        assertTrue(db.isQuerySuccessful());
+    }
+
+    @Test
     public void test10_1MultipleInsetTable() throws Exception {
         db.connect();
         ArrayList<String> strList = new ArrayList<String>();
@@ -220,6 +237,12 @@ public class PostgresDBManagerImplTest {
         ArrayList<HashMap> dataAssertion =  db.executeQuery("SELECT count(*) FROM client WHERE cli_shared_key='testUserSharedKey'");
         assertTrue(dataAssertion.get(0).get("count").equals(1L));
         db.executeQuery("DELETE FROM client WHERE cli_shared_key='testUserSharedKey'");
+    }
+
+    @Test
+    public void test18ExecuteSQLFileSpecialCharactersEncodingASCII(){
+        db.connect();
+        ArrayList<ArrayList<HashMap>> dataAssertion =  db.executeSQLFile("src/main/test/resources/db/postgres/specialChar.sql");
     }
 
 }
