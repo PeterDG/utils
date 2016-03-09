@@ -192,6 +192,7 @@ public class JDBCDBManagerImpl implements DBManager {
     }
 
     public ArrayList<ArrayList<HashMap>> executeSQLFile(String filePath) {
+        connect();
         File file = new File(filePath);
         ArrayList<ArrayList<HashMap>> list = new ArrayList<>();
         List<String> linesList = file.getListLinesOfFile();
@@ -203,6 +204,7 @@ public class JDBCDBManagerImpl implements DBManager {
     }
 
     public ArrayList<ArrayList<HashMap>> executeSQLFile(String filePath, ArrayList<String[]> pairsToReplace) {
+        connect();
         File file = new File(filePath);
         file.replaceTextLists(getPath(scripts.tmpSQL.fileName),pairsToReplace);
         return executeSQLFile(getPath(scripts.tmpSQL.fileName));
@@ -210,6 +212,7 @@ public class JDBCDBManagerImpl implements DBManager {
 
 
     public ArrayList<HashMap> executeQuery(String query) {
+        connect();
         querySuccessful=true;
         ArrayList list = new ArrayList();
         try {
