@@ -15,8 +15,8 @@ public class XMLTest {
     public String strXml;
     public String strXmlNoAttributes;
     public String strXpathTest;
+    public String xmlSOAPRequest;
     public String xmlSOAPResponse;
-    public String xmlSOAPResponse2;
 
     @Before
     public void before() {
@@ -63,6 +63,11 @@ public class XMLTest {
                 "      <marks>90</marks>\n" +
                 "   </student>\n" +
                 "</class>";
+        xmlSOAPRequest=
+                "<ris-_calculateRiskScore>\n"+
+                "         <sharedKey>1234</sharedKey>\n" +
+                "         <clientEnvironment>Environment</clientEnvironment>\n" +
+                "</ris-_calculateRiskScore>\n";
 
     }
 
@@ -89,9 +94,17 @@ public class XMLTest {
     }
 
     @Test
+    public void testSetElementCData() throws Exception {
+        xml = new XML(xmlSOAPRequest);
+        xml.setElement("/ris-_calculateRiskScore/clientEnvironment", "<![CDATA[NewName]]>");
+        String result = xml.getElement("/ris-_calculateRiskScore/clientEnvironment");
+        assertTrue(result.equals("NewName"));
+    }
+
+    @Test
     public void testSetElementB() throws Exception {
         xml = new XML(strXml);
-        xml.setElement("/class/student[@rollno='493']/firstname", "NewName");
+        xml.setElement("/class/student[@rollno='493']/firstname", "<![CDATA[NewName]]>");
         String result = xml.getElement("/class/student[@rollno='493']/firstname");
         assertTrue(result.equals("NewName"));
     }

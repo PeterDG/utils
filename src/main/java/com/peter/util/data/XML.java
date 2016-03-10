@@ -43,32 +43,39 @@ public class XML {
     }
 
     public void setElement(String xPathExpression, String value) {
-        xml.selectSingleNode(xPathExpression).setText(value);
+        Node node = xml.selectSingleNode(xPathExpression);
+        String name = node.getName();
+        if (value.matches("<!\\[CDATA\\[.*\\]\\]>")) {
+            Element ele = node.getParent().addElement(name);
+            ele.addCDATA(value.split("<!\\[CDATA\\[|\\]\\]>")[1]);
+            node.getParent().remove(node);
+        } else {
+            node.setText(value);
+        }
     }
 
-    public String toString(){
+    public String toString() {
         return prettyPrint(xml);
     }
 
-    private String prettyPrint( Document document ) {
+    private String prettyPrint(Document document) {
         String strDocument = null;
         try {
             OutputFormat format = OutputFormat.createPrettyPrint();
             format.setEncoding(document.getXMLEncoding());
             StringWriter stringWriter = new StringWriter();
-            XMLWriter writer = new XMLWriter( stringWriter, format );
+            XMLWriter writer = new XMLWriter(stringWriter, format);
             // XMLWriter has a bug that is avoided if we reparse the document
             // prior to calling XMLWriter.write()
             writer.write(DocumentHelper.parseText(document.asXML()));
             writer.close();
             strDocument = stringWriter.toString();
-            strDocument =strDocument.replace("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n","");
-        }
-        catch ( Exception e ){
+            strDocument = strDocument.replace("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n", "");
+        } catch (Exception e) {
             e.printStackTrace();
-            return( null );
+            return (null);
         }
-        return( strDocument );
+        return (strDocument);
     }
 
 }
