@@ -45,7 +45,7 @@ public class XML {
     public void setElement(String xPathExpression, String value) {
         Node node = xml.selectSingleNode(xPathExpression);
         String name = node.getName();
-        if (value.matches("<!\\[CDATA\\[.*\\]\\]>")) {
+        if (value.matches("<!\\[CDATA\\[((.*)\\n*)\\]\\]>")) {
             Element ele = node.getParent().addElement(name);
             ele.addCDATA(value.split("<!\\[CDATA\\[|\\]\\]>")[1]);
             node.getParent().remove(node);
