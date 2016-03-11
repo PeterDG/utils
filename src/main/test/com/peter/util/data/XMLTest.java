@@ -119,8 +119,6 @@ public class XMLTest {
         assertTrue(result.equals(test));
     }
 
-
-
     @Test
     public void testToString() throws Exception {
         xml = new XML(strXml);
