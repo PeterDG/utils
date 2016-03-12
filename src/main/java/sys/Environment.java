@@ -10,6 +10,7 @@ import java.io.IOException;
 public class Environment {
     public String rootPath;
     public String targetPath;
+    public String resourcesPath;
     public static Environment instance;
 
     public static Environment getInstance() {
@@ -31,5 +32,8 @@ public class Environment {
             e.printStackTrace();
         }
         this.rootPath= targetPath.replaceAll("target+.*","");
+        String resourcesRelativePath ="";
+        if (!targetPath.equals(rootPath)) resourcesRelativePath = "/src/main/resources/";
+        this.resourcesPath = rootPath + resourcesRelativePath;
     }
 }

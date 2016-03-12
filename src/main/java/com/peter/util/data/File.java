@@ -20,6 +20,7 @@ public class File {
 
     public java.io.File file;
     public String path;
+    public String defaultEncodingName="Cp1252"; //ANSI Encoding
 
     public File(String path, String nameFile) {
         this.file = new java.io.File(path, nameFile);
@@ -84,7 +85,7 @@ public class File {
             if (listOfFiles[i].isFile()) {
                 fileNames.add(listOfFiles[i].getName());
             } else if (listOfFiles[i].isDirectory()) {
-                System.out.println("Directory " + listOfFiles[i].getName());
+             //   System.out.println("Directory " + listOfFiles[i].getName());
             }
         }
 
@@ -132,7 +133,7 @@ public class File {
     public List<String> getListLinesOfFile() {
         List<String> linesList = null;
         try {
-            Stream<String> lines = Files.lines(Paths.get(path));
+            Stream<String> lines = Files.lines(Paths.get(path),Charset.forName(defaultEncodingName));
             linesList = lines.filter(x -> !x.isEmpty()).collect(Collectors.toList());
             lines.close();
         } catch (IOException e) {
