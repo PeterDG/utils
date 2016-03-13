@@ -16,6 +16,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by Peter on 1/22/2016.
  */
+/* run with unal profile*/
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class OracleDBManagerImplTest {
     public DBManager db;

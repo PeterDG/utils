@@ -4,6 +4,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
+import java.net.ConnectException;
 import java.util.Properties;
 
 /**
@@ -51,6 +52,8 @@ public class SSH {
             config.put("StrictHostKeyChecking", "no");
             session.setConfig(config);
             session.connect();
+        } catch (JSchException e){
+            System.out.println("Connection with "+sshHost + " could not be established!!");
         } catch (Exception e) {
             e.printStackTrace();
         }

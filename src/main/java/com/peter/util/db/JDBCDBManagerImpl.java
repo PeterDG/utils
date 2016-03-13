@@ -78,6 +78,8 @@ public class JDBCDBManagerImpl implements DBManager {
                 Class.forName(dbManagerType.driverClassName);
                 activeConnection = DriverManager.getConnection(connectionInfo.getJDBCUrlWithDBName() + dbName, connectionInfo.getUserName(), connectionInfo.getPassword());
             }
+        } catch (SQLRecoverableException e){
+            System.out.println("Connection with "+connectionInfo.getJdbcUrl() + " could not be established!!");
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
