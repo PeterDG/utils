@@ -51,6 +51,13 @@ public class StringsTest {
     }
 
     @Test
+    public void testCapitalizeMultipleSpace() throws Exception {
+        receivedValue = Strings.capitalize("HOLA        ESTO NO ES CAMEL CASE");
+        expectedValue = "Hola Esto No Es Camel Case";
+    }
+
+
+    @Test
     public void testCapitalizeList() throws Exception {
         Strings.capitalize(strTestList);
     }
