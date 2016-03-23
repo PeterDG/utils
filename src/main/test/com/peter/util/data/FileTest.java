@@ -50,4 +50,26 @@ public class FileTest {
                 "</soapenv:Envelope>";
         assertTrue(strFile.equals(hoppedStr.replaceAll("[\r\n]+","")));
     }
+
+    @Test
+    public void testReplaceTextLists() throws Exception {
+        path = environment.rootPath + "src\\main\\resources\\db\\scripts\\postgres\\template_createDB.sql";
+        file = new File(path);
+        File copy = file.copy(file.getDirectory() + "/" + "copy.sql");
+        copy.removeLastCharacter();
+        String hoppedStr="CREATE DATABASE \"p_dbName\" WITH OWNER = p_dbOwne";
+        String receivedStr = copy.toString();
+        copy.delete();
+        assertTrue(receivedStr.equals(hoppedStr));
+    }
+
+    @Test
+    public void testCopyDelete() throws Exception {
+        path = environment.rootPath + "src\\main\\resources\\db\\scripts\\postgres\\template_createDB.sql";
+        file = new File(path);
+        File copy = file.copy(file.getDirectory() + "/" + "copy.sql");
+        boolean createdCopy =copy.exist();
+        copy.delete();
+        assertTrue(createdCopy && !copy.exist());
+    }
 }

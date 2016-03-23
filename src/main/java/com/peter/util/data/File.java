@@ -19,18 +19,20 @@ import java.util.stream.Stream;
 public class File {
 
     public java.io.File file;
-    public String path;
+    public Path path;
+    public Path directory;
     public String defaultEncodingName="Cp1252"; //ANSI Encoding
 
-    public File(String path, String nameFile) {
-        this.file = new java.io.File(path, nameFile);
-        this.path = path;
+    public File(String strPath, String nameFile) {
+        this.path = Paths.get(strPath+"/"+nameFile);
+        this.directory = path.getParent();
+        this.file = new java.io.File(getPath());
     }
 
-    public File(String path) {
-        ArrayList<String> data = getFileName(path);
-        this.file = new java.io.File(data.get(0), data.get(1));
-        this.path = path;
+    public File(String strPath) {
+        this.path = Paths.get(strPath);
+        this.directory = path.getParent();
+        this.file = new java.io.File(getPath().replace("\\","/"));
     }
 
     public void clean() {
@@ -78,7 +80,7 @@ public class File {
 
     public List<String> getListFilesOfDirectory() {
         List<String> fileNames = new ArrayList<String>();
-        java.io.File folder = new java.io.File(path);
+        java.io.File folder = file;
         java.io.File[] listOfFiles = folder.listFiles();
 
         for (int i = 0; i < listOfFiles.length; i++) {
@@ -101,7 +103,7 @@ public class File {
     public void moveDir(String target) {
         List<String> fileNames = getListFilesOfDirectory();
         for (int i = 0; i < fileNames.size(); i++) {
-            File file = new File(path, fileNames.get(i));
+            File file = new File(getDirectory(), fileNames.get(i));
             file.moveFile(target);
         }
     }
@@ -110,7 +112,7 @@ public class File {
         List<String> fileNames = getListFilesOfDirectory().stream()
                 .filter(p -> p.contains("." + extension)).collect(Collectors.toList());
         for (int i = 0; i < fileNames.size(); i++) {
-            File file = new File(path, fileNames.get(i));
+            File file = new File(getDirectory(), fileNames.get(i));
             file.moveFile(target);
         }
     }
@@ -125,7 +127,7 @@ public class File {
         List<String> fileNames = getListFilesOfDirectory().stream()
                 .filter(p -> p.contains("." + extension)).collect(Collectors.toList());
         for (int i = 0; i < fileNames.size(); i++) {
-            File file = new File(path, fileNames.get(i));
+            File file = new File(getDirectory(), fileNames.get(i));
             file.getFile().delete();
         }
     }
@@ -133,7 +135,7 @@ public class File {
     public List<String> getListLinesOfFile() {
         List<String> linesList = null;
         try {
-            Stream<String> lines = Files.lines(Paths.get(path),Charset.forName(defaultEncodingName));
+            Stream<String> lines = Files.lines(path,Charset.forName(defaultEncodingName));
             linesList = lines.filter(x -> !x.isEmpty()).collect(Collectors.toList());
             lines.close();
         } catch (IOException e) {
@@ -143,7 +145,7 @@ public class File {
     }
 
     public void replaceTextLists(String outFilePath, ArrayList<String[]> pairsToReplace) {
-        this.replace(this.path, outFilePath, pairsToReplace.get(0)[0], pairsToReplace.get(0)[1]);
+        this.replace(getPath(), outFilePath, pairsToReplace.get(0)[0], pairsToReplace.get(0)[1]);
         for (int i = 1; i < pairsToReplace.size(); i++) {
             this.replace(outFilePath, outFilePath, pairsToReplace.get(i)[0], pairsToReplace.get(i)[1]);
         }
@@ -175,23 +177,27 @@ public class File {
         this.file = file;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setDirectory(String path) {
+        this.directory = Paths.get(path);
     }
 
     public java.io.File getFile() {
         return file;
     }
 
+    public String getDirectory() {
+        return directory.toString();
+    }
+
     public String getPath() {
-        return path;
+        return path.toString();
     }
 
     public String toString() {
         byte[] encoded = new byte[0];
         String result = null;
         try {
-            encoded = Files.readAllBytes(Paths.get(path));
+            encoded = Files.readAllBytes(path);
              result=new String(encoded, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
@@ -234,4 +240,28 @@ public class File {
             e.printStackTrace();
         }
     }
+
+    public File copy(String target) {
+
+        try {
+            Files.copy(path,Paths.get(target));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        File file = new File(target);
+        return file;
+    }
+
+    public void delete() {
+        try {
+            Files.deleteIfExists(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean exist(){
+        return file.exists();
+    }
+
 }
