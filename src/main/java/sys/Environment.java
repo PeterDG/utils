@@ -27,7 +27,7 @@ public class Environment {
     public void loadRoutes(){
         ClassPathResource contextPath = new ClassPathResource("");
         try {
-            this.targetPath = contextPath.getFile().toString()+"\\";
+            this.targetPath = (contextPath.getFile().toString()+"/").replace("\\", "/");
         } catch (IOException e) {
             e.printStackTrace();
         }
