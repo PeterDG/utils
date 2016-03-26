@@ -21,18 +21,20 @@ public class File {
     public java.io.File file;
     public Path path;
     public Path directory;
-    public String defaultEncodingName="Cp1252"; //ANSI Encoding
+    public String defaultEncodingName = "Cp1252"; //ANSI Encoding
 
     public File(String strPath, String nameFile) {
-        this.path = Paths.get(strPath+"/"+nameFile);
-        this.directory = path.getParent();
-        this.file = new java.io.File(getPath());
+        update(strPath + "/" + nameFile);
     }
 
     public File(String strPath) {
-        this.path = Paths.get(strPath);
+        update(strPath);
+    }
+
+    public void update(String strPath) {
+        this.path = Paths.get(strPath.replace("\\", "/"));
         this.directory = path.getParent();
-        this.file = new java.io.File(getPath().replace("\\","/"));
+        this.file = new java.io.File(getPath());
     }
 
     public void clean() {
@@ -87,7 +89,7 @@ public class File {
             if (listOfFiles[i].isFile()) {
                 fileNames.add(listOfFiles[i].getName());
             } else if (listOfFiles[i].isDirectory()) {
-             //   System.out.println("Directory " + listOfFiles[i].getName());
+                //   System.out.println("Directory " + listOfFiles[i].getName());
             }
         }
 
@@ -135,7 +137,7 @@ public class File {
     public List<String> getListLinesOfFile() {
         List<String> linesList = null;
         try {
-            Stream<String> lines = Files.lines(path,Charset.forName(defaultEncodingName));
+            Stream<String> lines = Files.lines(path, Charset.forName(defaultEncodingName));
             linesList = lines.filter(x -> !x.isEmpty()).collect(Collectors.toList());
             lines.close();
         } catch (IOException e) {
@@ -198,7 +200,7 @@ public class File {
         String result = null;
         try {
             encoded = Files.readAllBytes(path);
-             result=new String(encoded, StandardCharsets.UTF_8);
+            result = new String(encoded, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -244,7 +246,7 @@ public class File {
     public File copy(String target) {
 
         try {
-            Files.copy(path,Paths.get(target));
+            Files.copy(path, Paths.get(target));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -260,7 +262,7 @@ public class File {
         }
     }
 
-    public boolean exist(){
+    public boolean exist() {
         return file.exists();
     }
 
