@@ -32,4 +32,9 @@ public class Validate {
         Assert.fail(message);
     }
 
+    public void equals(){
+        if(!receivedValue.equals(expectedValue))
+            fail();
+    }
+
 }

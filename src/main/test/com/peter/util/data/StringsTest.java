@@ -61,4 +61,11 @@ public class StringsTest {
     public void testCapitalizeList() throws Exception {
         Strings.capitalize(strTestList);
     }
+
+    @Test
+    public void testCompare() throws Exception {
+        String a="I change the size of the DetectId 15window to 1081p";
+        String b="I change the size of the DetectId 16window to 1080p";
+        Strings.compare(a,b);
+    }
 }

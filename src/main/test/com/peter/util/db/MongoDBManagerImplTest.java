@@ -122,4 +122,11 @@ public class MongoDBManagerImplTest {
         ArrayList<HashMap> result =  connectionWithDB.executeQuery("SELECT * FROM historicalUserMetrics WHERE date <'2015-06-23T18:28:30.859Z'");
         assertTrue(result.size()==2);
     }
+
+    @Test
+    public void testExecuteQueryInsertWithWhereWithLT() throws Exception {
+        MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
+        ArrayList<HashMap> result =  connectionWithDB.executeQuery("INSERT INTO simulatedContext ( ctx_date ,ctx_user ,ctx_latitude ,ctx_longitude ,ctx_body ,ctx_risk ) VALUES ( '2011-03-30 15:05:00' ,'UserMonthly' ,'0.0' ,'0.0' ,'{\"null\": null}' ,'0.5795924069441956' )");
+        assertTrue(result.size()==2);
+    }
 }
