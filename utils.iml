@@ -29,6 +29,8 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.9.13" level="project" />
+    <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-core-asl:1.9.13" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20140107" level="project" />
     <orderEntry type="library" name="Maven: com.jayway.restassured:json-path:2.3.4" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.groovy:groovy-json:2.3.6" level="project" />

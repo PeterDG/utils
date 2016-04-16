@@ -1,6 +1,7 @@
 package com.peter.util.db;
 
 import com.google.common.base.Optional;
+
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
@@ -8,14 +9,15 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.peter.util.db.antlr.SQLiteInterpreter;
+import com.peter.util.db.antlr.SQLtoMongoWalker;
 import org.apache.log4j.Logger;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import org.joda.time.LocalDateTime;
-import static com.mongodb.client.model.Filters.*;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import org.codehaus.jackson.map.ObjectMapper;
 
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.*;
 
 
@@ -53,23 +55,67 @@ public class MongoDBManagerImpl implements DBManager {
 
     @Override
     public ArrayList<HashMap> executeQuery(String query) {
+        ArrayList<HashMap> documents = null;
         sqLiteInterpreter = new SQLiteInterpreter(query);
         sqLiteInterpreter.setQueryParameters();
+        SQLtoMongoWalker.command cmd = sqLiteInterpreter.sqLtoMongoWalker.cmd;
         Bson rowsFilter = sqLiteInterpreter.sqLtoMongoWalker.rowsFilter;
-        ArrayList<String> columnsFilter = sqLiteInterpreter.sqLtoMongoWalker.columnsFilter;
+        ArrayList<String> columnNames = sqLiteInterpreter.sqLtoMongoWalker.columnNames;
+        ArrayList<String> columnValues = sqLiteInterpreter.sqLtoMongoWalker.columnValues;
         String tableName = sqLiteInterpreter.sqLtoMongoWalker.tableName;
         activeCollection = activeDB.getCollection(tableName);
+        if (cmd.equals(SQLtoMongoWalker.command.SELECT))
+            documents = select(tableName, columnNames, rowsFilter);
+        if (cmd.equals(SQLtoMongoWalker.command.INSERT))
+            insert(tableName, columnNames, columnValues);
+        return documents;
+    }
+
+    public ArrayList<HashMap> select(String table, ArrayList<String> columnNames, Bson rowsFilter) {
         MongoCursor result;
         if (rowsFilter != null)
             result = activeCollection.find(rowsFilter).iterator();
         else
             result = activeCollection.find().iterator();
         ArrayList<HashMap> documents = mongoCursorToArrayList(result);
-        if (columnsFilter != null && !columnsFilter.get(0).equals("*"))
-            documents = filterMapListByEntries(documents, columnsFilter);
+        if (columnNames != null && !columnNames.get(0).equals("*"))
+            documents = filterMapListByEntries(documents, columnNames);
         return documents;
     }
 
+    public void insert(String table, ArrayList<String> columnsNames, ArrayList<String> columnsValues) {
+        String jsonStr = getJsonStr(columnsNames, columnsValues);
+        Document document = jsonStr2Document(jsonStr);
+        activeCollection.insertOne(document);
+    }
+
+    public Document jsonStr2Document(String jsonStr) {
+        JSONObject json = new JSONObject(jsonStr);
+        Document document = new Document();
+        try {
+            HashMap<String, Object> result = new ObjectMapper().readValue(jsonStr, HashMap.class);
+            document.putAll(result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return document;
+    }
+
+    public String getJsonStr(ArrayList<String> columnsNames, ArrayList<String> columnsValues) {
+        String jsonStr;
+        String value=columnsValues.get(0);
+        if (columnsNames.size() > 0) {
+            jsonStr = "{";
+            for (int i = 0; i < columnsNames.size(); i++) {
+                jsonStr += "\"" + columnsNames.get(i) + "\":" + columnsValues.get(i) + ",";
+            }
+            jsonStr = jsonStr.substring(0, jsonStr.length() - 1);
+            jsonStr += "}";
+        } else
+
+            jsonStr = value.substring(1,value.length()-1);
+        return jsonStr;
+    }
 
     public ArrayList<HashMap> mongoCursorToArrayList(MongoCursor iterator) {
         ArrayList documents = new ArrayList<>();

@@ -18,10 +18,11 @@ import java.util.HashMap;
  * Created by Peter on 1/31/2016.
  */
 public class SQLtoMongoWalker extends SQLiteBaseListener {
-
+    public command cmd;
     public String tableName;
     public Bson rowsFilter;
-    public ArrayList<String> columnsFilter;
+    public ArrayList<String> columnNames;
+    public ArrayList<String> columnValues;
     public HashMap<String,Bson> filtersMap;
 
     public SQLtoMongoWalker() {
@@ -32,16 +33,34 @@ public class SQLtoMongoWalker extends SQLiteBaseListener {
         AND, OR, EQ, EMPTY,GTE,LTE,LT,GT,LIKE
     }
 
+    public enum command {
+        SELECT,INSERT
+    }
+
     @Override
     public void enterSelect_core(SQLiteParser.Select_coreContext ctx) {
-        columnsFilter = new ArrayList<>();
+        cmd= command.SELECT;
+        columnNames = new ArrayList<>();
         tableName = ctx.table_or_subquery(0).getText();
         for (SQLiteParser.Result_columnContext column : ctx.result_column()) {
-            columnsFilter.add(column.getText());
+            columnNames.add(column.getText());
         }
         if (ctx.K_WHERE() != null)
             setFilter(ctx.expr(0));
         if(ctx.expr().size()>0) rowsFilter = filtersMap.get(ctx.expr(0).toString());
+    }
+    @Override
+    public void enterInsert_stmt(SQLiteParser.Insert_stmtContext ctx){
+        cmd=command.INSERT;
+        columnNames = new ArrayList<>();
+        columnValues = new ArrayList<>();
+        tableName = ctx.table_name().getText();
+        for (SQLiteParser.Column_nameContext column : ctx.column_name()) {
+            columnNames.add(column.getText());
+        }
+        for (SQLiteParser.ExprContext exp : ctx.expr()) {
+            columnValues.add(exp.getText().replace("'","\""));
+        }
     }
 
     public logicOperators getOperator(SQLiteParser.ExprContext exp) {
