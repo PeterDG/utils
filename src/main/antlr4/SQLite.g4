@@ -64,6 +64,7 @@ sql_stmt
                                       | drop_table_stmt
                                       | drop_trigger_stmt
                                       | drop_view_stmt
+                                      | truncate_table_stmt
                                       | factored_select_stmt
                                       | insert_stmt
                                       | pragma_stmt
@@ -164,6 +165,10 @@ drop_index_stmt
 
 drop_table_stmt
  : K_DROP K_TABLE ( K_IF K_EXISTS )? ( database_name '.' )? table_name
+ ;
+
+truncate_table_stmt
+ : K_TRUNCATE K_TABLE ( K_IF K_EXISTS )? ( database_name '.' )? table_name
  ;
 
 drop_trigger_stmt
@@ -518,6 +523,7 @@ keyword
  | K_DETACH
  | K_DISTINCT
  | K_DROP
+ | K_TRUNCATE
  | K_EACH
  | K_ELSE
  | K_END
@@ -747,6 +753,7 @@ K_DESC : D E S C;
 K_DETACH : D E T A C H;
 K_DISTINCT : D I S T I N C T;
 K_DROP : D R O P;
+K_TRUNCATE : T R U N C A T E;
 K_EACH : E A C H;
 K_ELSE : E L S E;
 K_END : E N D;

@@ -68,6 +68,8 @@ public class MongoDBManagerImpl implements DBManager {
             documents = select(tableName, columnNames, rowsFilter);
         if (cmd.equals(SQLtoMongoWalker.command.INSERT))
             insert(tableName, columnNames, columnValues);
+        if (cmd.equals(SQLtoMongoWalker.command.TRUNCATE))
+            truncate(tableName);
         return documents;
     }
 
@@ -87,6 +89,10 @@ public class MongoDBManagerImpl implements DBManager {
         String jsonStr = getJsonStr(columnsNames, columnsValues);
         Document document = jsonStr2Document(jsonStr);
         activeCollection.insertOne(document);
+    }
+
+    public void truncate(String table) {
+        activeCollection.drop();
     }
 
     public Document jsonStr2Document(String jsonStr) {

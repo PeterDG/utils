@@ -136,4 +136,10 @@ public class MongoDBManagerImplTest {
         ArrayList<HashMap> result =  connectionWithDB.executeQuery("INSERT INTO simulatedContext VALUES ( '"+context+"')");
     }
 
+    @Test
+    public void testExecuteQueryTruncateTable() throws Exception {
+        MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
+        ArrayList<HashMap> result =  connectionWithDB.executeQuery("TRUNCATE TABLE simulatedContext");
+    }
+
 }

@@ -34,7 +34,7 @@ public class SQLtoMongoWalker extends SQLiteBaseListener {
     }
 
     public enum command {
-        SELECT,INSERT
+        SELECT, TRUNCATE, INSERT
     }
 
     @Override
@@ -61,6 +61,11 @@ public class SQLtoMongoWalker extends SQLiteBaseListener {
         for (SQLiteParser.ExprContext exp : ctx.expr()) {
             columnValues.add(exp.getText().replace("'","\""));
         }
+    }
+    @Override
+    public void enterTruncate_table_stmt(SQLiteParser.Truncate_table_stmtContext ctx){
+        cmd=command.TRUNCATE;
+        tableName = ctx.table_name().getText();
     }
 
     public logicOperators getOperator(SQLiteParser.ExprContext exp) {
