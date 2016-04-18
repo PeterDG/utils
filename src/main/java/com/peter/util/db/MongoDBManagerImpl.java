@@ -210,8 +210,9 @@ public class MongoDBManagerImpl implements DBManager {
     }
 
     @Override
-    public void cleanTable(String dbName) {
-
+    public void cleanTable(String table) {
+        String query = "TRUNCATE TABLE " + table;
+        executeQuery(query);
     }
 
     @Override

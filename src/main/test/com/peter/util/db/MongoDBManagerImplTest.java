@@ -142,4 +142,9 @@ public class MongoDBManagerImplTest {
         ArrayList<HashMap> result =  connectionWithDB.executeQuery("TRUNCATE TABLE simulatedContext");
     }
 
+    @Test
+    public void testExecuteQueryCleanTable() throws Exception {
+        MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
+        connectionWithDB.cleanTable("simulatedContext");
+    }
 }
