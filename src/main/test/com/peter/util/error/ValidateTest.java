@@ -38,4 +38,12 @@ public class ValidateTest {
         validate = new Validate(received,expected);
         validate.fail();
     }
+
+    @Test
+    public void testSucessNoInfo() throws Exception {
+        int received=10;
+        int expected=10;
+        validate = new Validate(received,expected);
+        validate.equals();
+    }
 }

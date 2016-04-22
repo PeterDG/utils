@@ -7,17 +7,17 @@ package com.peter.util.error;
 import junit.framework.Assert;
 
 public class Validate {
-    public String receivedValue;
-    public String expectedValue;
+    public Object receivedValue;
+    public Object expectedValue;
     public String info;
     public String message;
 
-    public Validate(String receivedValue, String expectedValue) {
+    public Validate(Object receivedValue, Object expectedValue) {
         this.receivedValue = receivedValue;
         this.expectedValue = expectedValue;
     }
 
-    public Validate(String receivedValue, String expectedValue, String info) {
+    public Validate(Object receivedValue, Object expectedValue, String info) {
         this.receivedValue = receivedValue;
         this.expectedValue = expectedValue;
         this.info = info;
