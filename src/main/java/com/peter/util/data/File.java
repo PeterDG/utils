@@ -7,9 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -92,7 +90,25 @@ public class File {
                 //   System.out.println("Directory " + listOfFiles[i].getName());
             }
         }
+        return fileNames;
+    }
 
+    public static List<java.io.File> getListFilesOfDirectory(String dir) {
+        java.io.File file = new java.io.File(Paths.get(dir.replace("\\", "/")).toString());
+        List<java.io.File> fileNames = new ArrayList<>();
+        java.io.File folder = file;
+        java.io.File[] listOfFiles = folder.listFiles();
+        for (int i = 0; i < listOfFiles.length; i++) {
+            if (listOfFiles[i].isFile()) {
+                fileNames.add(listOfFiles[i]);
+            } else if (listOfFiles[i].isDirectory()) {
+                try {
+                    fileNames.addAll(getListFilesOfDirectory(listOfFiles[i].getCanonicalPath().toString()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         return fileNames;
     }
 

@@ -72,4 +72,9 @@ public class FileTest {
         copy.delete();
         assertTrue(createdCopy && !copy.exist());
     }
+
+    @Test
+    public void testGetListFilesOfDirectory() throws Exception {
+      File.getListFilesOfDirectory("E:\\Development\\Projects\\utils\\src\\main\\java\\com\\peter\\util\\connection");
+    }
 }
