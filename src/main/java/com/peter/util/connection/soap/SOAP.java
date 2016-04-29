@@ -2,6 +2,7 @@ package com.peter.util.connection.soap;
 
 import com.jayway.restassured.response.Response;
 import com.peter.util.connection.REST;
+import com.peter.util.connection.request.RequestType;
 import com.peter.util.data.File;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.Map;
 /**
  * Created by Peter on 2/29/2016.
  */
-public class SOAP {
+public class SOAP implements RequestType{
     public REST rest;
     public String strXMLRequest;
     public XMLSoap xmlSoapResponse;
@@ -56,4 +57,9 @@ public class SOAP {
         strXMLRequest=xmlSoapRequest.strXML;
     }
 
+    @Override
+    public String dispatch() {
+        send();
+        return xmlSoapResponse.strXML;
+    }
 }

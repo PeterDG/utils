@@ -19,9 +19,11 @@ public class RESTTest {
     public String accessPointHost;
     public String accessPointPort;
     public REST rest;
-    private String accessPointToken;
-    private String queryInstruments;
-    private String url;
+    public String accessPointToken;
+    public String queryInstruments;
+    public String url;
+    public String urlA;
+    public String urlB;
 
     @Before
     public void setUp() throws Exception {
@@ -30,6 +32,8 @@ public class RESTTest {
         url="https://api-fxpractice.oanda.com:443/v1/candles";
         accessPointToken="96adf2bb5787f47f8a42e8a188ddbe27-6abfff05cf00171e5bee37d64ffa2eca";
         queryInstruments="EUR_USD";
+        urlA="http://192.168.0.20:8080/detect/public/calculate-risk-score.htm";
+        urlB="http://192.168.0.20:8080/detect/public/calculate-risk-score.htm?sharedkey=Home";
 
     }
 
@@ -76,6 +80,13 @@ public class RESTTest {
         Map<String, String> headersMaps = new HashMap<String,String>() {{put("Authorization", "Bearer "+accessPointToken);}};
         Map<String, String> paramsMaps = new HashMap<String,String>() {{put("instrument",queryInstruments);}};
         Response response = rest.get(headersMaps,paramsMaps);
+        assertTrue(response!=null);
+    }
+
+    @Test
+    public void testPOSTConstructorURL() throws Exception {
+        rest = new REST(urlA);
+        Response response = rest.post();
         assertTrue(response!=null);
     }
 }

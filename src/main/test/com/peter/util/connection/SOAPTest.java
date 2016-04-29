@@ -26,7 +26,7 @@ public class SOAPTest {
     @Before
     public void before() {
         environment = new Environment();
-        serviceUrl = "http://7.80.179.235:8080/detect/services/WSRiskScoringService";
+        serviceUrl = "http://192.168.0.20:8080/detect/services/WSRiskScoringService";
         soapRequest = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ris=\"http://soap.easysol.net/detect/riskScoringService\">\n" +
                 "   <soapenv:Body>\n" +
                 "      <ris:calculateRiskScore>\n" +
