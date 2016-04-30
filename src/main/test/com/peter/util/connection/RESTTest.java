@@ -24,6 +24,7 @@ public class RESTTest {
     public String url;
     public String urlA;
     public String urlB;
+    private String urlC;
 
     @Before
     public void setUp() throws Exception {
@@ -34,7 +35,7 @@ public class RESTTest {
         queryInstruments="EUR_USD";
         urlA="http://192.168.0.20:8080/detect/public/calculate-risk-score.htm";
         urlB="http://192.168.0.20:8080/detect/public/calculate-risk-score.htm?sharedkey=Home";
-
+        urlC="http://192.168.0.20:8080/detect//public/calculate-risk-score.htm";
     }
 
     @After
@@ -87,6 +88,13 @@ public class RESTTest {
     public void testPOSTConstructorURL() throws Exception {
         rest = new REST(urlA);
         Response response = rest.post();
-        assertTrue(response!=null);
+        assertTrue(response.getStatusCode()==200);
+    }
+
+    @Test
+    public void testMalformedURL() throws Exception {
+        rest = new REST(urlC);
+        Response response = rest.post();
+        assertTrue("Response code:"+String.valueOf(response.getStatusCode()),response.getStatusCode()==200);
     }
 }

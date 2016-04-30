@@ -42,9 +42,8 @@ public class REST implements RequestType {
     }
 
     public REST(String url, Type type) {
+        this(url);
         this.type = type;
-        setData(url);
-        init();
     }
 
     public void setData(String url) {
@@ -57,7 +56,7 @@ public class REST implements RequestType {
             String[] splitPort = tmp.split("/");
             this.port = splitPort[0];
             if (splitPort.length > 1) {
-                this.service = tmp.replace(port, "");
+                this.service = tmp.replace(port, "").replaceAll("//{1,100}","/");
             }
         }
     }
