@@ -21,10 +21,7 @@ public class REST implements RequestType {
     public Map<String, String> params;
     public String body;
     public Response response;
-    public Operation operation;
-
-    public enum Operation {GET, POST}
-
+    public Type type;
 
     public REST(String host, String port, String service) {
         this.host = host;
@@ -44,8 +41,8 @@ public class REST implements RequestType {
         init();
     }
 
-    public REST(String url, Operation operation) {
-        this.operation = operation;
+    public REST(String url, Type type) {
+        this.type = type;
         setData(url);
         init();
     }
@@ -159,9 +156,9 @@ public class REST implements RequestType {
     }
 
     public Response send() {
-        if (operation.equals(Operation.GET))
+        if (type.equals(Type.GET))
             response = get();
-        if (operation.equals(Operation.POST))
+        if (type.equals(Type.POST))
             response = post();
         return response;
     }
@@ -183,8 +180,8 @@ public class REST implements RequestType {
         this.headers = headers;
     }
 
-    public void setOperation(Operation operation) {
-        this.operation = operation;
+    public void setType(Type type) {
+        this.type = type;
     }
 
 

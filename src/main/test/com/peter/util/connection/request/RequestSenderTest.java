@@ -26,7 +26,7 @@ public class RequestSenderTest {
     public void setUp() throws Exception {
         restTest = new RESTTest();
         restTest.setUp();
-        restTest.rest = new REST(restTest.urlA, REST.Operation.POST);
+        restTest.rest = new REST(restTest.urlA, RequestType.Type.POST);
         soapTest = new SOAPTest();
         soapTest.before();
         soapTest.soap = new SOAP(soapTest.serviceUrl, soapTest.soapRequest, soapTest.paramsList);

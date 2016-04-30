@@ -47,7 +47,7 @@ public class RequestTest {
 
     @Test
     public void testPostREST() throws Exception {
-        restTest.rest = new REST(restTest.urlA, REST.Operation.POST);
+        restTest.rest = new REST(restTest.urlA, RequestType.Type.POST);
         request = new Request(restTest.rest);
         String strResponse = request.send();
         Response response = ((REST) request.resource).response;
@@ -56,7 +56,7 @@ public class RequestTest {
 
     @Test
     public void testGetREST() throws Exception {
-        REST requestREST = new REST(restTest.url, REST.Operation.GET);
+        REST requestREST = new REST(restTest.url, RequestType.Type.GET);
         Map<String, String> headersMaps = new HashMap<String, String>() {{
             put("Authorization", "Bearer " + restTest.accessPointToken);
         }};
