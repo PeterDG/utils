@@ -16,11 +16,7 @@ public class Request extends Thread{
     public Instant responseTime;
     public boolean verbose = false;
 
-    public Request(REST resource) {
-        this.resource = resource;
-    }
-
-    public Request(SOAP resource) {
+    public Request(RequestType resource) {
         this.resource = resource;
     }
 
