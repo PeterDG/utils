@@ -21,6 +21,8 @@ public class REST implements RequestType {
     public Type type;
     public URL uri;
 
+    public enum ResponseData{statusCode,statusLine,responseHeaders,defaultCharset,content,message,contentType}
+
     public REST(String host, String port, String service) {
         uri=new URL(host+":"+port+"/"+service);
         init();
