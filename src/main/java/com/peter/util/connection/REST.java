@@ -13,31 +13,26 @@ import static com.jayway.restassured.RestAssured.given;
  * Created by PEDRO GUTIERREZ on 26/08/2015.
  */
 public class REST implements RequestType {
-    public String host;
-    public String port;
-    public String service;
-    public String url;
     public Map<String, String> headers;
     public Map<String, String> params;
+    public Map<String, String> queryParams;
     public String body;
     public Response response;
     public Type type;
+    public URL uri;
 
     public REST(String host, String port, String service) {
-        this.host = host;
-        this.port = port;
-        this.service = service;
+        uri=new URL(host+":"+port+"/"+service);
         init();
     }
 
     public REST(String host, String service) {
-        setData(host);
-        this.service = service;
+        uri=new URL(host+"/"+service);
         init();
     }
 
     public REST(String url) {
-        setData(url);
+        uri=new URL(url);
         init();
     }
 
@@ -46,25 +41,11 @@ public class REST implements RequestType {
         this.type = type;
     }
 
-    public void setData(String url) {
-        this.url = url;
-        String tmp = url;
-        String[] splitHost = tmp.split(":\\d");
-        this.host = splitHost[0];
-        if (splitHost.length > 1) {
-            tmp = tmp.replace(host + ":", "");
-            String[] splitPort = tmp.split("/");
-            this.port = splitPort[0];
-            if (splitPort.length > 1) {
-                this.service = tmp.replace(port, "").replaceAll("//{1,100}","/");
-            }
-        }
-    }
-
     public void init() {
-        RestAssured.baseURI = host;
-        RestAssured.basePath = service.charAt(0) == '/' ? service : "/" + service;
-        if (port != null) RestAssured.port = Integer.parseInt(port);
+        RestAssured.baseURI =  uri.getProtocol()+"://"+uri.getHost();
+        int port=uri.url.getPort();
+        RestAssured.basePath = uri.getPath();
+        if (port != 0) RestAssured.port = port;
     }
 
     public Response post(String jsonGivenBody) {
@@ -116,6 +97,7 @@ public class REST implements RequestType {
         response =
                 given().
                         headers(headers != null ? headers : new HashMap<>()).
+                        queryParameters(queryParams !=null ? queryParams :new HashMap<>()).
                         params(params != null ? params : new HashMap<>()).
                         body(body != null ? body : "").
                         when().
@@ -162,11 +144,6 @@ public class REST implements RequestType {
         return response;
     }
 
-
-    public void url(String url) {
-        this.url = url;
-    }
-
     public void body(String body) {
         this.body = body;
     }
@@ -183,6 +160,9 @@ public class REST implements RequestType {
         this.type = type;
     }
 
+    public void queryParams(Map<String, String> queryParams) {
+        this.queryParams = queryParams;
+    }
 
     @Override
     public String dispatch() {
