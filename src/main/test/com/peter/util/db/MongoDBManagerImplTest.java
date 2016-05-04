@@ -124,6 +124,13 @@ public class MongoDBManagerImplTest {
     }
 
     @Test
+    public void testExecuteQuerySelectWithWhereWithAnd() throws Exception {
+        MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
+        ArrayList<HashMap> result =  connectionWithDB.executeQuery("SELECT * FROM historicalUserMetrics WHERE date <='2015-06-23T03:52:07.796Z' AND date >= '2015-06-23T03:52:07.796Z'");
+        assertTrue(result.size()==1);
+    }
+
+    @Test
     public void testExecuteQueryInsertWithColumnNames() throws Exception {
         MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
         ArrayList<HashMap> result =  connectionWithDB.executeQuery("INSERT INTO simulatedContext ( ctx_date ,ctx_user ,ctx_latitude ,ctx_longitude ,ctx_body ,ctx_risk ) VALUES ( '2011-03-30 15:05:00' ,'UserMonthly' ,'0.0' ,'0.0' ,'null' ,'0.5795924069441956' )");
