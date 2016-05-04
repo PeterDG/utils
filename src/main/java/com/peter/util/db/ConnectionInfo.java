@@ -9,12 +9,12 @@ import com.google.common.base.Optional;
 public class ConnectionInfo {
 
     private final String jdbcUrl;
-    private final Optional<Credentials> credentials;
+    private Optional<Credentials> credentials;
 
 
     public ConnectionInfo(final String jdbcUrl, final Optional<Credentials> credentials) {
         this.jdbcUrl = jdbcUrl;
-        this.credentials = credentials;
+        this.credentials = validateCredentials(credentials);
     }
 
     public String getJdbcUrl() {
@@ -55,7 +55,6 @@ public class ConnectionInfo {
         return url;
     }
 
-
     public String getServer() {
         return jdbcUrl.split(":*/*/")[1].split(":")[0];
     }
@@ -67,4 +66,14 @@ public class ConnectionInfo {
     public Optional<Credentials> getCredentials() {
         return credentials;
     }
+
+    public static Optional<Credentials> validateCredentials(Optional<Credentials> credentials) {
+        Optional<Credentials> credentialsAbsent = Optional.absent();
+        if (credentials.isPresent()) {
+            if (credentials.get().userName.length() == 0 || credentials.get().password.length() == 0)
+                credentials = credentialsAbsent;
+        }
+        return credentials;
+    }
+
 }

@@ -83,4 +83,18 @@ public class ConnectionInfoTest {
         DBManagerType type =connectionInfo.getDBType();
         assertTrue(type.equals(DBManagerType.POSTGRES));
     }
+
+    @Test
+    public void testValidateCredentialsWithOutCredentials() throws Exception {
+        credentials=new Credentials("","");
+        connectionInfo= new ConnectionInfo("jdbc:postgresql://ds029847.mongolab.com:29847/tpch",Optional.of(credentials));
+        assertTrue(!connectionInfo.getCredentials().isPresent());
+    }
+
+    @Test
+    public void testValidateCredentialsWithCredentials() throws Exception {
+        credentials=new Credentials("test","test");
+        connectionInfo= new ConnectionInfo("jdbc:postgresql://ds029847.mongolab.com:29847/tpch",Optional.of(credentials));
+        assertTrue(connectionInfo.getCredentials().isPresent());
+    }
 }
