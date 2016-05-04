@@ -147,4 +147,13 @@ public class MongoDBManagerImplTest {
         MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
         connectionWithDB.cleanTable("simulatedContext");
     }
+
+    @Test
+    public void testExecuteSQLFile() throws Exception {
+        MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
+        ArrayList pairsToReplace = new ArrayList() ;
+        pairsToReplace.add(new String []{"p_table","historicalPopulationMetrics"});
+        ArrayList<ArrayList<HashMap>> data = connectionWithDB.executeSQLFile("src/main/test/resources/db/mongo/select.sql", pairsToReplace);
+        assertTrue(data.get(0).size()>0);
+    }
 }

@@ -8,6 +8,7 @@ import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.peter.util.data.File;
 import com.peter.util.db.antlr.SQLiteInterpreter;
 import com.peter.util.db.antlr.SQLtoMongoWalker;
 import org.apache.log4j.Logger;
@@ -18,6 +19,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.util.*;
 
 
@@ -151,12 +153,21 @@ public class MongoDBManagerImpl implements DBManager {
 
     @Override
     public ArrayList<ArrayList<HashMap>> executeSQLFile(String filePath) {
-        return null;
+        File file = new File(filePath);
+        ArrayList<ArrayList<HashMap>> list = new ArrayList<>();
+        List<String> linesList = file.getListLinesOfFile();
+        ResultSet resultSet = null;
+        for (String line : linesList) {
+            list.add(executeQuery(line));
+        }
+        return list;
     }
 
     @Override
     public ArrayList<ArrayList<HashMap>> executeSQLFile(String filePath, ArrayList<String[]> pairsToReplace) {
-        return null;
+        File file = new File(filePath);
+        file.replaceTextLists(PostgresDBManagerImpl.scripts.tmpSQL.filePath,pairsToReplace);
+        return executeSQLFile(PostgresDBManagerImpl.scripts.tmpSQL.filePath);
     }
 
     @Override
