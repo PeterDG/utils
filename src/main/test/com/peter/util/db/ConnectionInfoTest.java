@@ -97,4 +97,11 @@ public class ConnectionInfoTest {
         connectionInfo= new ConnectionInfo("jdbc:postgresql://ds029847.mongolab.com:29847/tpch",Optional.of(credentials));
         assertTrue(connectionInfo.getCredentials().isPresent());
     }
+
+    @Test
+    public void testValidateCredentialsWithCredentialsOnluUsuerName() throws Exception {
+        credentials=new Credentials("test","");
+        connectionInfo= new ConnectionInfo("jdbc:postgresql://ds029847.mongolab.com:29847/tpch",Optional.of(credentials));
+        assertTrue(connectionInfo.getCredentials().isPresent());
+    }
 }

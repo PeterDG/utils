@@ -70,7 +70,7 @@ public class ConnectionInfo {
     public static Optional<Credentials> validateCredentials(Optional<Credentials> credentials) {
         Optional<Credentials> credentialsAbsent = Optional.absent();
         if (credentials.isPresent()) {
-            if (credentials.get().userName.length() == 0 || credentials.get().password.length() == 0)
+            if (credentials.get().userName.length() == 0 )
                 credentials = credentialsAbsent;
         }
         return credentials;
