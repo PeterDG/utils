@@ -30,5 +30,5 @@ public interface DBManager {
  boolean isQuerySuccessful();
  void closeConnection();
  void commit();
-
+ Query getLastQuery();
 }

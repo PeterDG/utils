@@ -1,6 +1,7 @@
 package com.peter.util.db;
 
 import com.google.common.base.Optional;
+import com.mongodb.MongoClient;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -243,6 +244,14 @@ public class PostgresDBManagerImplTest {
     public void test18ExecuteSQLFileSpecialCharactersEncodingASCII(){
         db.connect();
         ArrayList<ArrayList<HashMap>> dataAssertion =  db.executeSQLFile("src/main/test/resources/db/postgres/specialChar.sql");
+    }
+
+    @Test
+    public void testGetLastQuery() throws Exception {
+        db.connect();
+        ArrayList<ArrayList<HashMap>> data = db.executeSQLFile("src/main/test/resources/db/postgres/file.sql");
+        assertTrue(db.getLastQuery().result.size()==2);
+        assertTrue(db.isQuerySuccessful());
     }
 
 }

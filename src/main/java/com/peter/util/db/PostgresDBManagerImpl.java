@@ -85,6 +85,11 @@ public class PostgresDBManagerImpl implements DBManager {
         }
     }
 
+    @Override
+    public Query getLastQuery() {
+        return null;
+    }
+
     public void closeConnection(){
         try {
             activeConnection.close();

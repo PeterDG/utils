@@ -21,6 +21,7 @@ public class JDBCDBManagerImpl implements DBManager {
     public Connection activeConnection;
     public boolean querySuccessful;
     public DBManagerType dbManagerType;
+    public Query lastQuery;
 
     public enum scripts {
         templateCreateDB("template_createDB.sql"),
@@ -63,9 +64,11 @@ public class JDBCDBManagerImpl implements DBManager {
     public JDBCDBManagerImpl(ConnectionInfo connectionInfo) {
         this.connectionInfo = connectionInfo;
         this.dbManagerType=connectionInfo.getDBType();
+        lastQuery=new Query();
     }
 
     public JDBCDBManagerImpl() {
+
     }
 
     public Connection connect() {
@@ -92,6 +95,11 @@ public class JDBCDBManagerImpl implements DBManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Query getLastQuery() {
+        return lastQuery;
     }
 
     public void closeConnection(){
@@ -202,6 +210,7 @@ public class JDBCDBManagerImpl implements DBManager {
         for (String line : linesList) {
             list.add(executeQuery(line));
         }
+        lastQuery.setQuery(linesList,list);
         return list;
     }
 
@@ -230,6 +239,7 @@ public class JDBCDBManagerImpl implements DBManager {
             }
 
         }
+        lastQuery.setQuery(query,list);
         return list;
     }
 

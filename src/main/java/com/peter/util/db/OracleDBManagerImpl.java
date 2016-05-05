@@ -19,6 +19,7 @@ public class OracleDBManagerImpl implements DBManager {
     public ConnectionInfo connectionInfo;
     public Connection activeConnection;
     public boolean querySuccessful;
+    public Query lastQuery;
 
     public enum scripts {
         templateCreateDB("template_createDB.sql"),
@@ -57,6 +58,7 @@ public class OracleDBManagerImpl implements DBManager {
 
     public OracleDBManagerImpl(ConnectionInfo connectionInfo) {
         this.connectionInfo = connectionInfo;
+        lastQuery=new Query();
     }
 
     public OracleDBManagerImpl() {
@@ -84,6 +86,11 @@ public class OracleDBManagerImpl implements DBManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Query getLastQuery() {
+        return lastQuery;
     }
 
     public void closeConnection(){
@@ -187,6 +194,7 @@ public class OracleDBManagerImpl implements DBManager {
         for (String line : linesList) {
             list.add(executeQuery(line));
         }
+        lastQuery.setQuery(linesList,list);
         return list;
     }
 
@@ -213,6 +221,7 @@ public class OracleDBManagerImpl implements DBManager {
             }
 
         }
+        lastQuery.setQuery(query,list);
         return list;
     }
 

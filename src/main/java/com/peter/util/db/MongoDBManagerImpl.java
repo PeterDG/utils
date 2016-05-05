@@ -36,14 +36,15 @@ public class MongoDBManagerImpl implements DBManager {
     public MongoCollection activeCollection;
     public MongoDatabase activeDB;
     public SQLiteInterpreter sqLiteInterpreter;
+    public Query lastQuery;
 
 
     public MongoDBManagerImpl() {
-
     }
 
     public MongoDBManagerImpl(ConnectionInfo connectionInfo) {
         this.connectionInfo = connectionInfo;
+        this.lastQuery=new Query();
     }
 
     public Object connect() {
@@ -72,6 +73,7 @@ public class MongoDBManagerImpl implements DBManager {
             insert(tableName, columnNames, columnValues);
         if (cmd.equals(SQLtoMongoWalker.command.TRUNCATE))
             truncate(tableName);
+        lastQuery.setQuery(query,documents);
         return documents;
     }
 
@@ -111,7 +113,7 @@ public class MongoDBManagerImpl implements DBManager {
 
     public String getJsonStr(ArrayList<String> columnsNames, ArrayList<String> columnsValues) {
         String jsonStr;
-        String value=columnsValues.get(0);
+        String value = columnsValues.get(0);
         if (columnsNames.size() > 0) {
             jsonStr = "{";
             for (int i = 0; i < columnsNames.size(); i++) {
@@ -121,7 +123,7 @@ public class MongoDBManagerImpl implements DBManager {
             jsonStr += "}";
         } else
 
-            jsonStr = value.substring(1,value.length()-1);
+            jsonStr = value.substring(1, value.length() - 1);
         return jsonStr;
     }
 
@@ -160,13 +162,14 @@ public class MongoDBManagerImpl implements DBManager {
         for (String line : linesList) {
             list.add(executeQuery(line));
         }
+        lastQuery.setQuery(linesList,list);
         return list;
     }
 
     @Override
     public ArrayList<ArrayList<HashMap>> executeSQLFile(String filePath, ArrayList<String[]> pairsToReplace) {
         File file = new File(filePath);
-        file.replaceTextLists(PostgresDBManagerImpl.scripts.tmpSQL.filePath,pairsToReplace);
+        file.replaceTextLists(PostgresDBManagerImpl.scripts.tmpSQL.filePath, pairsToReplace);
         return executeSQLFile(PostgresDBManagerImpl.scripts.tmpSQL.filePath);
     }
 
@@ -239,6 +242,11 @@ public class MongoDBManagerImpl implements DBManager {
     @Override
     public void commit() {
 
+    }
+
+    @Override
+    public Query getLastQuery() {
+        return lastQuery;
     }
 
     public void createConnection() {

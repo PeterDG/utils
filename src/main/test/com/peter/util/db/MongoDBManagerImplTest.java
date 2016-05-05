@@ -170,4 +170,11 @@ public class MongoDBManagerImplTest {
         ArrayList<ArrayList<HashMap>> data = connectionWithDB.executeSQLFile("src/main/test/resources/db/mongo/select.sql", pairsToReplace);
         assertTrue(data.get(0).size()>0);
     }
+
+    @Test
+    public void testGetLastQuery() throws Exception {
+        MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
+        ArrayList<HashMap> result =  connectionWithDB.executeQuery("SELECT * FROM historicalUserMetrics WHERE date <'2015-06-23T18:28:30.859Z'");
+        assertTrue(connectionWithDB.getLastQuery().query.size()==1);
+    }
 }
