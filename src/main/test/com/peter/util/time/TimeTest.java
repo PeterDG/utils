@@ -44,4 +44,18 @@ public class TimeTest {
         date=Time.addTimes2Date(date,map);
         new SimpleDateFormat(Time.DEFAULT_DATE_FORMAT).format(date).toString().equals("2025-11-11T13:22:17");
     }
+
+    @Test
+    public void testSubtractTimes2Date() throws Exception {
+        Date date =Time.string2IsoDate("2025-11-11T13:22:17.796Z");
+        HashMap<Integer,Integer> map=new HashMap();
+        map.put(Calendar.YEAR,-10);
+        map.put(Calendar.MONTH,-10);
+        map.put(Calendar.DAY_OF_YEAR,-10);
+        map.put(Calendar.HOUR,-10);
+        map.put(Calendar.MINUTE,-10);
+        map.put(Calendar.SECOND,-10);
+        date=Time.addTimes2Date(date,map);
+        new SimpleDateFormat(Time.DEFAULT_DATE_FORMAT).format(date).toString().equals("2015-01-01T03:12:07");
+    }
 }
