@@ -325,4 +325,12 @@ public class Time {
     public static String getStringYearMonthFromDate(LocalDateTime date) {
         return DateTimeFormat.forPattern("yyyy-MM").print(date);
     }
+
+    public static Date addTimes2Date(Date date, Map<Integer, Integer> calendarTimes) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        for (Integer time : calendarTimes.keySet())
+            calendar.add(time, calendarTimes.get(time));
+        return calendar.getTime();
+    }
 }
