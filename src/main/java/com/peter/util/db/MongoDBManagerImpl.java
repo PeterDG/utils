@@ -44,7 +44,7 @@ public class MongoDBManagerImpl implements DBManager {
 
     public MongoDBManagerImpl(ConnectionInfo connectionInfo) {
         this.connectionInfo = connectionInfo;
-        this.lastQuery=new Query();
+        this.lastQuery = new Query();
     }
 
     public Object connect() {
@@ -66,23 +66,24 @@ public class MongoDBManagerImpl implements DBManager {
         ArrayList<String> columnNames = sqLiteInterpreter.sqLtoMongoWalker.columnNames;
         ArrayList<String> columnValues = sqLiteInterpreter.sqLtoMongoWalker.columnValues;
         String tableName = sqLiteInterpreter.sqLtoMongoWalker.tableName;
+        int limit = sqLiteInterpreter.sqLtoMongoWalker.limit;
         activeCollection = activeDB.getCollection(tableName);
         if (cmd.equals(SQLtoMongoWalker.command.SELECT))
-            documents = select(tableName, columnNames, rowsFilter);
+            documents = select(tableName, columnNames, rowsFilter, limit);
         if (cmd.equals(SQLtoMongoWalker.command.INSERT))
             insert(tableName, columnNames, columnValues);
         if (cmd.equals(SQLtoMongoWalker.command.TRUNCATE))
             truncate(tableName);
-        lastQuery.setQuery(query,documents);
+        lastQuery.setQuery(query, documents);
         return documents;
     }
 
-    public ArrayList<HashMap> select(String table, ArrayList<String> columnNames, Bson rowsFilter) {
+    public ArrayList<HashMap> select(String table, ArrayList<String> columnNames, Bson rowsFilter, int limit) {
         MongoCursor result;
         if (rowsFilter != null)
-            result = activeCollection.find(rowsFilter).iterator();
+            result = activeCollection.find(rowsFilter).limit(limit).iterator();
         else
-            result = activeCollection.find().iterator();
+            result = activeCollection.find().limit(limit).iterator();
         ArrayList<HashMap> documents = mongoCursorToArrayList(result);
         if (columnNames != null && !columnNames.get(0).equals("*"))
             documents = filterMapListByEntries(documents, columnNames);
@@ -162,7 +163,7 @@ public class MongoDBManagerImpl implements DBManager {
         for (String line : linesList) {
             list.add(executeQuery(line));
         }
-        lastQuery.setQuery(linesList,list);
+        lastQuery.setQuery(linesList, list);
         return list;
     }
 

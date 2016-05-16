@@ -177,4 +177,25 @@ public class MongoDBManagerImplTest {
         ArrayList<HashMap> result =  connectionWithDB.executeQuery("SELECT * FROM historicalUserMetrics WHERE date <'2015-06-23T18:28:30.859Z'");
         assertTrue(connectionWithDB.getLastQuery().query.size()==1);
     }
+
+    @Test
+    public void testSelectWithLimit() throws Exception {
+        MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
+        ArrayList<HashMap> result = connectionWithDB.executeQuery("SELECT * FROM historicalUserMetrics LIMIT 1");
+        assertTrue(result.size()==1);
+    }
+
+    @Test
+    public void testSelectWithLimitAll() throws Exception {
+        MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
+        ArrayList<HashMap> result = connectionWithDB.executeQuery("SELECT * FROM historicalUserMetrics LIMIT 0");
+        assertTrue(result.size()==5);
+    }
+
+    @Test
+    public void testSelectWithoutLimit() throws Exception {
+        MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
+        ArrayList<HashMap> result = connectionWithDB.executeQuery("SELECT * FROM historicalUserMetrics");
+        assertTrue(result.size()==5);
+    }
 }

@@ -24,6 +24,7 @@ public class SQLtoMongoWalker extends SQLiteBaseListener {
     public ArrayList<String> columnNames;
     public ArrayList<String> columnValues;
     public HashMap<String,Bson> filtersMap;
+    public int limit=0;
 
     public SQLtoMongoWalker() {
         filtersMap = new HashMap<String,Bson>();
@@ -49,6 +50,13 @@ public class SQLtoMongoWalker extends SQLiteBaseListener {
             setFilter(ctx.expr(0));
         if(ctx.expr().size()>0) rowsFilter = filtersMap.get(ctx.expr(0).toString());
     }
+
+    @Override
+    public void enterFactored_select_stmt(SQLiteParser.Factored_select_stmtContext ctx) {
+        if (ctx.K_LIMIT() != null)
+            limit=Integer.parseInt(ctx.expr(0).getText());
+    }
+
     @Override
     public void enterInsert_stmt(SQLiteParser.Insert_stmtContext ctx){
         cmd=command.INSERT;
