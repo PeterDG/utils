@@ -16,15 +16,19 @@ public class Query {
     }
 
     public void setQuery(String query, ArrayList result) {
-        ArrayList lines = new ArrayList(){};
+        ArrayList lines = new ArrayList() {
+        };
         lines.add(query);
         this.query = lines;
         this.result = result;
-        if(result.size()>0){
-            if(result.get(0).getClass()!=ArrayList.class){
-                ArrayList map = new ArrayList(){};
-                map.add(result);
-                this.result=map;
+        if (result != null) {
+            if (result.size() > 0) {
+                if (result.get(0).getClass() != ArrayList.class) {
+                    ArrayList map = new ArrayList() {
+                    };
+                    map.add(result);
+                    this.result = map;
+                }
             }
         }
     }
