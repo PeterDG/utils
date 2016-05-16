@@ -64,7 +64,7 @@ public class TimeTest {
     public void testDate2Instant() throws Exception {
         Date date =Time.string2IsoDate("2025-11-11T13:22:17.796Z");
         Instant instant = Time.date2Instant(date);
-        assertTrue(instant.toString().equals("2025-11-11T18:22:17.796Z"));
+        assertTrue(instant.toString().equals("2025-11-11T13:22:17.796Z"));
     }
 
     @Test

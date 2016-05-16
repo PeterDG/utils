@@ -336,7 +336,7 @@ public class Time {
     }
 
     public static Instant date2Instant(Date date) {
-        return new Instant(date.getTime());
+        return new Instant(date.getTime()-5*3600000);
     }
 
     public static Date getCurrentTime() {
