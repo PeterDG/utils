@@ -1,6 +1,8 @@
 package com.peter.util.so;
 
+import com.peter.util.time.Time;
 import org.junit.Before;
+import org.junit.After;
 import org.junit.Test;
 
 import java.util.Calendar;
@@ -19,43 +21,44 @@ public class UtilsTest {
         soUtils = new SOUtils();
     }
 
+    @After
+    public void after() throws Exception {
+        soUtils.syncTime(cmdPath);
+    }
+
     @Test
     public void testSetSODate() throws Exception {
-        soUtils.setSODate("05-09-2029", cmdPath); //mm-dd-yy
-        Calendar cal = Calendar.getInstance();
-        int month = cal.get(Calendar.MONTH) + 1;
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        int year = cal.get(Calendar.YEAR);
-        assertTrue(month == 5 && day == 9 && year == 2029);
+        soUtils.setSODate("05-20-2016", cmdPath); //mm-dd-yy
+        int month = Time.getCurrentTime(Calendar.MONTH);
+        int day = Time.getCurrentTime(Calendar.DAY_OF_MONTH);
+        int year = Time.getCurrentTime(Calendar.YEAR);
+        assertTrue(month == 5 && day == 20 && year == 2016);
     }
 
     @Test
     public void testSetSOHour() throws Exception {
         soUtils.setSOHour("08:00", cmdPath);
-        Calendar cal = Calendar.getInstance();
-        int hours = cal.get(Calendar.HOUR_OF_DAY);
+        int hours = Time.getCurrentTime(Calendar.HOUR_OF_DAY);
         assertTrue(hours == 8);
     }
 
     @Test
     public void testSetSOTime() throws Exception {
-        soUtils.setSOTime("04-09-2029", "09:00", cmdPath);
-        Calendar cal = Calendar.getInstance();
-        int hours = cal.get(Calendar.HOUR_OF_DAY);
-        int month = cal.get(Calendar.MONTH) + 1;
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        int year = cal.get(Calendar.YEAR);
-        assertTrue(hours == 9 && month == 4 && day == 9 && year == 2029);
+        soUtils.setSOTime("05-20-2016", "09:00", cmdPath);
+        int hours = Time.getCurrentTime(Calendar.HOUR_OF_DAY);
+        int month = Time.getCurrentTime(Calendar.MONTH);
+        int day = Time.getCurrentTime(Calendar.DAY_OF_MONTH);
+        int year = Time.getCurrentTime(Calendar.YEAR);
+        assertTrue(hours == 9 && month == 5 && day == 20 && year == 2016);
     }
 
     @Test
     public void testSetSOTimeDate() throws Exception {
-        soUtils.setSOTime("2029-04-09 09:00:00", cmdPath);
-        Calendar cal = Calendar.getInstance();
-        int hours = cal.get(Calendar.HOUR_OF_DAY);
-        int month = cal.get(Calendar.MONTH) + 1;
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        int year = cal.get(Calendar.YEAR);
-        assertTrue(hours == 9 && month == 4 && day == 9 && year == 2029);
+        soUtils.setSOTime("2016-05-20 09:00:00", cmdPath);
+        int hours = Time.getCurrentTime(Calendar.HOUR_OF_DAY);
+        int month = Time.getCurrentTime(Calendar.MONTH);
+        int day = Time.getCurrentTime(Calendar.DAY_OF_MONTH);
+        int year = Time.getCurrentTime(Calendar.YEAR);
+        assertTrue(hours == 9 && month == 5 && day == 20 && year == 2016);
     }
 }

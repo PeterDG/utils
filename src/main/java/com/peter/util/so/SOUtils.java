@@ -11,16 +11,22 @@ import java.util.List;
  * Created by Peter on 5/12/2016.
  */
 public class SOUtils {
+    public static int waitTime=1000;
 
     public static void setSODate(String date, String adminLnkPath){
         List<String> cmdLines = Arrays.asList("date "+date, "exit");
          CMD.execute(cmdLines,adminLnkPath);
-         sleep(500);
+         sleep(waitTime);
     }
     public static void setSOHour(String hour, String adminLnkPath){
         List<String> cmdLines = Arrays.asList("time "+hour, "exit");
         CMD.execute(cmdLines,adminLnkPath);
-        sleep(500);
+        sleep(waitTime);
+    }
+
+    public static void syncTime(String adminLnkPath){
+        List<String> cmdLines = Arrays.asList("w32tm /resync", "exit");
+        CMD.execute(cmdLines,adminLnkPath);
     }
 
     public static void setSOTime(String date,String hour, String adminLnkPath){

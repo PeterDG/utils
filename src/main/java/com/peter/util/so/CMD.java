@@ -37,7 +37,7 @@ public class CMD {
         String resource = file.getName();
         com.peter.util.data.File bat = new com.peter.util.data.File(rootPath, "cmds.bat");
         bat.writeLines(cmdLines, true);
-        result = execute("cmd /c start "+rootPath + resource+" \""+bat.getPath()+"\"");
+        result = execute("cmd /c start /w /b "+rootPath + resource+" \""+bat.getPath()+"\"");
         return result;
     }
 
