@@ -45,12 +45,12 @@ public class Time {
     }
 
     public static Date string2Date(final String dateStr, String format, String timeZoneID) throws TechnicalException {
-        Date date =string2LocalDateTime(dateStr, format).toDate(TimeZone.getTimeZone(timeZoneID));
+        Date date = string2LocalDateTime(dateStr, format).toDate(TimeZone.getTimeZone(timeZoneID));
         return date;
     }
 
     public static Date string2Date(final String dateStr, String format) throws TechnicalException {
-        Date date =string2Date(dateStr,format, DEFAULT_TIME_ZONE);
+        Date date = string2Date(dateStr, format, DEFAULT_TIME_ZONE);
         return date;
     }
 
@@ -129,7 +129,7 @@ public class Time {
             Date date = sdf.parse(dateToValidate);
 //            System.out.println(date);
         } catch (ParseException e) {
-           // e.printStackTrace();
+            // e.printStackTrace();
             return false;
         }
         return true;
@@ -335,7 +335,23 @@ public class Time {
         return calendar.getTime();
     }
 
-    public static Instant date2Instant(Date date){
+    public static Instant date2Instant(Date date) {
         return new Instant(date.getTime());
     }
+
+    public static Date getCurrentTime() {
+        return new Date();
+    }
+
+    public static int getCurrentTime(int calentarTime) {
+        java.util.Date date = new Date();
+        int month = 0;
+        if (calentarTime == Calendar.MONTH)
+            month += 1;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        month += cal.get(calentarTime);
+        return month;
+    }
+
 }

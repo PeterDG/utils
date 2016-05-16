@@ -66,4 +66,14 @@ public class TimeTest {
         Instant instant = Time.date2Instant(date);
         assertTrue(instant.toString().equals("2025-11-11T18:22:17.796Z"));
     }
+
+    @Test
+    public void testCurrentTime() throws Exception {
+        Date date =Time.getCurrentTime();
+    }
+
+    @Test
+    public void testCurrentTimeMonth() throws Exception {
+        int date =Time.getCurrentTime(Calendar.YEAR);
+    }
 }
