@@ -5,6 +5,7 @@ package com.peter.util.so;
  */
 
 import java.io.*;
+import java.util.List;
 
 public class CMD {
 
@@ -28,4 +29,16 @@ public class CMD {
 
         return output.toString();
     }
+
+    public static String execute(List<String> cmdLines, String adminLnkPath) {
+        String result;
+        File file = new File(adminLnkPath);
+        String rootPath = file.getParent()+"/";
+        String resource = file.getName();
+        com.peter.util.data.File bat = new com.peter.util.data.File(rootPath, "cmds.bat");
+        bat.writeLines(cmdLines, true);
+        result = execute("cmd /c start "+rootPath + resource+" \""+bat.getPath()+"\"");
+        return result;
+    }
+
 }

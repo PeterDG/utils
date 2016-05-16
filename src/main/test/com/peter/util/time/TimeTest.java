@@ -1,5 +1,6 @@
 package com.peter.util.time;
 
+import org.joda.time.Instant;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
@@ -42,7 +43,7 @@ public class TimeTest {
         map.put(Calendar.MINUTE,10);
         map.put(Calendar.SECOND,10);
         date=Time.addTimes2Date(date,map);
-        new SimpleDateFormat(Time.DEFAULT_DATE_FORMAT).format(date).toString().equals("2025-11-11T13:22:17");
+        assertTrue(new SimpleDateFormat(Time.DEFAULT_DATE_FORMAT).format(date).toString().equals("2025-11-11 13:22:17"));
     }
 
     @Test
@@ -56,6 +57,13 @@ public class TimeTest {
         map.put(Calendar.MINUTE,-10);
         map.put(Calendar.SECOND,-10);
         date=Time.addTimes2Date(date,map);
-        new SimpleDateFormat(Time.DEFAULT_DATE_FORMAT).format(date).toString().equals("2015-01-01T03:12:07");
+        assertTrue(new SimpleDateFormat(Time.DEFAULT_DATE_FORMAT).format(date).toString().equals("2015-01-01 03:12:07"));
+    }
+
+    @Test
+    public void testDate2Instant() throws Exception {
+        Date date =Time.string2IsoDate("2025-11-11T13:22:17.796Z");
+        Instant instant = Time.date2Instant(date);
+        assertTrue(instant.toString().equals("2025-11-11T18:22:17.796Z"));
     }
 }

@@ -2,6 +2,7 @@ package com.peter.util.time;
 
 import com.peter.util.exceptions.TechnicalException;
 import org.joda.time.DateTime;
+import org.joda.time.Instant;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDateTime;
@@ -332,5 +333,9 @@ public class Time {
         for (Integer time : calendarTimes.keySet())
             calendar.add(time, calendarTimes.get(time));
         return calendar.getTime();
+    }
+
+    public static Instant date2Instant(Date date){
+        return new Instant(date.getTime());
     }
 }
