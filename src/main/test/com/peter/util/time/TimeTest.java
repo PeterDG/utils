@@ -76,4 +76,18 @@ public class TimeTest {
     public void testCurrentTimeMonth() throws Exception {
         int date =Time.getCurrentTime(Calendar.YEAR);
     }
+
+    @Test
+    public void testSetTimes2Date() throws Exception {
+        Date date =Time.string2IsoDate("2015-05-10T03:12:07.796Z");
+        HashMap<Integer,Integer> map=new HashMap();
+        map.put(Calendar.YEAR,2010);
+        map.put(Calendar.MONTH,10);
+        map.put(Calendar.DAY_OF_MONTH,10);
+        map.put(Calendar.HOUR,10);
+        map.put(Calendar.MINUTE,10);
+        map.put(Calendar.SECOND,10);
+        date=Time.setTimes2Date(date,map);
+        assertTrue(new SimpleDateFormat(Time.DEFAULT_DATE_FORMAT).format(date).toString().equals("2010-10-10 10:10:10"));
+    }
 }

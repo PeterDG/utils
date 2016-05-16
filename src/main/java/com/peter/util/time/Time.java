@@ -354,4 +354,16 @@ public class Time {
         return month;
     }
 
+    public static Date setTimes2Date(Date date, Map<Integer, Integer> calendarTimes) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        for (Integer time : calendarTimes.keySet()) {
+            int value = calendarTimes.get(time);
+            if (time == Calendar.MONTH)
+                value -= 1;
+            calendar.set(time, value);
+        }
+        return calendar.getTime();
+    }
+
 }
