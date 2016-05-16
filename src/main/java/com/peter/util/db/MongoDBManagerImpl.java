@@ -67,9 +67,10 @@ public class MongoDBManagerImpl implements DBManager {
         ArrayList<String> columnValues = sqLiteInterpreter.sqLtoMongoWalker.columnValues;
         String tableName = sqLiteInterpreter.sqLtoMongoWalker.tableName;
         int limit = sqLiteInterpreter.sqLtoMongoWalker.limit;
+        int offset = sqLiteInterpreter.sqLtoMongoWalker.offset;
         activeCollection = activeDB.getCollection(tableName);
         if (cmd.equals(SQLtoMongoWalker.command.SELECT))
-            documents = select(tableName, columnNames, rowsFilter, limit);
+            documents = select(tableName, columnNames, rowsFilter, limit,offset);
         if (cmd.equals(SQLtoMongoWalker.command.INSERT))
             insert(tableName, columnNames, columnValues);
         if (cmd.equals(SQLtoMongoWalker.command.TRUNCATE))
@@ -78,12 +79,12 @@ public class MongoDBManagerImpl implements DBManager {
         return documents;
     }
 
-    public ArrayList<HashMap> select(String table, ArrayList<String> columnNames, Bson rowsFilter, int limit) {
+    public ArrayList<HashMap> select(String table, ArrayList<String> columnNames, Bson rowsFilter, int limit,int offset) {
         MongoCursor result;
         if (rowsFilter != null)
-            result = activeCollection.find(rowsFilter).limit(limit).iterator();
+            result = activeCollection.find(rowsFilter).limit(limit).skip(offset).iterator();
         else
-            result = activeCollection.find().limit(limit).iterator();
+            result = activeCollection.find().limit(limit).skip(offset).iterator();
         ArrayList<HashMap> documents = mongoCursorToArrayList(result);
         if (columnNames != null && !columnNames.get(0).equals("*"))
             documents = filterMapListByEntries(documents, columnNames);

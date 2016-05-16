@@ -198,4 +198,27 @@ public class MongoDBManagerImplTest {
         ArrayList<HashMap> result = connectionWithDB.executeQuery("SELECT * FROM historicalUserMetrics");
         assertTrue(result.size()==5);
     }
+
+    @Test
+    public void testSelectWithOffset() throws Exception {
+        MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
+        ArrayList<HashMap> result = connectionWithDB.executeQuery("SELECT * FROM historicalUserMetrics LIMIT 1 OFFSET 3");
+        assertTrue(result.size()==1);
+        assertTrue(result.get(0).get("_id").equals("EoinHorgan"));
+    }
+
+    @Test
+    public void testSelectWithoutOffsetAll() throws Exception {
+        MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
+        ArrayList<HashMap> result = connectionWithDB.executeQuery("SELECT * FROM historicalUserMetrics LIMIT 1 OFFSET 0");
+        assertTrue(result.size()==1);
+        assertTrue(result.get(0).get("_id").equals("rlinero"));
+    }
+
+    @Test
+    public void testSelectWithoutOffset() throws Exception {
+        MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
+        ArrayList<HashMap> result = connectionWithDB.executeQuery("SELECT * FROM historicalUserMetrics");
+        assertTrue(result.size()==5);
+    }
 }
