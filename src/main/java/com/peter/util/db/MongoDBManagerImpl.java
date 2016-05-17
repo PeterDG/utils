@@ -69,8 +69,14 @@ public class MongoDBManagerImpl implements DBManager {
         int limit = sqLiteInterpreter.sqLtoMongoWalker.limit;
         int offset = sqLiteInterpreter.sqLtoMongoWalker.offset;
         activeCollection = activeDB.getCollection(tableName);
+        if(columnNames!=null && columnNames.size()>0) {
+            if (columnNames.get(0).toLowerCase().contains("count")) {
+                cmd = SQLtoMongoWalker.command.COUNT;
+                documents = count(tableName, rowsFilter);
+            }
+        }
         if (cmd.equals(SQLtoMongoWalker.command.SELECT))
-            documents = select(tableName, columnNames, rowsFilter, limit,offset);
+            documents = select(tableName, columnNames, rowsFilter, limit, offset);
         if (cmd.equals(SQLtoMongoWalker.command.INSERT))
             insert(tableName, columnNames, columnValues);
         if (cmd.equals(SQLtoMongoWalker.command.TRUNCATE))
@@ -79,7 +85,7 @@ public class MongoDBManagerImpl implements DBManager {
         return documents;
     }
 
-    public ArrayList<HashMap> select(String table, ArrayList<String> columnNames, Bson rowsFilter, int limit,int offset) {
+    public ArrayList<HashMap> select(String table, ArrayList<String> columnNames, Bson rowsFilter, int limit, int offset) {
         MongoCursor result;
         if (rowsFilter != null)
             result = activeCollection.find(rowsFilter).limit(limit).skip(offset).iterator();
@@ -88,6 +94,16 @@ public class MongoDBManagerImpl implements DBManager {
         ArrayList<HashMap> documents = mongoCursorToArrayList(result);
         if (columnNames != null && !columnNames.get(0).equals("*"))
             documents = filterMapListByEntries(documents, columnNames);
+        return documents;
+    }
+
+    public ArrayList<HashMap> count(String table, Bson rowsFilter) {
+        long result;
+        if (rowsFilter != null)
+            result = activeCollection.count(rowsFilter);
+        else
+            result = activeCollection.count();
+        ArrayList<HashMap> documents = countToArrayList(result);
         return documents;
     }
 
@@ -136,6 +152,14 @@ public class MongoDBManagerImpl implements DBManager {
             document = (Document) iterator.next();
             documents.add(new HashMap<>(document));
         }
+        return documents;
+    }
+
+    public ArrayList<HashMap> countToArrayList(long count) {
+        ArrayList documents = new ArrayList<>();
+        HashMap<String, Long> document = new HashMap<>();
+        document.put("count", count);
+        documents.add(document);
         return documents;
     }
 

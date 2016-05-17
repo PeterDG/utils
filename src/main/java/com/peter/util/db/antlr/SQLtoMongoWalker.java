@@ -36,7 +36,7 @@ public class SQLtoMongoWalker extends SQLiteBaseListener {
     }
 
     public enum command {
-        SELECT, TRUNCATE, INSERT
+        SELECT, TRUNCATE, INSERT, COUNT
     }
 
     @Override

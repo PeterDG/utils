@@ -221,4 +221,19 @@ public class MongoDBManagerImplTest {
         ArrayList<HashMap> result = connectionWithDB.executeQuery("SELECT * FROM historicalUserMetrics");
         assertTrue(result.size()==5);
     }
+
+    @Test
+    public void testSelectCount() throws Exception {
+        MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
+        ArrayList<HashMap> result = connectionWithDB.executeQuery("SELECT COUNT(*) FROM historicalUserMetrics");
+        assertTrue(result.get(0).get("count").equals(5l));
+    }
+
+    @Test
+    public void testSelectCountWhere() throws Exception {
+        MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
+        ArrayList<HashMap> result =  connectionWithDB.executeQuery("SELECT COUNT(*) FROM context WHERE serverInfo.date >='2014-09-16T23:03:52.000Z' AND serverInfo.date <= '2014-09-17T14:41:21.000Z'");
+        assertTrue(result.get(0).get("count").equals(3l));
+    }
+
 }
