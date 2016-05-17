@@ -33,7 +33,12 @@ public class XML {
     }
 
     public String getElement(String xPathExpression) {
-        String nodes = xml.selectSingleNode(xPathExpression).getText();
+        String nodes=null;
+        try {
+            nodes = xml.selectSingleNode(xPathExpression).getText();
+        }catch (Exception e ){
+            System.out.print("Non exsitent node: "+xPathExpression);
+        }
         return nodes;
     }
 

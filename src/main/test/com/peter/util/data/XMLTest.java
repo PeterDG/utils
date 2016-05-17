@@ -87,6 +87,13 @@ public class XMLTest {
     }
 
     @Test
+    public void testGetNoExistentElement() throws Exception {
+        xml = new XML(strXml);
+        String result = xml.getElement("/class/student/noExist");
+        assertTrue(result==null);
+    }
+
+    @Test
     public void testSetElement() throws Exception {
         xml = new XML(strXml);
         xml.setElement("/class/student/firstname", "NewName");
