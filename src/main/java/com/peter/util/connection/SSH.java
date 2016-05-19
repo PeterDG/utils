@@ -1,9 +1,12 @@
 package com.peter.util.connection;
 
+import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.ConnectException;
 import java.util.Properties;
 
@@ -82,4 +85,41 @@ public class SSH {
         }
     }
 
+    public String executeCommand(String command) {
+        ChannelExec channel = null;
+        String result=null;
+        try {
+            channel = (ChannelExec) this.session.openChannel("exec");
+            channel.setCommand(command);
+            channel.setInputStream(null);
+
+            channel.setErrStream(System.err);
+
+            InputStream in=channel.getInputStream();
+
+            channel.connect();
+
+            byte[] tmp=new byte[1024];
+            while(true){
+                while(in.available()>0){
+                    int i=in.read(tmp, 0, 1024);
+                    if(i<0)break;
+                    result=new String(tmp, 0, i);
+                }
+                if(channel.isClosed()){
+                    if(in.available()>0) continue;
+                    System.out.println("exit-status: "+channel.getExitStatus());
+                    break;
+                }
+                try{Thread.sleep(1000);}catch(Exception ee){}
+            }
+            channel.disconnect();
+
+        } catch (JSchException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }

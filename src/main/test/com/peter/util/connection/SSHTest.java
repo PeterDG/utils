@@ -12,6 +12,7 @@ public class SSHTest {
     public SSH ssh;
     public String sshUser;
     public String sshPassword;
+    public String sshPasswordA;
     public String sshHost;
     public int sshPort;
     public String remoteHost;
@@ -21,6 +22,7 @@ public class SSHTest {
     public String dbUser;
     public String dbPassword;
     public String sshUrl;
+    public String sshUrlA;
     public String sshUrlWithTunnel;
 
     @Before
@@ -37,6 +39,9 @@ public class SSHTest {
         dbPassword = "bogota";                      // database login password
         sshUrl = "ssh://root@7.183.185.100:22";       // ssh url
         sshUrlWithTunnel = "ssh://root@7.183.185.100:22 3365->168.176.5.66:1521";       // ssh url type2
+
+        sshPasswordA = "3asyso1";                       // SSH login password
+        sshUrlA = "ssh://root@192.168.243.197:22";
     }
 
     @Test
@@ -73,4 +78,14 @@ public class SSHTest {
         ssh.disconnect();
         assertTrue( result>0);
     }
+
+    @Test
+    public void testExecuteCommand() throws Exception {
+        ssh = new SSH(sshUrlA, sshPasswordA);
+        Boolean result=ssh.session.isConnected();
+        String response=ssh.executeCommand("echo Hello World!");
+        ssh.disconnect();
+        assertTrue(result && response.equals("Hello World!\n"));
+    }
+
 }
