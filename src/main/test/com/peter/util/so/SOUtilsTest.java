@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 /**
  * Created by Peter on 5/12/2016.
  */
-public class UtilsTest {
+public class SOUtilsTest {
     public SOUtils soUtils;
     public String cmdPath = "E:\\Development\\Projects\\utils\\src\\main\\resources\\so\\admin.exe";
 
@@ -60,5 +60,11 @@ public class UtilsTest {
         int day = Time.getCurrentTime(Calendar.DAY_OF_MONTH);
         int year = Time.getCurrentTime(Calendar.YEAR);
         assertTrue(hours == 9 && month == 5 && day == 20 && year == 2016);
+    }
+
+    @Test
+    public void testIsWindows() throws Exception {
+       boolean win= soUtils.isWindows();
+        assertTrue(win);
     }
 }
