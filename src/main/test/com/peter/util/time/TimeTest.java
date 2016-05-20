@@ -1,6 +1,8 @@
 package com.peter.util.time;
 
 import org.joda.time.Instant;
+import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
@@ -89,5 +91,12 @@ public class TimeTest {
         map.put(Calendar.SECOND,10);
         date=Time.setTimes2Date(date,map);
         assertTrue(new SimpleDateFormat(Time.DEFAULT_DATE_FORMAT).format(date).toString().equals("2010-10-10 10:10:10"));
+    }
+
+    @Test
+    public void testGetLastDateOfMonth() throws Exception {
+        LocalDateTime dateTime= Time.string2LocalDateTime("1986-04-08 12:30","yyyy-MM-dd HH:mm");
+        LocalDateTime lastDateOfMonth = Time.getLastDateOfMonth(dateTime);
+        assertTrue(lastDateOfMonth.toString().equals("1986-04-30T23:59:59.000"));
     }
 }
