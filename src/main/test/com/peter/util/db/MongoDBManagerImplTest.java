@@ -236,4 +236,32 @@ public class MongoDBManagerImplTest {
         assertTrue(result.get(0).get("count").equals(3l));
     }
 
+    @Test
+    public void testSelectWithLimitOrderASC() throws Exception {
+        MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
+        ArrayList<HashMap> result = connectionWithDB.executeQuery("SELECT * FROM historicalUserMetrics ORDER BY date ASC LIMIT 0");
+        assertTrue(result.get(0).get("_id").equals("rlinero"));
+    }
+
+    @Test
+    public void testSelectWithLimitOrderASCSecondLevel() throws Exception {
+        MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
+        ArrayList<HashMap> result = connectionWithDB.executeQuery("SELECT * FROM context ORDER BY serverInfo.date ASC LIMIT 5");
+        assertTrue(result.get(0).get("_id").toString().equals("5586385618025318465b1aaf"));
+    }
+
+    @Test
+    public void testSelectWithLimitOrderDES() throws Exception {
+        MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
+        ArrayList<HashMap> result = connectionWithDB.executeQuery("SELECT * FROM historicalUserMetrics ORDER BY date DESC LIMIT 0");
+        assertTrue(result.get(0).get("_id").equals("lnino"));
+    }
+
+    @Test
+    public void testSelectWithLimitOrderDESCSecondLevel() throws Exception {
+        MongoClient mongoClient=(MongoClient) connectionWithDB.connect();
+        ArrayList<HashMap> result = connectionWithDB.executeQuery("SELECT * FROM context ORDER BY serverInfo.date DESC LIMIT 5");
+        assertTrue(result.get(0).get("_id").toString().equals("561d1e1f15fa5b5db9c95318"));
+    }
+
 }

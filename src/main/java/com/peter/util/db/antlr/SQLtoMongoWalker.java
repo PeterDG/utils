@@ -1,5 +1,6 @@
 package com.peter.util.db.antlr;
 
+import com.mongodb.BasicDBObject;
 import com.peter.util.exceptions.TechnicalException;
 import com.peter.util.time.Time;
 import org.bson.conversions.Bson;
@@ -21,6 +22,7 @@ public class SQLtoMongoWalker extends SQLiteBaseListener {
     public command cmd;
     public String tableName;
     public Bson rowsFilter;
+    public Bson order;
     public ArrayList<String> columnNames;
     public ArrayList<String> columnValues;
     public HashMap<String,Bson> filtersMap;
@@ -29,6 +31,7 @@ public class SQLtoMongoWalker extends SQLiteBaseListener {
 
     public SQLtoMongoWalker() {
         filtersMap = new HashMap<String,Bson>();
+        order=new BasicDBObject();
     }
 
     public enum logicOperators {
@@ -58,6 +61,14 @@ public class SQLtoMongoWalker extends SQLiteBaseListener {
             limit=Integer.parseInt(ctx.expr(0).getText());
         if (ctx.K_OFFSET() != null)
             offset=Integer.parseInt(ctx.expr(1).getText());
+        if (ctx.K_ORDER()!=null){
+            for(SQLiteParser.Ordering_termContext term:ctx.ordering_term()){
+                int asc_order=-1;
+                if(term.K_ASC()!=null)
+                    asc_order=1;
+                ((BasicDBObject)order).append(term.expr().getText(),asc_order);
+            }
+        }
     }
 
     @Override
