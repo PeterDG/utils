@@ -86,6 +86,19 @@ public class MongoDBManagerImpl implements DBManager {
         return documents;
     }
 
+    @Override
+    public ArrayList<HashMap> executeQueryWithLimits(String query, int fromIndex, int toIndex) {
+        int limit= toIndex-fromIndex;
+        String exp = " " + "LIMIT " + limit + " OFFSET " + fromIndex;
+        return executeQuery(query+exp);
+    }
+
+    @Override
+    public ArrayList<HashMap> executePaginatedQuery(String query, int fromIndex, int pageSize, int page) {
+        int offset=page*pageSize;
+        return executeQueryWithLimits(query,fromIndex+offset,fromIndex+offset+pageSize);
+    }
+
     public ArrayList<HashMap> select(String table, ArrayList<String> columnNames, Bson rowsFilter, int limit, int offset, Bson order) {
         MongoCursor result;
         if (rowsFilter != null)
@@ -198,6 +211,38 @@ public class MongoDBManagerImpl implements DBManager {
         File file = new File(filePath);
         file.replaceTextLists(PostgresDBManagerImpl.scripts.tmpSQL.filePath, pairsToReplace);
         return executeSQLFile(PostgresDBManagerImpl.scripts.tmpSQL.filePath);
+    }
+
+    @Override
+    public ArrayList<ArrayList<HashMap>> executeSQLFileWithLimits(String filePath, int fromIndex, int toIndex) {
+        File file = new File(filePath);
+        ArrayList<ArrayList<HashMap>> list = new ArrayList<>();
+        List<String> linesList = file.getListLinesOfFile();
+        ResultSet resultSet = null;
+        for (String line : linesList) {
+            list.add(executeQueryWithLimits(line,fromIndex,toIndex));
+        }
+        lastQuery.setQuery(linesList, list);
+        return list;
+    }
+
+    @Override
+    public ArrayList<ArrayList<HashMap>> executeSQLFileWithLimits(String filePath, ArrayList<String[]> pairsToReplace, int fromIndex, int toIndex) {
+        File file = new File(filePath);
+        file.replaceTextLists(PostgresDBManagerImpl.scripts.tmpSQL.filePath, pairsToReplace);
+        return executeSQLFileWithLimits(PostgresDBManagerImpl.scripts.tmpSQL.filePath,fromIndex,toIndex);
+    }
+
+    @Override
+    public ArrayList<ArrayList<HashMap>> executePaginatedSQLFile(String filePath, ArrayList<String[]> pairsToReplace, int fromIndex, int pageSize, int page) {
+        int offset=page*pageSize;
+        return executeSQLFileWithLimits(filePath,pairsToReplace,fromIndex+offset,fromIndex+offset+pageSize);
+    }
+
+    @Override
+    public ArrayList<ArrayList<HashMap>> executePaginatedSQLFile(String filePath, int fromIndex, int pageSize, int page) {
+        int offset=page*pageSize;
+        return executeSQLFileWithLimits(filePath,fromIndex+offset,fromIndex+offset+pageSize);
     }
 
     @Override

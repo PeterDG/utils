@@ -204,6 +204,26 @@ public class OracleDBManagerImpl implements DBManager {
         return executeSQLFile(scripts.tmpSQL.filePath);
     }
 
+    @Override
+    public ArrayList<ArrayList<HashMap>> executeSQLFileWithLimits(String filePath, int fromIndex, int toIndex) {
+        return null;
+    }
+
+    @Override
+    public ArrayList<ArrayList<HashMap>> executeSQLFileWithLimits(String filePath, ArrayList<String[]> pairsToReplace, int fromIndex, int toIndex) {
+        return null;
+    }
+
+    @Override
+    public ArrayList<ArrayList<HashMap>> executePaginatedSQLFile(String filePath, int fromIndex, int pageSize, int page) {
+        return null;
+    }
+
+    @Override
+    public ArrayList<ArrayList<HashMap>> executePaginatedSQLFile(String filePath, ArrayList<String[]> pairsToReplace, int fromIndex, int pageSize, int page) {
+        return null;
+    }
+
 
     public ArrayList<HashMap> executeQuery(String query) {
         querySuccessful=true;
@@ -223,6 +243,19 @@ public class OracleDBManagerImpl implements DBManager {
         }
         lastQuery.setQuery(query,list);
         return list;
+    }
+
+    @Override
+    public ArrayList<HashMap> executeQueryWithLimits(String query, int fromIndex, int toIndex) {
+        int limit= toIndex-fromIndex;
+        String exp = " " + "LIMIT " + limit + " OFFSET " + fromIndex;
+        return executeQuery(query+exp);
+    }
+
+    @Override
+    public ArrayList<HashMap> executePaginatedQuery(String query, int fromIndex, int pageSize, int page) {
+        int offset=page*pageSize;
+        return executeQueryWithLimits(query,fromIndex+offset,fromIndex+offset+pageSize);
     }
 
     public ArrayList<HashMap> resultSetToArrayList(ResultSet rs) {

@@ -274,4 +274,36 @@ public class MongoDBManagerImplTest {
         assertTrue(result.get(0).get("_id").toString().equals("561d1e1f15fa5b5db9c95318"));
     }
 
+    @Test
+    public void testExecuteQueryWithLimits() throws Exception {
+        MongoClient mongoClient = (MongoClient) connectionWithDB.connect();
+        ArrayList<HashMap> result = connectionWithDB.executeQueryWithLimits("SELECT * FROM context ORDER BY serverInfo.date DESC",0,5);
+        assertTrue(result.size() == 5 && result.get(0).get("_id").toString().equals("561d1e1f15fa5b5db9c95318"));
+    }
+
+    @Test
+    public void testExecutePaginatedQuery() throws Exception {
+        MongoClient mongoClient = (MongoClient) connectionWithDB.connect();
+        ArrayList<HashMap> result = connectionWithDB.executePaginatedQuery("SELECT * FROM context ORDER BY serverInfo.date DESC",100,100,5);
+        assertTrue(result.size() == 100 && result.get(0).get("_id").toString().equals("55865e2f18025318465b8241"));
+    }
+
+    @Test
+    public void testExecuteSQLFileWithLimits() throws Exception {
+        MongoClient mongoClient = (MongoClient) connectionWithDB.connect();
+        ArrayList pairsToReplace = new ArrayList();
+        pairsToReplace.add(new String[]{"p_table", "context ORDER BY serverInfo.date DESC"});
+        ArrayList<ArrayList<HashMap>> result = connectionWithDB.executeSQLFileWithLimits("src/main/test/resources/db/mongo/select.sql", pairsToReplace,0,5);
+        assertTrue(result.get(0).get(0).get("_id").toString().equals("561d1e1f15fa5b5db9c95318"));
+    }
+
+    @Test
+    public void testExecutePaginatedSQLFile() throws Exception {
+        MongoClient mongoClient = (MongoClient) connectionWithDB.connect();
+        ArrayList pairsToReplace = new ArrayList();
+        pairsToReplace.add(new String[]{"p_table", "context ORDER BY serverInfo.date DESC"});
+        ArrayList<ArrayList<HashMap>> result = connectionWithDB.executePaginatedSQLFile("src/main/test/resources/db/mongo/select.sql", pairsToReplace,100,100,5);
+        assertTrue(result.get(0).size() == 100 && result.get(0).get(0).get("_id").toString().equals("55865e2f18025318465b8241"));
+    }
+
 }

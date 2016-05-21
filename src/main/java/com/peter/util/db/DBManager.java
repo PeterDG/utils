@@ -14,8 +14,17 @@ public interface DBManager {
 
  Object connect();
  ArrayList<HashMap> executeQuery(String query);
+ ArrayList<HashMap> executeQueryWithLimits(String query, int from, int to);
+  ArrayList<HashMap> executePaginatedQuery(String query, int fromIndex, int pageSize, int page);
+
  ArrayList<ArrayList<HashMap>> executeSQLFile(String filePath);
  ArrayList<ArrayList<HashMap>> executeSQLFile(String filePath, ArrayList<String[]> pairsToReplace);
+
+ ArrayList<ArrayList<HashMap>> executeSQLFileWithLimits(String filePath, int fromIndex, int toIndex);
+ ArrayList<ArrayList<HashMap>> executeSQLFileWithLimits(String filePath, ArrayList<String[]> pairsToReplace, int fromIndex, int toIndex);
+ ArrayList<ArrayList<HashMap>> executePaginatedSQLFile(String filePath, int fromIndex, int pageSize, int page);
+ ArrayList<ArrayList<HashMap>> executePaginatedSQLFile(String filePath, ArrayList<String[]> pairsToReplace, int fromIndex, int pageSize, int page);
+
  ArrayList<ArrayList<HashMap>> createDB(String dbName);
  ArrayList<ArrayList<HashMap>> deleteDB(String dbName);
  boolean existDB(String dbName);
