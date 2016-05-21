@@ -4,6 +4,7 @@ package com.peter.util.data.util;
 import com.peter.util.time.Time;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -39,5 +40,10 @@ public class ArraysList {
             ret.add(col);
         }
         return ret;
+    }
+
+    public static ArrayList<String> enumToArrayList(Class<? extends Enum<?>> e) {
+        String[] array = Arrays.toString(e.getEnumConstants()).replaceAll("^.|.$", "").split(", ");
+        return new ArrayList<String>(Arrays.asList(array));
     }
 }
