@@ -1,6 +1,7 @@
 package com.peter.util.so;
 
 import com.peter.util.time.Time;
+import org.joda.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.After;
 import org.junit.Test;
@@ -60,6 +61,13 @@ public class SOUtilsTest {
         int day = Time.getCurrentTime(Calendar.DAY_OF_MONTH);
         int year = Time.getCurrentTime(Calendar.YEAR);
         assertTrue(hours == 9 && month == 5 && day == 20 && year == 2016);
+    }
+
+    @Test
+    public void testSetSOTimeDateLocalNow() throws Exception {
+        soUtils.setSOTime("2016-05-26 09:00:00", cmdPath);
+        LocalDateTime lastDateOfMonth =         LocalDateTime.now();
+        assertTrue(lastDateOfMonth.toString().split("\\.")[0].equals("2016-05-26T09:00:00"));
     }
 
     @Test
