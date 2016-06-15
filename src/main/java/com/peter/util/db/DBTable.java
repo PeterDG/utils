@@ -30,32 +30,40 @@ public class DBTable {
     public String column20;
     public ArrayList<String> columns;
 
+    public DBTable() {
+    }
+
+    public DBTable(ArrayList<String> columns) {
+        this.columns = columns;
+        setList(columns);
+    }
+
     public ArrayList<String> getAsList() {
         this.columns = new ArrayList<String>(Arrays.asList(column1, column2, column3, column4, column5, column6, column7, column8, column9, column10, column11, column12, column13, column14, column15, column16, column17, column18, column19, column20));
         return columns;
     }
 
     public void setList(ArrayList<String> list){
-        column1=list.get(0);
-        column2=list.get(1);
-        column3=list.get(2);
-        column4=list.get(3);
-        column5=list.get(4);
-        column6=list.get(5);
-        column7=list.get(6);
-        column8=list.get(7);
-        column9=list.get(8);
-        column10=list.get(9);
-        column11=list.get(10);
-        column12=list.get(11);
-        column13=list.get(12);
-        column14=list.get(13);
-        column15=list.get(14);
-        column16=list.get(15);
-        column17=list.get(16);
-        column18=list.get(17);
-        column19=list.get(18);
-        column20=list.get(19);
+        if(list.size()>0)column1=list.get(0);
+        if(list.size()>1)column2=list.get(1);
+        if(list.size()>2)column3=list.get(2);
+        if(list.size()>3)column4=list.get(3);
+        if(list.size()>4)column5=list.get(4);
+        if(list.size()>5)column6=list.get(5);
+        if(list.size()>6)column7=list.get(6);
+        if(list.size()>7)column8=list.get(7);
+        if(list.size()>8)column9=list.get(8);
+        if(list.size()>9)column10=list.get(9);
+        if(list.size()>10)column11=list.get(10);
+        if(list.size()>11)column12=list.get(11);
+        if(list.size()>12)column13=list.get(12);
+        if(list.size()>13)column14=list.get(13);
+        if(list.size()>14)column15=list.get(14);
+        if(list.size()>15)column16=list.get(15);
+        if(list.size()>16)column17=list.get(16);
+        if(list.size()>17)column18=list.get(17);
+        if(list.size()>18)column19=list.get(18);
+        if(list.size()>19)column20=list.get(19);
     }
 
     public String getAsStringList(boolean values) {
