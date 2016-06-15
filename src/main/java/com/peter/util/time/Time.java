@@ -336,7 +336,7 @@ public class Time {
     }
 
     public static Instant date2Instant(Date date) {
-        return new Instant(date.getTime()-5*3600000);
+        return new Instant(date.getTime() - 5 * 3600000);
     }
 
     public static Date getCurrentTime() {
@@ -364,6 +364,22 @@ public class Time {
             calendar.set(time, value);
         }
         return calendar.getTime();
+    }
+
+    public static java.time.LocalDateTime parseList(CharSequence dateStr, ArrayList<java.time.format.DateTimeFormatter> formats) {
+        java.time.LocalDateTime localDateTime = null;
+        java.time.format.DateTimeFormatter formatter = formats.get(0);
+        try{
+            localDateTime=java.time.LocalDateTime.parse(dateStr,formatter);
+        } catch(java.time.format.DateTimeParseException e) {
+            formats.remove(formatter);
+            if (formats.size() > 0) {
+                localDateTime=parseList(dateStr, formats);
+            } else {
+                e.printStackTrace();
+            }
+        }
+        return localDateTime;
     }
 
 }

@@ -6,9 +6,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 
 import static org.junit.Assert.assertTrue;
 
@@ -16,6 +14,8 @@ import static org.junit.Assert.assertTrue;
  * Created by Peter on 2/2/2016.
  */
 public class TimeTest {
+    public static java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+    public static java.time.format.DateTimeFormatter formatterNoMS = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Test
     public void testToDate() throws Exception {
@@ -98,5 +98,24 @@ public class TimeTest {
         LocalDateTime dateTime= Time.string2LocalDateTime("1986-04-08 12:30","yyyy-MM-dd HH:mm");
         LocalDateTime lastDateOfMonth = Time.getLastDateOfMonth(dateTime);
         assertTrue(lastDateOfMonth.toString().equals("1986-04-30T23:59:59.000"));
+    }
+
+
+    @Test
+    public void testParseListFormat() throws Exception {
+        ArrayList<java.time.format.DateTimeFormatter> list = new ArrayList<>();
+        list.add(formatter);
+        list.add(formatterNoMS);
+        java.time.LocalDateTime dateTime = Time.parseList("1986-04-08 12:30:00", list);
+        assertTrue(dateTime.toString().equals("1986-04-08T12:30"));
+    }
+
+    @Test
+    public void testParseListFormat1() throws Exception {
+        ArrayList<java.time.format.DateTimeFormatter> list = new ArrayList<>();
+        list.add(formatter);
+        list.add(formatterNoMS);
+        java.time.LocalDateTime dateTime = Time.parseList("1986-04-08 12:30:00.500", list);
+        assertTrue(dateTime.toString().equals("1986-04-08T12:30:00.500"));
     }
 }
