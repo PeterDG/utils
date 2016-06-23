@@ -23,20 +23,25 @@ import org.junit.Test;
  */
 public class GITTest {
 
-    private String localPath, remotePath;
+    private String localPath, remotePath,remotePathSSH,remotePathUserNamePass;
     private GIT git;
+//    private static String username = "pgutierrez";
     private static String username = "PeterDG";
     private static String password = "";
+    private static String privateKey= "E:\\Development\\Projects\\utils\\src\\main\\test\\resources\\git\\id_rsa";
+    private static String passphrase= "pgutierrez";
 
     @Before
-    public void init() throws IOException {
+    public void init() throws IOException, InterruptedException {
         localPath = "E:\\Development\\Projects\\examples\\test";
-        remotePath = "https://gitlab.com/PeterDG/test.git";
-        git = new GIT(localPath, remotePath);
-        git.setUsernamePasswordCredentialsProvider(username, password);
-        com.peter.util.data.File file = new com.peter.util.data.File(localPath);
+        remotePathUserNamePass = "https://gitlab.com/PeterDG/test.git";
+        remotePath = "git@gitlab.com:PeterDG/test.git";
+//        remotePathUserNamePass = "http://192.168.243.3/pgutierrez/test.git";
+//        remotePath = "git@192.168.243.3:pgutierrez/test.git";
+        setSSHAuthentication();
         Dir.deleteDirectory(localPath);
     }
+
 
     @Test
     public void testCreate() throws IOException {
@@ -51,8 +56,44 @@ public class GITTest {
     }
 
     @Test
-    public void testAddFilePushUserNamePasswordCredentials() throws IOException {
-        String fileName = "myfile" + (int) (Math.random() * 1000);
+    public void testAddAndPush() throws IOException {
+        String fileName = "myfile" + (int) (Math.random() * 10000);
+        Boolean clone = git.clone();
+        com.peter.util.data.File myfile = new com.peter.util.data.File(localPath + "/" + fileName);
+        myfile.writeLine("Esto es una prueba",false);
+        Boolean add = git.addAndPush(fileName,"Added file:"+fileName);
+        assertTrue(add);
+    }
+
+
+    @Test
+    public void testEditAndPush() throws IOException {
+        String fileName = "myfile" + (int) (Math.random() * 10000);
+        Boolean clone = git.clone();
+        com.peter.util.data.File myfile = new com.peter.util.data.File(localPath + "/" + fileName);
+        myfile.writeLine("Esto es una prueba\n Segunda Linea",true);
+        Boolean add = git.addAndPush(fileName,"Added file:"+fileName);
+        myfile.writeLine("Agregando nuevas lineas\n Cuarta Linea",false);
+        Boolean edit = git.addAndPush(fileName,"Edited file:"+fileName);
+        assertTrue(add);
+        assertTrue(edit);
+    }
+
+    @Test
+    public void testRemoveAndPush() throws IOException {
+        String fileName = "myfile" + (int) (Math.random() * 10000);
+        Boolean clone = git.clone();
+        com.peter.util.data.File myfile = new com.peter.util.data.File(localPath + "/" + fileName);
+        myfile.writeLine("Esto es una prueba",false);
+        Boolean add = git.addAndPush(fileName,"Added file:"+fileName);
+        Boolean remove = git.removeAndPush(fileName,"Removed file:"+fileName);
+        assertTrue(add);
+        assertTrue(remove);
+    }
+
+    @Test
+    public void testAddFilePushSSH_gitUri() throws IOException {
+        String fileName = "myfile" + (int) (Math.random() * 10000);
         Boolean clone = git.clone();
         File myfile = new File(localPath + "/" + fileName);
         myfile.createNewFile();
@@ -65,5 +106,52 @@ public class GITTest {
         assertTrue(push);
     }
 
+    @Test
+    public void testRemoveFilePushSSH_gitUri() throws IOException {
+        String fileName = "myfile" + (int) (Math.random() * 10000);
+        Boolean clone = git.clone();
+        File myfile = new File(localPath + "/" + fileName);
+        myfile.createNewFile();
+        Boolean add = git.add(fileName);
+        Boolean commit = git.commit("Added " + fileName);
+        Boolean push = git.push();
+        Boolean remove=git.remove(fileName);
+        Boolean commitR = git.commit("Removed " + fileName);
+        Boolean pushR = git.push();
+        assertTrue(clone);
+        assertTrue(add);
+        assertTrue(commit);
+        assertTrue(push);
+        assertTrue(remove);
+        assertTrue(commitR);
+        assertTrue(pushR);
+    }
+
+    @Test
+    public void testAddFilePushUserNamePasswordCredentials() throws IOException {
+        setUserNamePassAuthentication();
+        String fileName = "myfile" + (int) (Math.random() * 10000);
+        Boolean clone = git.clone();
+        File myfile = new File(localPath + "/" + fileName);
+        myfile.createNewFile();
+        Boolean add = git.add(fileName);
+        Boolean commit = git.commit("Added " + fileName);
+        Boolean push = git.push();
+        assertTrue(clone);
+        assertTrue(add);
+        assertTrue(commit);
+        assertTrue(push);
+    }
+
+    public void setUserNamePassAuthentication(){
+        git = new GIT(localPath, remotePathUserNamePass);
+        git.setUsernamePasswordCredentialsProvider(username, password);
+    }
+
+    public void setSSHAuthentication(){
+        git = new GIT(localPath, remotePath);
+        git.setPrivateKey(privateKey);
+        git.setPassphrase(passphrase);
+    }
 
 }

@@ -1,12 +1,17 @@
 package com.peter.util.connection;
 
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
+import com.jcraft.jsch.UserInfo;
 import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.errors.UnsupportedCredentialItem;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
-import org.eclipse.jgit.transport.CredentialsProvider;
-import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+import org.eclipse.jgit.transport.*;
+import org.eclipse.jgit.util.FS;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +25,9 @@ public class GIT {
     public Repository localRepo;
     public Git git;
     public CredentialsProvider credentialsProvider;
+    public String privateKey;
+    public String passphrase = "";
+
 
     public GIT(String localPath) {
         try {
@@ -40,12 +48,72 @@ public class GIT {
         this.credentialsProvider = credentialsProvider;
     }
 
+    public void setPrivateKey(String privateKey) {
+        this.privateKey = privateKey;
+    }
+
+    public void setPassphrase(String passphrase) {
+        this.passphrase = passphrase;
+    }
+
     public void setUsernamePasswordCredentialsProvider(String userName, String password) {
         this.credentialsProvider = new UsernamePasswordCredentialsProvider(userName, password);
     }
 
-    public void setSSHConnection(String userName, String password) {
-        this.credentialsProvider = new UsernamePasswordCredentialsProvider(userName, password);
+
+    public static TransportCommand setSSHConnection(TransportCommand command, String privateKey, String passphrase) {
+        SshSessionFactory sshSessionFactory = new JschConfigSessionFactory() {
+            @Override
+            protected void configure(OpenSshConfig.Host host, Session session) {
+                UserInfo userInfo = new UserInfo() {
+                    @Override
+                    public String getPassphrase() {
+                        return passphrase;
+                    }
+
+                    @Override
+                    public String getPassword() {
+                        return "";
+                    }
+
+                    @Override
+                    public boolean promptPassword(String message) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean promptPassphrase(String message) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean promptYesNo(String message) {
+                        // accept host authenticity
+                        return true;
+                    }
+
+                    @Override
+                    public void showMessage(String message) {
+                    }
+                };
+                session.setUserInfo(userInfo);
+            }
+
+            @Override
+            protected JSch createDefaultJSch(FS fs) throws JSchException {
+                JSch defaultJSch = super.createDefaultJSch(fs);
+                defaultJSch.addIdentity(privateKey);
+                return defaultJSch;
+            }
+        };
+        command.setTransportConfigCallback(new TransportConfigCallback() {
+            @Override
+            public void configure(Transport transport) {
+                SshTransport sshTransport = (SshTransport) transport;
+                sshTransport.setSshSessionFactory(sshSessionFactory);
+            }
+        });
+        return command;
     }
 
     public Boolean clone() {
@@ -74,19 +142,41 @@ public class GIT {
     }
 
     public Boolean add(String fileRegExp) {
-        GitCommand cmd =git.add().addFilepattern(fileRegExp);
+        GitCommand cmd = git.add().addFilepattern(fileRegExp);
+        return run(cmd);
+    }
+
+    public Boolean addAndPush(String fileRegExp, String message) {
+        Boolean fetch = fetch();
+        Boolean pull = pull();
+        Boolean opr= add(fileRegExp);
+        Boolean commit=commit(message);
+        Boolean push=push();
+        return fetch&&pull&&opr&&commit&&push;
+    }
+
+    public Boolean removeAndPush(String fileRegExp, String message) {
+        Boolean fetch = fetch();
+        Boolean pull = pull();
+        Boolean opr= remove(fileRegExp);
+        Boolean commit=commit(message);
+        Boolean push=push();
+        return fetch&&pull&&opr&&commit&&push;
+    }
+
+    public Boolean remove(String fileRegExp) {
+        GitCommand cmd = git.rm().addFilepattern(fileRegExp);
         return run(cmd);
     }
 
     public Boolean run(TransportCommand command) {
-        try {
-            command.setCredentialsProvider(credentialsProvider).call();
-        } catch (GitAPIException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
+        if (sshAuthentication())
+            command = setSSHConnection(command, privateKey, passphrase);
+        else
+            command = (TransportCommand) command.setCredentialsProvider(credentialsProvider);
+        return run((GitCommand) command);
     }
+
 
     public Boolean run(GitCommand command) {
         try {
@@ -106,5 +196,15 @@ public class GIT {
             return false;
         }
         return true;
+    }
+
+    public boolean sshAuthentication() {
+        if (remotePath.matches("git@.*") || remotePath.matches("ssh://.*"))
+            return true;
+        return false;
+    }
+
+    public void close() {
+        git.close();
     }
 }
