@@ -18,13 +18,13 @@ public class CMD {
         Process p;
         try {
             p = Runtime.getRuntime().exec(cmdLine);
-            p.waitFor();
             BufferedReader reader =
                     new BufferedReader(new InputStreamReader(p.getInputStream()));
 
             String line = "";
             while ((line = reader.readLine()) != null) {
                 output.append(line + "\n");
+                System.out.println(line);
             }
 
         } catch (Exception e) {
