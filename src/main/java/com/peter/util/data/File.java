@@ -1,6 +1,7 @@
 package com.peter.util.data;
 
 
+import sys.Environment;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -96,16 +97,28 @@ public class File {
     public static List<java.io.File> getListFilesOfDirectory(String dir) {
         java.io.File file = new java.io.File(Paths.get(dir.replace("\\", "/")).toString());
         List<java.io.File> fileNames = new ArrayList<>();
-        java.io.File folder = file;
-        java.io.File[] listOfFiles = folder.listFiles();
-        for (int i = 0; i < listOfFiles.length; i++) {
-            if (listOfFiles[i].isFile()) {
-                fileNames.add(listOfFiles[i]);
-            } else if (listOfFiles[i].isDirectory()) {
-                try {
-                    fileNames.addAll(getListFilesOfDirectory(listOfFiles[i].getCanonicalPath().toString()));
-                } catch (IOException e) {
-                    e.printStackTrace();
+        if (file.isDirectory()) {
+            java.io.File folder = file;
+            java.io.File[] listOfFiles = folder.listFiles();
+            for (int i = 0; i < listOfFiles.length; i++) {
+                if (listOfFiles[i].isFile()) {
+                    fileNames.add(listOfFiles[i]);
+                } else if (listOfFiles[i].isDirectory()) {
+                    try {
+                        fileNames.addAll(getListFilesOfDirectory(listOfFiles[i].getCanonicalPath().toString()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } else {
+            if (file.isFile()) {
+                fileNames.add(file);
+            } else {
+                if(!file.getPath().contains(":")) {
+                    fileNames = getListFilesOfDirectory(Environment.getInstance().rootPath + "/" + dir);
+                } else {
+                    System.out.println("INVALID PATH:"+ dir);
                 }
             }
         }
