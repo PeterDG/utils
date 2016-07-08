@@ -127,4 +127,8 @@ public class JSON {
         getFlatJson();
         CSVWriter.writeToFile(CSVWriter.getCSV(flatJson, ","), csvPathFile);
     }
+
+    public Boolean equals(JSON json){
+        return getJsonObj().toString().equals(json.getJsonObj().toString());
+    }
 }

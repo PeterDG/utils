@@ -15,6 +15,7 @@ import static junit.framework.TestCase.assertTrue;
  * Created by Peter on 11/20/15.
  */
 public class JSONTest {
+
     public String accessPointHost;
     public String accessPointPort;
     public REST rest;
@@ -38,6 +39,11 @@ public class JSONTest {
     public void testGetDataList() throws Exception {
         HashMap<String, List<Object>> dataList = json.getDataList("candles");
         assertTrue("This will succeed.", dataList.size()==11);
+    }
+
+    @Test
+    public void equals() throws Exception {
+        assertTrue(json.equals(new JSON(jsonStr)));
     }
 
     public final String jsonStr="{\n" +
