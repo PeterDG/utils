@@ -3,12 +3,14 @@ package com.peter.util.data;
 import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.path.json.config.JsonPathConfig;
 import com.jayway.restassured.response.Response;
+import org.apache.commons.io.output.NullOutputStream;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.peter.util.jsontocsv.parser.JSONFlattener;
 import com.peter.util.jsontocsv.writer.CSVWriter;
 
+import java.io.PrintStream;
 import java.util.*;
 
 /**
@@ -54,7 +56,7 @@ public class JSON {
     }
 
     public String toString() {
-        return jsonPath.prettyPrint();
+        return prettyPrint(jsonPath);
     }
 
     public String update() {
@@ -81,10 +83,10 @@ public class JSON {
 
     public JSONObject getJsonObj() {
         try {
-            jsonObj = new JSONObject(jsonPath.prettyPrint());
+            jsonObj = new JSONObject(prettyPrint(jsonPath));
         } catch (JSONException e) {
             jsonObj = new JSONObject();
-            jsonObj.put("", new JSONArray(jsonPath.prettyPrint()));
+            jsonObj.put("", new JSONArray(prettyPrint(jsonPath)));
         }
         return jsonObj;
     }
@@ -130,5 +132,14 @@ public class JSON {
 
     public Boolean equals(JSON json){
         return getJsonObj().toString().equals(json.getJsonObj().toString());
+    }
+
+    public String prettyPrint(JsonPath jsonPath){
+        PrintStream syout = System.out;
+        PrintStream tmp = new PrintStream(new NullOutputStream());
+        System.setOut(tmp);
+        String out=jsonPath.prettyPrint();
+        System.setOut(syout);
+        return out;
     }
 }

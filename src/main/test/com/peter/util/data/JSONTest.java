@@ -27,7 +27,7 @@ public class JSONTest {
     @Before
     public void setUp() throws Exception {
        json=new JSON(jsonStr);
-
+        new JSON(jsonStr);
     }
 
     @After
