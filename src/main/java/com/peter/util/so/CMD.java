@@ -18,15 +18,11 @@ public class CMD {
         Process p;
         try {
             p = Runtime.getRuntime().exec(cmdLine);
-            BufferedReader reader =
-                    new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-            String line = "";
-            while ((line = reader.readLine()) != null) {
-                output.append(line + "\n");
-                System.out.println(line);
-            }
-
+            LogPrinterThread outLog = new LogPrinterThread(p, LogPrinterThread.logTypes.OUT);
+            LogPrinterThread errLog = new LogPrinterThread(p, LogPrinterThread.logTypes.ERR);
+            errLog.start();
+            outLog.start();
+            p.waitFor();
         } catch (Exception e) {
             e.printStackTrace();
         }
