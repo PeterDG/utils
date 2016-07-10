@@ -11,13 +11,13 @@ import java.io.InputStreamReader;
 public class LogPrinterThread extends Thread {
     private final logTypes log;
     public BufferedReader reader;
-
-    StringBuffer output = new StringBuffer();
+    public StringBuffer output;
 
     public enum logTypes {OUT, ERR}
 
-    public LogPrinterThread(Process p, logTypes log) {
+    public LogPrinterThread(Process p, logTypes log, StringBuffer output) {
         this.log = log;
+        this.output=output;
         switch (log) {
             case OUT:
                 this.reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -35,9 +35,11 @@ public class LogPrinterThread extends Thread {
                 switch (log) {
                     case OUT:
                         System.out.println(line);
+                        output.append(line+"\n");
                         break;
                     case ERR:
                         System.err.println(line);
+                        output.append(line+"\n");
                         break;
                 }
             }

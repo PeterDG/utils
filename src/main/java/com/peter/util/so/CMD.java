@@ -18,8 +18,8 @@ public class CMD {
         Process p;
         try {
             p = Runtime.getRuntime().exec(cmdLine);
-            LogPrinterThread outLog = new LogPrinterThread(p, LogPrinterThread.logTypes.OUT);
-            LogPrinterThread errLog = new LogPrinterThread(p, LogPrinterThread.logTypes.ERR);
+            LogPrinterThread outLog = new LogPrinterThread(p, LogPrinterThread.logTypes.OUT,output);
+            LogPrinterThread errLog = new LogPrinterThread(p, LogPrinterThread.logTypes.ERR,output);
             errLog.start();
             outLog.start();
             p.waitFor();
