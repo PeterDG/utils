@@ -3,6 +3,8 @@ package com.peter.util.data;
 import com.google.common.base.CaseFormat;
 import com.google.common.primitives.Booleans;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 
 /**
@@ -78,5 +80,10 @@ public class Strings {
         if(!textA.equals(textB))
             return textA;
         return "";
+    }
+
+    public static String generateRndString(int length) {
+        SecureRandom random = new SecureRandom();
+        return new BigInteger(length*5, random).toString(32);
     }
 }
