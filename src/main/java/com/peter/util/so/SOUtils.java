@@ -3,6 +3,13 @@ package com.peter.util.so;
 import com.peter.util.time.Time;
 import org.junit.Before;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -72,5 +79,36 @@ public class SOUtils {
          return OS;
     }
 
+    //      Create Tmp file inside of jar file
+    public File createTmpFile(String resourcePath) {
+        File tmp = null;
+        String[] split = resourcePath.split("\\.");
+        String extension = split.length > 1 ? split[1] : "";
+        try {
+            tmp = File.createTempFile("tmp", "." + extension);
+            try (final ReadableByteChannel channel = Channels.newChannel(this.getClass().getResourceAsStream(resourcePath));
+                 final FileChannel fileChannel = new RandomAccessFile(tmp, "rw").getChannel()) {
+                final ByteBuffer bb = ByteBuffer.allocate(1024);
+                while (channel.read(bb) > 0) {
+                    bb.flip();
+                    fileChannel.write(bb);
+                    bb.clear();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return tmp;
+    }
 
+    public File createTmpFile(String source,String destination){
+        File src = null;
+        src = createTmpFile(source);
+        File dst=new File(src.getParent()+destination);
+        File dstDir=dst.getParentFile();
+        if (!dstDir.exists())
+            dstDir.mkdirs();
+        src.renameTo(dst);
+        return dst;
+    }
 }

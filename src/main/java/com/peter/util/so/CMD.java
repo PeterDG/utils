@@ -41,26 +41,5 @@ public class CMD {
         return result;
     }
 
-    //      Create Tmp file inside of jar file
-    public File createTmpFile(String resourcePath) {
-        File tmp = null;
-        String[] split = resourcePath.split("\\.");
-        String extension = split.length > 1 ? split[1] : "";
-        try {
-            tmp = File.createTempFile("tmp", "." + extension);
-            try (final ReadableByteChannel channel = Channels.newChannel(this.getClass().getResourceAsStream(resourcePath));
-                 final FileChannel fileChannel = new RandomAccessFile(tmp, "rw").getChannel()) {
-                final ByteBuffer bb = ByteBuffer.allocate(1024);
-                while (channel.read(bb) > 0) {
-                    bb.flip();
-                    fileChannel.write(bb);
-                    bb.clear();
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return tmp;
-    }
 
 }
