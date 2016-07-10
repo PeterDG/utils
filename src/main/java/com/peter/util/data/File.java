@@ -295,4 +295,19 @@ public class File {
         return file.exists();
     }
 
+    public static Boolean removeDirectory(java.io.File dir) {
+        String[] entries = dir.list();
+        Boolean deleted;
+        for (String s : entries) {
+            java.io.File currentFile = new java.io.File(dir.getPath(), s);
+            if (currentFile.isDirectory())
+                deleted=removeDirectory(currentFile);
+            else
+                deleted =currentFile.delete();
+            if (!deleted)
+                return false;
+        }
+        return dir.delete();
+    }
+
 }
