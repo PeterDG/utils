@@ -34,7 +34,9 @@ public interface DBManager {
  void insertTable(String table, String columnNames, String values);
  void insertTable(String table,  ArrayList<String> columnNamesList, ArrayList<String> valuesList);
  void updateTable(String table, String columnNames, String values,  Optional<String> where);
+ void updateTable(DBTable dbTable,  Optional<String> where);
  List<HashMap> selectTable(String table, String columnNames, Optional<String> where);
+ List<HashMap> selectTable(DBTable table, Optional<String> where);
  void cleanTable(String dbName);
  boolean isQuerySuccessful();
  void closeConnection();

@@ -45,6 +45,10 @@ public class DBTable {
         this.values.add(row);
     }
 
+    public void cleanRows(){
+        this.values.clear();
+    }
+
     @Override
     public DBTable clone(){
         return new DBTable(name,headers.clone(),cloneRows());

@@ -139,10 +139,20 @@ public class PostgresDBManagerImpl implements DBManager {
         executeQuery(query);
     }
 
+    @Override
+    public void updateTable(DBTable dbTable, Optional<String> where) {
+
+    }
+
     public List<HashMap> selectTable(String table, String columnNames, Optional<String> where) {
         String query = "SELECT " + columnNames + " FROM " + table;
         if (where.isPresent()) query += " WHERE " + where.get();
         return executeQuery(query);
+    }
+
+    @Override
+    public List<HashMap> selectTable(DBTable table, Optional<String> where) {
+        return null;
     }
 
     public void createTable(String table, String columnNamesAndTypes, Optional<String> primaryKey) {

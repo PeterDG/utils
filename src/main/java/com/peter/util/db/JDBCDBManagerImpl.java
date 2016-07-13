@@ -36,9 +36,9 @@ public class JDBCDBManagerImpl implements DBManager {
         }
     }
 
-    public String getPath(String scriptFileName){
+    public String getPath(String scriptFileName) {
         String dir;
-        switch(scriptFileName){
+        switch (scriptFileName) {
             default:
                 dir = dbManagerType.scriptsPath;
                 break;
@@ -46,7 +46,7 @@ public class JDBCDBManagerImpl implements DBManager {
                 dir = Environment.getInstance().targetPath;
                 break;
         }
-        dir +=scriptFileName;
+        dir += scriptFileName;
         return dir;
     }
 
@@ -63,8 +63,8 @@ public class JDBCDBManagerImpl implements DBManager {
 
     public JDBCDBManagerImpl(ConnectionInfo connectionInfo) {
         this.connectionInfo = connectionInfo;
-        this.dbManagerType=connectionInfo.getDBType();
-        lastQuery=new Query();
+        this.dbManagerType = connectionInfo.getDBType();
+        lastQuery = new Query();
     }
 
     public JDBCDBManagerImpl() {
@@ -81,15 +81,15 @@ public class JDBCDBManagerImpl implements DBManager {
                 Class.forName(dbManagerType.driverClassName);
                 activeConnection = DriverManager.getConnection(connectionInfo.getJDBCUrlWithDBName() + dbName, connectionInfo.getUserName(), connectionInfo.getPassword());
             }
-        } catch (SQLRecoverableException e){
-            System.out.println("Connection with "+connectionInfo.getJdbcUrl() + " could not be established!!");
+        } catch (SQLRecoverableException e) {
+            System.out.println("Connection with " + connectionInfo.getJdbcUrl() + " could not be established!!");
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return activeConnection;
     }
 
-    public void commit(){
+    public void commit() {
         try {
             activeConnection.commit();
         } catch (SQLException e) {
@@ -102,7 +102,7 @@ public class JDBCDBManagerImpl implements DBManager {
         return lastQuery;
     }
 
-    public void closeConnection(){
+    public void closeConnection() {
         try {
             activeConnection.close();
         } catch (SQLException e) {
@@ -112,9 +112,9 @@ public class JDBCDBManagerImpl implements DBManager {
 
     public ArrayList<ArrayList<HashMap>> createDB(String dbName) {
         File file = new File(getPath(scripts.templateCreateDB.fileName));
-        ArrayList pairsToReplace = new ArrayList() ;
-        pairsToReplace.add(new String []{scriptsParameters.dbName.name,dbName});
-        pairsToReplace.add(new String []{scriptsParameters.dbOwner.name,connectionInfo.getUserName()});
+        ArrayList pairsToReplace = new ArrayList();
+        pairsToReplace.add(new String[]{scriptsParameters.dbName.name, dbName});
+        pairsToReplace.add(new String[]{scriptsParameters.dbOwner.name, connectionInfo.getUserName()});
         file.replaceTextLists(getPath(scripts.tmpSQL.fileName), pairsToReplace);
 
         return executeSQLFile(getPath(scripts.tmpSQL.fileName));
@@ -122,10 +122,10 @@ public class JDBCDBManagerImpl implements DBManager {
 
     public ArrayList<ArrayList<HashMap>> deleteDB(String dbName) {
         File file = new File(getPath(scripts.templateDeleteDB.fileName));
-        ArrayList pairsToReplace = new ArrayList() ;
-        pairsToReplace.add(new String []{scriptsParameters.dbName.name,dbName});
-        pairsToReplace.add(new String []{scriptsParameters.dbOwner.name,connectionInfo.getUserName()});
-        file.replaceTextLists(getPath(scripts.tmpSQL.fileName),pairsToReplace);
+        ArrayList pairsToReplace = new ArrayList();
+        pairsToReplace.add(new String[]{scriptsParameters.dbName.name, dbName});
+        pairsToReplace.add(new String[]{scriptsParameters.dbOwner.name, connectionInfo.getUserName()});
+        file.replaceTextLists(getPath(scripts.tmpSQL.fileName), pairsToReplace);
         return executeSQLFile(getPath(scripts.tmpSQL.fileName));
     }
 
@@ -136,17 +136,17 @@ public class JDBCDBManagerImpl implements DBManager {
 
     public void insertTable(String table, ArrayList<String> columnNamesList, ArrayList<String> valuesList) {
         String columnNames = "";
-        for(String name:columnNamesList) columnNames+=name+",";
-        columnNames=columnNames.substring(0,columnNames.length()-1);
+        for (String name : columnNamesList) columnNames += name + ",";
+        columnNames = columnNames.substring(0, columnNames.length() - 1);
         String query = "INSERT INTO " + table + " ( " + columnNames + " ) " + "VALUES";
-        for(String values:valuesList){
-            query+= " ( " + values + " ),";
+        for (String values : valuesList) {
+            query += " ( " + values + " ),";
         }
-        query=query.substring(0, query.length() - 1);
+        query = query.substring(0, query.length() - 1);
         executeQuery(query);
     }
 
-    public void insertTable(DBTable table){
+    public void insertTable(DBTable table) {
         ArrayList<String> headers = table.headers.getAsList();
         ArrayList<String> values = new ArrayList<>();
         for (int i = 0; i < table.values.size(); i++) {
@@ -163,10 +163,23 @@ public class JDBCDBManagerImpl implements DBManager {
         executeQuery(query);
     }
 
+    public void updateTable(DBTable dbTable, Optional<String> where) {
+        String table = dbTable.name;
+        String columnNames = dbTable.headers.getAsStringList(DBRow.Grouper.NN);
+        String values = dbTable.values.get(0).getAsStringList(DBRow.Grouper.SS);
+        updateTable(table, columnNames, values, where);
+    }
+
     public List<HashMap> selectTable(String table, String columnNames, Optional<String> where) {
         String query = "SELECT " + columnNames + " FROM " + table;
         if (where.isPresent()) query += " WHERE " + where.get();
         return executeQuery(query);
+    }
+
+    public List<HashMap> selectTable(DBTable dbTable, Optional<String> where) {
+        String table = dbTable.name;
+        String columnNames = dbTable.headers.getAsStringList(DBRow.Grouper.NN);
+        return selectTable(table, columnNames, where);
     }
 
     public void createTable(String table, String columnNamesAndTypes, Optional<String> primaryKey) {
@@ -210,14 +223,14 @@ public class JDBCDBManagerImpl implements DBManager {
         for (String line : linesList) {
             list.add(executeQuery(line));
         }
-        lastQuery.setQuery(linesList,list);
+        lastQuery.setQuery(linesList, list);
         return list;
     }
 
     public ArrayList<ArrayList<HashMap>> executeSQLFile(String filePath, ArrayList<String[]> pairsToReplace) {
         connect();
         File file = new File(filePath);
-        file.replaceTextLists(getPath(scripts.tmpSQL.fileName),pairsToReplace);
+        file.replaceTextLists(getPath(scripts.tmpSQL.fileName), pairsToReplace);
         return executeSQLFile(getPath(scripts.tmpSQL.fileName));
     }
 
@@ -228,7 +241,7 @@ public class JDBCDBManagerImpl implements DBManager {
         List<String> linesList = file.getListLinesOfFile();
         ResultSet resultSet = null;
         for (String line : linesList) {
-            list.add(executeQueryWithLimits(line,fromIndex,toIndex));
+            list.add(executeQueryWithLimits(line, fromIndex, toIndex));
         }
         lastQuery.setQuery(linesList, list);
         return list;
@@ -238,24 +251,24 @@ public class JDBCDBManagerImpl implements DBManager {
     public ArrayList<ArrayList<HashMap>> executeSQLFileWithLimits(String filePath, ArrayList<String[]> pairsToReplace, int fromIndex, int toIndex) {
         File file = new File(filePath);
         file.replaceTextLists(PostgresDBManagerImpl.scripts.tmpSQL.filePath, pairsToReplace);
-        return executeSQLFileWithLimits(PostgresDBManagerImpl.scripts.tmpSQL.filePath,fromIndex,toIndex);
+        return executeSQLFileWithLimits(PostgresDBManagerImpl.scripts.tmpSQL.filePath, fromIndex, toIndex);
     }
 
     @Override
     public ArrayList<ArrayList<HashMap>> executePaginatedSQLFile(String filePath, ArrayList<String[]> pairsToReplace, int fromIndex, int pageSize, int page) {
-        int offset=page*pageSize;
-        return executeSQLFileWithLimits(filePath,pairsToReplace,fromIndex+offset,fromIndex+offset+pageSize);
+        int offset = page * pageSize;
+        return executeSQLFileWithLimits(filePath, pairsToReplace, fromIndex + offset, fromIndex + offset + pageSize);
     }
 
     @Override
     public ArrayList<ArrayList<HashMap>> executePaginatedSQLFile(String filePath, int fromIndex, int pageSize, int page) {
-        int offset=page*pageSize;
-        return executeSQLFileWithLimits(filePath,fromIndex+offset,fromIndex+offset+pageSize);
+        int offset = page * pageSize;
+        return executeSQLFileWithLimits(filePath, fromIndex + offset, fromIndex + offset + pageSize);
     }
 
     public ArrayList<HashMap> executeQuery(String query) {
         connect();
-        querySuccessful=true;
+        querySuccessful = true;
         ArrayList list = new ArrayList();
         try {
             Statement statement = activeConnection.createStatement();
@@ -264,27 +277,27 @@ public class JDBCDBManagerImpl implements DBManager {
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
-            if (!e.getMessage().equals( "No results were returned by the query.")){
+            if (!e.getMessage().equals("No results were returned by the query.")) {
                 e.printStackTrace();
-                querySuccessful=false;
+                querySuccessful = false;
             }
 
         }
-        lastQuery.setQuery(query,list);
+        lastQuery.setQuery(query, list);
         return list;
     }
 
     @Override
     public ArrayList<HashMap> executeQueryWithLimits(String query, int fromIndex, int toIndex) {
-        int limit= toIndex-fromIndex;
+        int limit = toIndex - fromIndex;
         String exp = " " + "LIMIT " + limit + " OFFSET " + fromIndex;
-        return executeQuery(query+exp);
+        return executeQuery(query + exp);
     }
 
     @Override
     public ArrayList<HashMap> executePaginatedQuery(String query, int fromIndex, int pageSize, int page) {
-        int offset=page*pageSize;
-        return executeQueryWithLimits(query,fromIndex+offset,fromIndex+offset+pageSize);
+        int offset = page * pageSize;
+        return executeQueryWithLimits(query, fromIndex + offset, fromIndex + offset + pageSize);
     }
 
     public ArrayList<HashMap> resultSetToArrayList(ResultSet rs) {

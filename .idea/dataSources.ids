@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component name="dataSourceStorage">
   <data-source name="PostgreSQL - test@192.168.99.100" uuid="fb704c7f-3a68-4f69-aa07-13ccf97aa826">
-    <database-info product="" version="" jdbc-version="" driver-name="" driver-version=""/>
+    <database-info product="PostgreSQL" version="9.5.3" jdbc-version="4.0" driver-name="PostgreSQL Native Driver" driver-version="PostgreSQL 9.4 JDBC4 (build 1201)">
+      <identifier-quote-string>&quot;</identifier-quote-string>
+    </database-info>
+    <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact"/>
     <database-model serializer="dbm" rdbms="POSTGRES" format-version="2.5">
       <database id="1" name="postgresUnitTest"/>
       <database id="2" name="test"/>
@@ -15,7 +18,7 @@
         <object-id>2200</object-id>
         <comment>standard public schema</comment>
         <introspection-state-number>961</introspection-state-number>
-        <introspection-timestamp>2016-03-09.11:29:04.470</introspection-timestamp>
+        <introspection-timestamp>2016-07-13.15:09:36.548</introspection-timestamp>
       </schema>
       <sequence id="5" parent="3" name="audits_aud_id_audits_seq">
         <object-id>16423</object-id>
@@ -5707,7 +5710,7 @@ chq_id_client</columns>
       </index>
       <index id="1192" parent="218" name="master_question_key_text">
         <object-id>16676</object-id>
-        <columns>#0</columns>
+        <columns></columns>
         <desc-columns></desc-columns>
         <unique>1</unique>
       </index>
@@ -6371,7 +6374,7 @@ eaur_id_role</columns>
       </index>
       <index id="1323" parent="235" name="unique_esc_name">
         <object-id>17292</object-id>
-        <columns>#0</columns>
+        <columns></columns>
         <desc-columns></desc-columns>
         <unique>1</unique>
       </index>

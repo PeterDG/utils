@@ -291,7 +291,17 @@ public class MongoDBManagerImpl implements DBManager {
     }
 
     @Override
+    public void updateTable(DBTable dbTable, Optional<String> where) {
+
+    }
+
+    @Override
     public List<HashMap> selectTable(String table, String columnNames, Optional<String> where) {
+        return null;
+    }
+
+    @Override
+    public List<HashMap> selectTable(DBTable table, Optional<String> where) {
         return null;
     }
 
