@@ -152,7 +152,7 @@ public class JDBCDBManagerImpl implements DBManager {
         for (int i = 0; i < table.values.size(); i++) {
             DBRow t = table.values.get(i).clone();
             t.setValues();
-            values.add(t.getAsStringList(true));
+            values.add(t.getAsStringList(DBRow.Grouper.SS));
         }
         insertTable(table.name, headers, values);
     }
