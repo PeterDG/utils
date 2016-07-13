@@ -162,7 +162,7 @@ public class OracleDBManagerImpl implements DBManager {
     }
 
     @Override
-    public void insertTable(String testTable, ArrayList<DBTable> dbTables) {
+    public void insertTable(DBTable dbtable) {
 
     }
 

@@ -271,7 +271,7 @@ public class MongoDBManagerImpl implements DBManager {
     }
 
     @Override
-    public void insertTable(String testTable, ArrayList<DBTable> dbTables) {
+    public void insertTable(DBTable dbTable) {
 
     }
 

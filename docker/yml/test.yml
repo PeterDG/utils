@@ -1,0 +1,13 @@
+########################################################################
+#
+# title:       Docker Compose YML file for DeviceID Project
+# author:      Pedro David Gutierrez
+# version:     1.0.0
+#
+########################################################################
+
+qa_postgres:
+  build: ../docker-files/postgres
+  ports:
+   - "5432:5432"
+  net: "bridge"

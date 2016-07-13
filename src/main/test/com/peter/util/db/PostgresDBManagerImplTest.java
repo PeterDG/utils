@@ -1,7 +1,6 @@
 package com.peter.util.db;
 
 import com.google.common.base.Optional;
-import com.mongodb.MongoClient;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -109,17 +108,17 @@ public class PostgresDBManagerImplTest {
     @Test
     public void test10InsetTableByColumns() throws Exception {
         db.connect();
-        ArrayList<DBTable> dbTables = new ArrayList<DBTable>();
-        DBTable dbTableA = new DBTable();
-        DBTable dbTableB = new DBTable();
-        DBTable dbTableC = new DBTable();
-        dbTableA.column1="code";
-        dbTableB.column1="1116";
-        dbTableC.column1="1117";
-        dbTables.add(dbTableA);
-        dbTables.add(dbTableB);
-        dbTables.add(dbTableC);
-        db.insertTable("testTable",dbTables);
+        ArrayList<DBRow> dbRows = new ArrayList<DBRow>();
+        DBRow headers = new DBRow();
+        DBRow dbRowB = new DBRow();
+        DBRow dbRowC = new DBRow();
+        headers.column1="code";
+        dbRowB.column1="1118";
+        dbRowC.column1="1119";
+        dbRows.add(dbRowB);
+        dbRows.add(dbRowC);
+        DBTable table=new DBTable("testTable",headers,dbRows);
+        db.insertTable(table);
         assertTrue(db.isQuerySuccessful());
     }
 

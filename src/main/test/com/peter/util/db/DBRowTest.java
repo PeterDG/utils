@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 /**
  * Created by Peter on 6/15/2016.
  */
-public class DBTableTest {
+public class DBRowTest {
     public static List<String> data = Arrays.asList(new String[]{"GND(date)",
             "GND(user)",
             "0.0",
@@ -21,7 +21,7 @@ public class DBTableTest {
     });
     @Test
     public void setList() throws Exception {
-        DBTable table = new DBTable(new ArrayList<String>(data));
+        DBRow table = new DBRow(new ArrayList<String>(data));
         assertTrue(table.column1.equals("GND(date)"));
         assertTrue(table.column6.equals("RND(0,1)"));
     }

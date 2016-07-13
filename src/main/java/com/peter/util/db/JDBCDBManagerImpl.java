@@ -146,15 +146,15 @@ public class JDBCDBManagerImpl implements DBManager {
         executeQuery(query);
     }
 
-    public void insertTable(String table,ArrayList<DBTable> columns){
-        ArrayList<String> columnNames = new ArrayList<>(Arrays.asList(columns.get(0).getAsStringList(false).split(",")));
-        ArrayList<String> columnValues = new ArrayList<>();
-        for (int i = 1; i < columns.size(); i++) {
-            DBTable t = columns.get(i).clone();
+    public void insertTable(DBTable table){
+        ArrayList<String> headers = table.headers.getAsList();
+        ArrayList<String> values = new ArrayList<>();
+        for (int i = 0; i < table.values.size(); i++) {
+            DBRow t = table.values.get(i).clone();
             t.setValues();
-            columnValues.add(t.getAsStringList(true));
+            values.add(t.getAsStringList(true));
         }
-        insertTable(table, columnNames, columnValues);
+        insertTable(table.name, headers, values);
     }
 
     public void updateTable(String table, String columnNames, String values, Optional<String> where) {

@@ -30,7 +30,7 @@ public interface DBManager {
  boolean existDB(String dbName);
  void createTable(String table, String columnNamesAndTypes, Optional<String> primaryKey);
  void deleteTable(String dbName);
- void insertTable(String testTable, ArrayList<DBTable> dbTables);
+ void insertTable(DBTable dbTable);
  void insertTable(String table, String columnNames, String values);
  void insertTable(String table,  ArrayList<String> columnNamesList, ArrayList<String> valuesList);
  void updateTable(String table, String columnNames, String values,  Optional<String> where);

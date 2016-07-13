@@ -4,7 +4,6 @@ package com.peter.util.db;
 import com.google.common.base.Optional;
 import com.peter.util.data.File;
 import sys.Environment;
-import sys.Settings;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -159,7 +158,7 @@ public class PostgresDBManagerImpl implements DBManager {
     }
 
     @Override
-    public void insertTable(String testTable, ArrayList<DBTable> dbTables) {
+    public void insertTable(DBTable dbTable) {
 
     }
 
