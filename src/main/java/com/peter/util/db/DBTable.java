@@ -40,6 +40,11 @@ public class DBTable {
     public void setValues(ArrayList<DBRow> values) {
         this.values = values;
     }
+
+    public void addRow(DBRow row){
+        this.values.add(row);
+    }
+
     @Override
     public DBTable clone(){
         return new DBTable(name,headers.clone(),cloneRows());
