@@ -13,6 +13,8 @@ import static org.junit.Assert.assertTrue;
  */
 public class DBTableTest {
     public DBTable table;
+    private DBTable tableNullValues;
+
     @Before
     public void setUp() throws Exception {
         ArrayList<DBRow> dbRows = new ArrayList<DBRow>();
@@ -25,6 +27,7 @@ public class DBTableTest {
         dbRows.add(dbRowB);
         dbRows.add(dbRowC);
         table=new DBTable("testTable",headers,dbRows);
+        tableNullValues=new DBTable("testTable",headers);
     }
 
     @After
@@ -38,6 +41,15 @@ public class DBTableTest {
         assertTrue(table.values.size()==2);
         assertTrue(table.headers.getAsList().size()==1);
           assertTrue(!table.clone().equals(table));
+    }
+
+    @Test
+    public void cloneMethodNullvalues() {
+        table= tableNullValues;
+        DBTable clone = table.clone();
+        assertTrue(table.values.size()==0);
+        assertTrue(table.headers.getAsList().size()==1);
+        assertTrue(!table.clone().equals(table));
     }
 
 }

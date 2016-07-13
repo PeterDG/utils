@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class DBTable {
     public String name;
     public DBRow headers;
-    public ArrayList<DBRow> values;
+    public ArrayList<DBRow> values=new ArrayList<>();
 
     public DBTable(String name) {
         this.name = name;
