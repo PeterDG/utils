@@ -14,6 +14,7 @@ public class XMLSoapTest {
     public XMLSoap xmlSoap;
     public String request;
     public String response;
+    public String responseTypeA;
     @Before
     public void before(){
       request="<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ris=\"http://soap.easysol.net/detect/riskScoringService\">\n" +
@@ -35,6 +36,7 @@ public class XMLSoapTest {
                 "      </ns2:calculateRiskScoreResponse>\n" +
                 "   </soap:Body>\n" +
                 "</soap:Envelope>";
+        responseTypeA="<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><soap:Body><soap:Fault><faultcode>soap:Client</faultcode><faultstring>Unmarshalling Error: Not a number: ? </faultstring></soap:Fault></soap:Body></soap:Envelope>";
 
     }
 
@@ -48,6 +50,13 @@ public class XMLSoapTest {
         xmlSoap = new XMLSoap(response);
         String result=xmlSoap.xml.getElement("calculateRiskScoreResponse/resultCode");
         assertTrue(result.equals("99"));
+    }
+
+    @Test
+    public void testGetElementResponseTypeA() throws Exception {
+        xmlSoap = new XMLSoap(responseTypeA);
+        String result=xmlSoap.xml.getElement("soap_-Body/soap_-Fault/faultcode");
+        assertTrue(result.equals("soap_-Client"));
     }
 
     @Test

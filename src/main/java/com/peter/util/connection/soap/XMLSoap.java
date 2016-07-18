@@ -22,7 +22,7 @@ public class XMLSoap {
 
     public void findReplacePosition() {
         replacePosition = 0;
-        Pattern pattern = Pattern.compile("xmlns:[\\w\\-_]+=\"http://[\\w_\\-%]*\\.?[\\w_\\-%]+\\.[\\w_\\-%]+(/[\\w_\\-%]+)*\"");
+        Pattern pattern = Pattern.compile("xmlns:[\\w\\-_]+=\"http://[\\w_\\-%]*\\.?[\\w_\\-%]+\\.[\\w_\\-%]+(/[\\w_\\-%]+)*");
         Matcher matcher = pattern.matcher(strXML);
         while (matcher.find())
             replacePosition = matcher.end();
