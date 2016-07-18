@@ -158,7 +158,7 @@ public class JDBCDBManagerImpl implements DBManager {
     }
 
     public void updateTable(String table, String columnNames, String values, Optional<String> where) {
-        String query = "UPDATE " + table + " SET " + columnNames + " = " + values;
+        String query = "UPDATE " + table + " SET (" + columnNames + ") = (" + values +")";
         if (where.isPresent()) query += " WHERE " + where.get();
         executeQuery(query);
     }
