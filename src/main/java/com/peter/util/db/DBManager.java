@@ -38,8 +38,11 @@ public interface DBManager {
  List<HashMap> selectTable(String table, String columnNames, Optional<String> where);
  List<HashMap> selectTable(DBTable table, Optional<String> where);
  void cleanTable(String dbName);
+ void cleanTable(String dbName,String options);
  boolean isQuerySuccessful();
  void closeConnection();
  void commit();
  Query getLastQuery();
+ int countRowsTable(String table,Optional<String> where);
+ int countRowsTable(DBTable dbTable,Optional<String> where);
 }

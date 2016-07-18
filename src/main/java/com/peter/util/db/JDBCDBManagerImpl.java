@@ -7,7 +7,6 @@ import sys.Environment;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -102,6 +101,20 @@ public class JDBCDBManagerImpl implements DBManager {
         return lastQuery;
     }
 
+    @Override
+    public int countRowsTable(String table, Optional<String> where) {
+        String whereStr = where.isPresent() ? where.get() : "";
+        String query = "SELECT COUNT(*) FROM " + table + " " + whereStr;
+        return ((Long) executeQuery(query).get(0).get("count")).intValue();
+    }
+
+
+    @Override
+    public int countRowsTable(DBTable dbTable, Optional<String> where) {
+        String table = dbTable.name;
+        return countRowsTable(table, where);
+    }
+
     public void closeConnection() {
         try {
             activeConnection.close();
@@ -158,7 +171,7 @@ public class JDBCDBManagerImpl implements DBManager {
     }
 
     public void updateTable(String table, String columnNames, String values, Optional<String> where) {
-        String query = "UPDATE " + table + " SET (" + columnNames + ") = (" + values +")";
+        String query = "UPDATE " + table + " SET (" + columnNames + ") = (" + values + ")";
         if (where.isPresent()) query += " WHERE " + where.get();
         executeQuery(query);
     }
@@ -196,6 +209,11 @@ public class JDBCDBManagerImpl implements DBManager {
 
     public void cleanTable(String table) {
         String query = "TRUNCATE TABLE " + table;
+        executeQuery(query);
+    }
+
+    public void cleanTable(String table, String options) {
+        String query = "TRUNCATE TABLE " + table + " " + options;
         executeQuery(query);
     }
 

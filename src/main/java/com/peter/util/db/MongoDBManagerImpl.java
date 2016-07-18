@@ -312,6 +312,11 @@ public class MongoDBManagerImpl implements DBManager {
     }
 
     @Override
+    public void cleanTable(String dbName, String options) {
+
+    }
+
+    @Override
     public boolean isQuerySuccessful() {
         return false;
     }
@@ -329,6 +334,16 @@ public class MongoDBManagerImpl implements DBManager {
     @Override
     public Query getLastQuery() {
         return lastQuery;
+    }
+
+    @Override
+    public int countRowsTable(String table, Optional<String> where) {
+        return 0;
+    }
+
+    @Override
+    public int countRowsTable(DBTable dbTable,Optional<String> where) {
+        return 0;
     }
 
     public void createConnection() {

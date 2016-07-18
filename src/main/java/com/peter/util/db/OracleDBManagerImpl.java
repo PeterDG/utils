@@ -93,6 +93,16 @@ public class OracleDBManagerImpl implements DBManager {
         return lastQuery;
     }
 
+    @Override
+    public int countRowsTable(String table, Optional<String> where) {
+        return 0;
+    }
+
+    @Override
+    public int countRowsTable(DBTable dbTable,Optional<String> where) {
+        return 0;
+    }
+
     public void closeConnection(){
         try {
             activeConnection.close();
@@ -179,6 +189,11 @@ public class OracleDBManagerImpl implements DBManager {
     public void cleanTable(String table) {
         String query = "TRUNCATE TABLE " + table;
         executeQuery(query);
+    }
+
+    @Override
+    public void cleanTable(String dbName, String options) {
+
     }
 
     public boolean existDB(String dbName) {

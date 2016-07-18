@@ -81,6 +81,14 @@ public class Database {
        db.cleanTable(dbTable.name);
     }
 
+    public void cleanTable(DBTable dbTable,String options){
+        db.cleanTable(dbTable.name,options);
+    }
+
+    public int countRowsTable(DBTable dbTable,Optional<String> where){
+        return db.countRowsTable(dbTable,where);
+    }
+
     public List<HashMap> selectTable(DBTable dbTable, Optional<String> where){
         return db.selectTable(dbTable,where);
     }

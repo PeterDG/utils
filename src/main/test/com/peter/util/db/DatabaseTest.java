@@ -136,5 +136,17 @@ public class DatabaseTest {
         assertTrue(database.isQuerySuccessful());
     }
 
+    @Test
+    public void countRowsTable() throws Exception {
+        database.addTable(dbTableTest.table);
+        database.createTable("testTable","id serial NOT NULL,code text,name text", Optional.of("id"));
+        database.insertTable(database.tablesMap.get("testTable"));
+        assertTrue(database.isQuerySuccessful());
+        int count=database.countRowsTable(dbTableTest.table,Optional.absent());
+        assertTrue(count==2);
+        database.deleteTable(dbTableTest.table);
+        assertTrue(database.isQuerySuccessful());
+    }
+
 
 }
