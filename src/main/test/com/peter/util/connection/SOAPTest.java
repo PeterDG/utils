@@ -5,10 +5,9 @@ import com.peter.util.connection.soap.SOAPParams;
 import com.peter.util.connection.soap.XMLSoap;
 import org.junit.Before;
 import org.junit.Test;
-import sys.Environment;
+import com.peter.util.sys.Environment;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static org.junit.Assert.*;
 

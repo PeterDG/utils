@@ -3,7 +3,7 @@ package com.peter.util.data;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import sys.Environment;
+import com.peter.util.sys.Environment;
 
 import static org.junit.Assert.*;
 

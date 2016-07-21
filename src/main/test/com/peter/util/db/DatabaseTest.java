@@ -4,7 +4,7 @@ import com.google.common.base.Optional;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import sys.Settings;
+import com.peter.util.sys.Settings;
 
 import java.util.ArrayList;
 import java.util.Arrays;

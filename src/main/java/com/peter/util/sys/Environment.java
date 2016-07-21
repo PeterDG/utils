@@ -1,4 +1,4 @@
-package sys;
+package com.peter.util.sys;
 
 import org.springframework.core.io.ClassPathResource;
 

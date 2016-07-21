@@ -6,7 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import com.peter.util.data.JSON;
-import sys.Environment;
+import com.peter.util.sys.Environment;
 
 import java.util.HashMap;
 import java.util.Map;

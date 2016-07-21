@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import sys.Settings;
+import com.peter.util.sys.Settings;
 
 import java.sql.Connection;
 import java.util.ArrayList;

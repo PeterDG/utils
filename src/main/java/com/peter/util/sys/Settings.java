@@ -1,4 +1,4 @@
-package sys;
+package com.peter.util.sys;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.stereotype.Service;
-import org.springframework.test.context.ActiveProfiles;
 
 /**
  * Created by Pedro Gutierrez on 2/26/2016.
