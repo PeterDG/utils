@@ -14,7 +14,7 @@ public class DBManagerFactory {
             case POSTGRES:
                 return new JDBCDBManagerImpl(connInfo);
             case ORACLE:
-                return new JDBCDBManagerImpl(connInfo);
+                return new OracleDBManagerImpl(connInfo);
             default:
                 try {
                     throw new Exception("Unrecognized type of DBManager");

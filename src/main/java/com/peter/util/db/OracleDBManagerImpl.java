@@ -5,6 +5,7 @@ import com.google.common.base.Optional;
 import com.peter.util.data.File;
 import com.peter.util.sys.Environment;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +32,7 @@ public class OracleDBManagerImpl implements DBManager {
 
         scripts(final String scriptFileName) {
             String dir;
-            switch(scriptFileName){
+            switch (scriptFileName) {
                 default:
                     dir = "src/main/resources/db/scripts/oracle/";
                     break;
@@ -39,7 +40,7 @@ public class OracleDBManagerImpl implements DBManager {
                     dir = Environment.getInstance().targetPath;
                     break;
             }
-            dir +=scriptFileName;
+            dir += scriptFileName;
             this.filePath = dir;
         }
     }
@@ -58,7 +59,7 @@ public class OracleDBManagerImpl implements DBManager {
 
     public OracleDBManagerImpl(ConnectionInfo connectionInfo) {
         this.connectionInfo = connectionInfo;
-        lastQuery=new Query();
+        lastQuery = new Query();
     }
 
     public OracleDBManagerImpl() {
@@ -80,7 +81,7 @@ public class OracleDBManagerImpl implements DBManager {
         return activeConnection;
     }
 
-    public void commit(){
+    public void commit() {
         try {
             activeConnection.commit();
         } catch (SQLException e) {
@@ -95,15 +96,18 @@ public class OracleDBManagerImpl implements DBManager {
 
     @Override
     public int countRowsTable(String table, Optional<String> where) {
-        return 0;
+        String whereStr = where.isPresent() ? where.get() : "";
+        String query = "SELECT COUNT(*) FROM " + table + " " + whereStr;
+        return ((BigDecimal) executeQuery(query).get(0).get("COUNT(*)")).intValue();
     }
 
     @Override
-    public int countRowsTable(DBTable dbTable,Optional<String> where) {
-        return 0;
+    public int countRowsTable(DBTable dbTable, Optional<String> where) {
+        String table = dbTable.name;
+        return countRowsTable(table, where);
     }
 
-    public void closeConnection(){
+    public void closeConnection() {
         try {
             activeConnection.close();
         } catch (SQLException e) {
@@ -113,9 +117,9 @@ public class OracleDBManagerImpl implements DBManager {
 
     public ArrayList<ArrayList<HashMap>> createDB(String dbName) {
         File file = new File(scripts.templateCreateDB.filePath);
-        ArrayList pairsToReplace = new ArrayList() ;
-        pairsToReplace.add(new String []{scriptsParameters.dbName.name,dbName});
-        pairsToReplace.add(new String []{scriptsParameters.dbOwner.name,connectionInfo.getUserName()});
+        ArrayList pairsToReplace = new ArrayList();
+        pairsToReplace.add(new String[]{scriptsParameters.dbName.name, dbName});
+        pairsToReplace.add(new String[]{scriptsParameters.dbOwner.name, connectionInfo.getUserName()});
         file.replaceTextLists(scripts.tmpSQL.filePath, pairsToReplace);
 
         return executeSQLFile(scripts.tmpSQL.filePath);
@@ -123,10 +127,10 @@ public class OracleDBManagerImpl implements DBManager {
 
     public ArrayList<ArrayList<HashMap>> deleteDB(String dbName) {
         File file = new File(scripts.templateDeleteDB.filePath);
-        ArrayList pairsToReplace = new ArrayList() ;
-        pairsToReplace.add(new String []{scriptsParameters.dbName.name,dbName});
-        pairsToReplace.add(new String []{scriptsParameters.dbOwner.name,connectionInfo.getUserName()});
-        file.replaceTextLists(scripts.tmpSQL.filePath,pairsToReplace);
+        ArrayList pairsToReplace = new ArrayList();
+        pairsToReplace.add(new String[]{scriptsParameters.dbName.name, dbName});
+        pairsToReplace.add(new String[]{scriptsParameters.dbOwner.name, connectionInfo.getUserName()});
+        file.replaceTextLists(scripts.tmpSQL.filePath, pairsToReplace);
         return executeSQLFile(scripts.tmpSQL.filePath);
     }
 
@@ -137,25 +141,43 @@ public class OracleDBManagerImpl implements DBManager {
 
     public void insertTable(String table, ArrayList<String> columnNamesList, ArrayList<String> valuesList) {
         String columnNames = "";
-        for(String name:columnNamesList) columnNames+=name+",";
-        columnNames=columnNames.substring(0,columnNames.length()-1);
+        for (String name : columnNamesList) columnNames += name + ",";
+        columnNames = columnNames.substring(0, columnNames.length() - 1);
         String query = "INSERT INTO " + table + " ( " + columnNames + " ) " + "VALUES";
-        for(String values:valuesList){
-            query+= " ( " + values + " ),";
+        for (String values : valuesList) {
+            query += " ( " + values + " ),";
         }
-        query=query.substring(0, query.length() - 1);
+        query = query.substring(0, query.length() - 1);
         executeQuery(query);
     }
 
     public void updateTable(String table, String columnNames, String values, Optional<String> where) {
-        String query = "UPDATE " + table + " SET " + columnNames + " = " + values;
+        String query=getSetForUpdateQuery(columnNames, values);
+        query = "UPDATE " + table + " SET " + query.substring(0,query.length()-1);
         if (where.isPresent()) query += " WHERE " + where.get();
         executeQuery(query);
     }
 
+    private String getSetForUpdateQuery(String columnNames, String values) {
+        String[] headerSplit = columnNames.split(",");
+        String[] valuesSplit = values.split(",");
+        String query="";
+        if (headerSplit.length > 1) {
+            for (int i = 0; i < headerSplit.length; i++) {
+                query += getSetForUpdateQuery(headerSplit[i], valuesSplit[i]);
+            }
+        } else {
+            query += columnNames + " = " + values+ ",";
+        }
+        return query;
+    }
+
     @Override
     public void updateTable(DBTable dbTable, Optional<String> where) {
-
+        String table = dbTable.name;
+        String columnNames = dbTable.headers.getAsStringList(DBRow.Grouper.NN);
+        String values = dbTable.values.get(0).getAsStringList(DBRow.Grouper.NN);
+        updateTable(table, columnNames, values, where);
     }
 
     public List<HashMap> selectTable(String table, String columnNames, Optional<String> where) {
@@ -219,13 +241,13 @@ public class OracleDBManagerImpl implements DBManager {
         for (String line : linesList) {
             list.add(executeQuery(line));
         }
-        lastQuery.setQuery(linesList,list);
+        lastQuery.setQuery(linesList, list);
         return list;
     }
 
     public ArrayList<ArrayList<HashMap>> executeSQLFile(String filePath, ArrayList<String[]> pairsToReplace) {
         File file = new File(filePath);
-        file.replaceTextLists(scripts.tmpSQL.filePath,pairsToReplace);
+        file.replaceTextLists(scripts.tmpSQL.filePath, pairsToReplace);
         return executeSQLFile(scripts.tmpSQL.filePath);
     }
 
@@ -251,7 +273,8 @@ public class OracleDBManagerImpl implements DBManager {
 
 
     public ArrayList<HashMap> executeQuery(String query) {
-        querySuccessful=true;
+        connect();
+        querySuccessful = true;
         ArrayList list = new ArrayList();
         try {
             Statement statement = activeConnection.createStatement();
@@ -260,27 +283,27 @@ public class OracleDBManagerImpl implements DBManager {
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
-            if (!e.getMessage().equals( "No results were returned by the query.")){
+            if (!e.getMessage().equals("No results were returned by the query.")) {
                 e.printStackTrace();
-                querySuccessful=false;
+                querySuccessful = false;
             }
 
         }
-        lastQuery.setQuery(query,list);
+        lastQuery.setQuery(query, list);
         return list;
     }
 
     @Override
     public ArrayList<HashMap> executeQueryWithLimits(String query, int fromIndex, int toIndex) {
-        int limit= toIndex-fromIndex;
+        int limit = toIndex - fromIndex;
         String exp = " " + "LIMIT " + limit + " OFFSET " + fromIndex;
-        return executeQuery(query+exp);
+        return executeQuery(query + exp);
     }
 
     @Override
     public ArrayList<HashMap> executePaginatedQuery(String query, int fromIndex, int pageSize, int page) {
-        int offset=page*pageSize;
-        return executeQueryWithLimits(query,fromIndex+offset,fromIndex+offset+pageSize);
+        int offset = page * pageSize;
+        return executeQueryWithLimits(query, fromIndex + offset, fromIndex + offset + pageSize);
     }
 
     public ArrayList<HashMap> resultSetToArrayList(ResultSet rs) {
