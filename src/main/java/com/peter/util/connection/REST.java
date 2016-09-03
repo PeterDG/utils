@@ -17,6 +17,8 @@ public class REST implements RequestType {
     public Map<String, String> params;
     public Map<String, String> queryParams;
     public String body;
+    public String user="";
+    public String password="";
     public Response response;
     public Type type;
     public URL uri;
@@ -47,6 +49,7 @@ public class REST implements RequestType {
         RestAssured.baseURI =  uri.getProtocol()+"://"+uri.getHost();
         int port=uri.url.getPort();
         RestAssured.basePath = uri.getPath();
+        queryParams(uri.getQueryParams());
         if (port != 0) RestAssured.port = port;
     }
 
@@ -87,6 +90,7 @@ public class REST implements RequestType {
                         headers(headers).
                         params(params).
                         body(body).
+                        auth().basic(this.user,this.password).
                         when().
                         post().
                         then().
@@ -102,6 +106,7 @@ public class REST implements RequestType {
                         queryParameters(queryParams !=null ? queryParams :new HashMap<>()).
                         params(params != null ? params : new HashMap<>()).
                         body(body != null ? body : "").
+                        auth().basic(this.user,this.password).
                         when().
                         post().
                         then().
@@ -164,6 +169,11 @@ public class REST implements RequestType {
 
     public void queryParams(Map<String, String> queryParams) {
         this.queryParams = queryParams;
+    }
+
+    public void authentication(String user,String password){
+        this.user=user;
+        this.password=password;
     }
 
     @Override
