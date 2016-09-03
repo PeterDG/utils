@@ -9,7 +9,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by Peter on 2/29/2016.
  */
-public class XMLSoapTest {
+public class XMLSoapTests {
 
     public XMLSoap xmlSoap;
     public String request;
