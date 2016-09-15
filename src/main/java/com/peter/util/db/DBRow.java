@@ -1,7 +1,6 @@
 package com.peter.util.db;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -28,6 +27,16 @@ public class DBRow {
     public String column18;
     public String column19;
     public String column20;
+    public String column21;
+    public String column22;
+    public String column23;
+    public String column24;
+    public String column25;
+    public String column26;
+    public String column27;
+    public String column28;
+    public String column29;
+    public String column30;
     public ArrayList<String> columns;
 
     public DBRow() {
@@ -60,6 +69,16 @@ public class DBRow {
         if (column18 != null) columns.add(column18);
         if (column19 != null) columns.add(column19);
         if (column20 != null) columns.add(column20);
+        if (column21 != null) columns.add(column21);
+        if (column22 != null) columns.add(column22);
+        if (column23 != null) columns.add(column23);
+        if (column24 != null) columns.add(column24);
+        if (column25 != null) columns.add(column25);
+        if (column26 != null) columns.add(column26);
+        if (column27 != null) columns.add(column27);
+        if (column28 != null) columns.add(column28);
+        if (column29 != null) columns.add(column29);
+        if (column30 != null) columns.add(column30);
 
         return columns;
     }
@@ -85,6 +104,16 @@ public class DBRow {
         if (list.size() > 17) column18 = list.get(17);
         if (list.size() > 18) column19 = list.get(18);
         if (list.size() > 19) column20 = list.get(19);
+        if (list.size() > 20) column21 = list.get(20);
+        if (list.size() > 21) column22 = list.get(21);
+        if (list.size() > 22) column23 = list.get(22);
+        if (list.size() > 23) column24 = list.get(23);
+        if (list.size() > 24) column25 = list.get(24);
+        if (list.size() > 25) column26 = list.get(25);
+        if (list.size() > 26) column27 = list.get(26);
+        if (list.size() > 27) column28 = list.get(27);
+        if (list.size() > 28) column29 = list.get(28);
+        if (list.size() > 29) column30 = list.get(29);
     }
 
     public String getAsStringList(Grouper grouper) {
@@ -108,7 +137,17 @@ public class DBRow {
                 (column17 != null ? " ," + s + column17 + s : "") +
                 (column18 != null ? " ," + s + column18 + s : "") +
                 (column19 != null ? " ," + s + column19 + s : "") +
-                (column20 != null ? " ," + s + column20 + s : "");
+                (column20 != null ? " ," + s + column20 + s : "") +
+                (column21 != null ? " ," + s + column21 + s : "") +
+                (column22 != null ? " ," + s + column22 + s : "") +
+                (column23 != null ? " ," + s + column23 + s : "") +
+                (column24 != null ? " ," + s + column24 + s : "") +
+                (column25 != null ? " ," + s + column25 + s : "") +
+                (column26 != null ? " ," + s + column26 + s : "") +
+                (column27 != null ? " ," + s + column27 + s : "") +
+                (column28 != null ? " ," + s + column28 + s : "") +
+                (column29 != null ? " ," + s + column29 + s : "") +
+                (column30 != null ? " ," + s + column30 + s : "");
     }
 
     public String getAsStringList() {
