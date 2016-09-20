@@ -20,6 +20,7 @@ public class OracleDBManagerImpl implements DBManager {
     public ConnectionInfo connectionInfo;
     public Connection activeConnection;
     public boolean querySuccessful;
+    public DBManagerType dbManagerType;
     public Query lastQuery;
 
     public enum scripts {
@@ -28,21 +29,25 @@ public class OracleDBManagerImpl implements DBManager {
         templateDeleteDB("template_deleteDB.sql"),
         tmpSQL("tmp.sql");
 
-        public final String filePath;
+        public final String fileName;
 
         scripts(final String scriptFileName) {
-            String dir;
-            switch (scriptFileName) {
-                default:
-                    dir = "src/main/resources/db/scripts/oracle/";
-                    break;
-                case "tmp.sql":
-                    dir = Environment.getInstance().targetPath;
-                    break;
-            }
-            dir += scriptFileName;
-            this.filePath = dir;
+            this.fileName = scriptFileName;
         }
+    }
+
+    public String getPath(String scriptFileName) {
+        String dir;
+        switch (scriptFileName) {
+            default:
+                dir = dbManagerType.scriptsPath;
+                break;
+            case "tmp.sql":
+                dir = Environment.getInstance().targetPath;
+                break;
+        }
+        dir += scriptFileName;
+        return dir;
     }
 
     public enum scriptsParameters {
@@ -53,12 +58,12 @@ public class OracleDBManagerImpl implements DBManager {
 
         scriptsParameters(final String name) {
             this.name = name;
-
         }
     }
 
     public OracleDBManagerImpl(ConnectionInfo connectionInfo) {
         this.connectionInfo = connectionInfo;
+        this.dbManagerType = connectionInfo.getDBType();
         lastQuery = new Query();
     }
 
@@ -72,9 +77,11 @@ public class OracleDBManagerImpl implements DBManager {
     public Connection getConnection(String dbName) {
         try {
             if (activeConnection == null || activeConnection.isClosed()) {
-                Class.forName("oracle.jdbc.driver.OracleDriver");
+                Class.forName(dbManagerType.driverClassName);
                 activeConnection = DriverManager.getConnection(connectionInfo.getJDBCUrlWithDBName() + dbName, connectionInfo.getUserName(), connectionInfo.getPassword());
             }
+        } catch (SQLRecoverableException e) {
+            System.out.println("Connection with " + connectionInfo.getJdbcUrl() + " could not be established!!");
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -116,22 +123,22 @@ public class OracleDBManagerImpl implements DBManager {
     }
 
     public ArrayList<ArrayList<HashMap>> createDB(String dbName) {
-        File file = new File(scripts.templateCreateDB.filePath);
+        File file = new File(getPath(scripts.templateCreateDB.fileName));
         ArrayList pairsToReplace = new ArrayList();
         pairsToReplace.add(new String[]{scriptsParameters.dbName.name, dbName});
         pairsToReplace.add(new String[]{scriptsParameters.dbOwner.name, connectionInfo.getUserName()});
-        file.replaceTextLists(scripts.tmpSQL.filePath, pairsToReplace);
+        file.replaceTextLists(getPath(scripts.tmpSQL.fileName), pairsToReplace);
 
-        return executeSQLFile(scripts.tmpSQL.filePath);
+        return executeSQLFile(getPath(scripts.tmpSQL.fileName));
     }
 
     public ArrayList<ArrayList<HashMap>> deleteDB(String dbName) {
-        File file = new File(scripts.templateDeleteDB.filePath);
+        File file = new File(getPath(scripts.templateDeleteDB.fileName));
         ArrayList pairsToReplace = new ArrayList();
         pairsToReplace.add(new String[]{scriptsParameters.dbName.name, dbName});
         pairsToReplace.add(new String[]{scriptsParameters.dbOwner.name, connectionInfo.getUserName()});
-        file.replaceTextLists(scripts.tmpSQL.filePath, pairsToReplace);
-        return executeSQLFile(scripts.tmpSQL.filePath);
+        file.replaceTextLists(getPath(scripts.tmpSQL.fileName), pairsToReplace);
+        return executeSQLFile(getPath(scripts.tmpSQL.fileName));
     }
 
     public void insertTable(String table, String columnNames, String values) {
@@ -145,15 +152,28 @@ public class OracleDBManagerImpl implements DBManager {
         columnNames = columnNames.substring(0, columnNames.length() - 1);
         String query = "INSERT INTO " + table + " ( " + columnNames + " ) " + "VALUES";
         for (String values : valuesList) {
+            values = setBooleanValues(values);
             query += " ( " + values + " ),";
         }
         query = query.substring(0, query.length() - 1);
         executeQuery(query);
     }
 
+    public void insertTable(DBTable table) {
+        ArrayList<String> headers = table.headers.getAsList();
+        ArrayList<String> values = new ArrayList<>();
+        for (int i = 0; i < table.values.size(); i++) {
+            DBRow t = table.values.get(i).clone();
+            t.setValues();
+            values.add(t.getAsStringList(table.getTypes()));
+        }
+        insertTable(table.name, headers, values);
+    }
+
     public void updateTable(String table, String columnNames, String values, Optional<String> where) {
-        String query=getSetForUpdateQuery(columnNames, values);
-        query = "UPDATE " + table + " SET " + query.substring(0,query.length()-1);
+        values = setBooleanValues(values);
+        String query = getSetForUpdateQuery(columnNames, values);
+        query = "UPDATE " + table + " SET " + query.substring(0, query.length() - 1);
         if (where.isPresent()) query += " WHERE " + where.get();
         executeQuery(query);
     }
@@ -161,22 +181,47 @@ public class OracleDBManagerImpl implements DBManager {
     private String getSetForUpdateQuery(String columnNames, String values) {
         String[] headerSplit = columnNames.split(",");
         String[] valuesSplit = values.split(",");
-        String query="";
+        String query = "";
         if (headerSplit.length > 1) {
             for (int i = 0; i < headerSplit.length; i++) {
                 query += getSetForUpdateQuery(headerSplit[i], valuesSplit[i]);
             }
         } else {
-            query += columnNames + " = " + values+ ",";
+            query += columnNames + " = " + values + ",";
         }
         return query;
+    }
+
+    private String setBooleanValues(String values) {
+        String finalValues = "";
+        if (values.toUpperCase().contains("TRUE") || values.toUpperCase().contains("FALSE")) {
+            String[] valuesSplit = values.split(",");
+            for (String value : valuesSplit) {
+                switch (value.trim().toUpperCase()) {
+                    case "TRUE":
+                        finalValues += "1";
+                        break;
+                    case "FALSE":
+                        finalValues += "0";
+                        break;
+                    default:
+                        finalValues += value.trim();
+                }
+                finalValues += ",";
+            }
+            finalValues = finalValues.substring(0, finalValues.length() - 1);
+        } else {
+            finalValues = values;
+        }
+
+        return finalValues;
     }
 
     @Override
     public void updateTable(DBTable dbTable, Optional<String> where) {
         String table = dbTable.name;
         String columnNames = dbTable.headers.getAsStringList(DBRow.Grouper.NN);
-        String values = dbTable.values.get(0).getAsStringList(DBRow.Grouper.NN);
+        String values = dbTable.values.get(0).getAsStringList(dbTable.getTypes());
         updateTable(table, columnNames, values, where);
     }
 
@@ -187,8 +232,10 @@ public class OracleDBManagerImpl implements DBManager {
     }
 
     @Override
-    public List<HashMap> selectTable(DBTable table, Optional<String> where) {
-        return null;
+    public List<HashMap> selectTable(DBTable dbTable, Optional<String> where) {
+        String table = dbTable.name;
+        String columnNames = dbTable.headers.getAsStringList(DBRow.Grouper.NN);
+        return selectTable(table, columnNames, where);
     }
 
     public void createTable(String table, String columnNamesAndTypes, Optional<String> primaryKey) {
@@ -199,13 +246,8 @@ public class OracleDBManagerImpl implements DBManager {
     }
 
     public void deleteTable(String table) {
-        String query = "DROP TABLE " + table;
+        String query = "DELETE " + table;
         executeQuery(query);
-    }
-
-    @Override
-    public void insertTable(DBTable dbtable) {
-
     }
 
     public void cleanTable(String table) {
@@ -214,8 +256,25 @@ public class OracleDBManagerImpl implements DBManager {
     }
 
     @Override
-    public void cleanTable(String dbName, String options) {
-
+    public void cleanTable(String table, String options) {
+        String query;
+        switch (options.toLowerCase()) {
+            case "cascade":
+                query = "SELECT p.table_name \"Parent Table\", c.table_name \"Child Table\",\n" +
+                        "       p.constraint_name \"Parent Constraint\", c.constraint_name \"Child Constraint\"\n" +
+                        "FROM user_constraints p\n" +
+                        "  JOIN user_constraints c ON(p.constraint_name=c.r_constraint_name)\n" +
+                        "WHERE (p.constraint_type = 'P' OR p.constraint_type = 'U')\n" +
+                        "      AND c.constraint_type = 'R'\n" +
+                        "      AND p.table_name = UPPER('" + table + "')";
+                ArrayList<HashMap> constraintsList = executeQuery(query);
+                for (HashMap map : constraintsList) {
+                    ArrayList<HashMap> result = executeQuery("TRUNCATE TABLE " + map.get("Child Table"));
+                }
+                break;
+        }
+        query = "DELETE " + table;
+        executeQuery(query);
     }
 
     public boolean existDB(String dbName) {
@@ -234,6 +293,7 @@ public class OracleDBManagerImpl implements DBManager {
     }
 
     public ArrayList<ArrayList<HashMap>> executeSQLFile(String filePath) {
+        connect();
         File file = new File(filePath);
         ArrayList<ArrayList<HashMap>> list = new ArrayList<>();
         List<String> linesList = file.getListLinesOfFile();
@@ -246,9 +306,10 @@ public class OracleDBManagerImpl implements DBManager {
     }
 
     public ArrayList<ArrayList<HashMap>> executeSQLFile(String filePath, ArrayList<String[]> pairsToReplace) {
+        connect();
         File file = new File(filePath);
-        file.replaceTextLists(scripts.tmpSQL.filePath, pairsToReplace);
-        return executeSQLFile(scripts.tmpSQL.filePath);
+        file.replaceTextLists(getPath(scripts.tmpSQL.fileName), pairsToReplace);
+        return executeSQLFile(getPath(scripts.tmpSQL.fileName));
     }
 
     @Override
@@ -276,18 +337,14 @@ public class OracleDBManagerImpl implements DBManager {
         connect();
         querySuccessful = true;
         ArrayList list = new ArrayList();
-        try {
-            Statement statement = activeConnection.createStatement();
+        try (Statement statement = activeConnection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(query);
             list = resultSetToArrayList(resultSet);
-            resultSet.close();
-            statement.close();
         } catch (SQLException e) {
             if (!e.getMessage().equals("No results were returned by the query.")) {
                 e.printStackTrace();
                 querySuccessful = false;
             }
-
         }
         lastQuery.setQuery(query, list);
         return list;
@@ -319,7 +376,9 @@ public class OracleDBManagerImpl implements DBManager {
                 list.add(row);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            if (!e.getMessage().contains("fetch out of sequence") && !e.getMessage().contains("no statement parsed")) {
+                e.printStackTrace();
+            }
         }
         return list;
     }

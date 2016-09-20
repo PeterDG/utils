@@ -150,6 +150,39 @@ public class DBRow {
                 (column30 != null ? " ," + s + column30 + s : "");
     }
 
+    public String getAsStringList(ArrayList<DBTable.DBDataType> types) {
+        return (column1 != null ? types.get(0).prefix + column1 + types.get(0).suffix : "") +
+                (column2 != null ? " ," + types.get(1).prefix + column2 + types.get(1).suffix : "") +
+                (column3 != null ? " ," + types.get(2).prefix + column3 + types.get(2).suffix : "") +
+                (column4 != null ? " ," + types.get(3).prefix + column4 + types.get(3).suffix : "") +
+                (column5 != null ? " ," + types.get(4).prefix + column5 + types.get(4).suffix : "") +
+                (column6 != null ? " ," + types.get(5).prefix + column6 + types.get(5).suffix : "") +
+                (column7 != null ? " ," + types.get(6).prefix + column7 + types.get(6).suffix : "") +
+                (column8 != null ? " ," + types.get(7).prefix + column8 + types.get(7).suffix : "") +
+                (column9 != null ? " ," + types.get(8).prefix + column9 + types.get(8).suffix : "") +
+                (column10 != null ? " ," + types.get(9).prefix + column10 + types.get(9).suffix : "") +
+                (column11 != null ? " ," + types.get(10).prefix + column11 + types.get(10).suffix : "") +
+                (column12 != null ? " ," + types.get(11).prefix + column12 + types.get(11).suffix : "") +
+                (column13 != null ? " ," + types.get(12).prefix + column13 + types.get(12).suffix : "") +
+                (column14 != null ? " ," + types.get(13).prefix + column14 + types.get(13).suffix : "") +
+                (column15 != null ? " ," + types.get(14).prefix + column15 + types.get(14).suffix : "") +
+                (column16 != null ? " ," + types.get(15).prefix + column16 + types.get(15).suffix : "") +
+                (column17 != null ? " ," + types.get(16).prefix + column17 + types.get(16).suffix : "") +
+                (column18 != null ? " ," + types.get(17).prefix + column18 + types.get(17).suffix : "") +
+                (column19 != null ? " ," + types.get(18).prefix + column19 + types.get(18).suffix : "") +
+                (column20 != null ? " ," + types.get(19).prefix + column20 + types.get(19).suffix : "") +
+                (column21 != null ? " ," + types.get(20).prefix + column21 + types.get(20).suffix : "") +
+                (column22 != null ? " ," + types.get(21).prefix + column22 + types.get(21).suffix : "") +
+                (column23 != null ? " ," + types.get(22).prefix + column23 + types.get(22).suffix : "") +
+                (column24 != null ? " ," + types.get(23).prefix + column24 + types.get(23).suffix : "") +
+                (column25 != null ? " ," + types.get(24).prefix + column25 + types.get(24).suffix : "") +
+                (column26 != null ? " ," + types.get(25).prefix + column26 + types.get(25).suffix : "") +
+                (column27 != null ? " ," + types.get(26).prefix + column27 + types.get(26).suffix : "") +
+                (column28 != null ? " ," + types.get(27).prefix + column28 + types.get(27).suffix : "") +
+                (column29 != null ? " ," + types.get(28).prefix + column29 + types.get(28).suffix : "") +
+                (column30 != null ? " ," + types.get(29).prefix + column30 + types.get(29).suffix : "");
+    }
+
     public String getAsStringList() {
         return getAsStringList(Grouper.NN);
     }
