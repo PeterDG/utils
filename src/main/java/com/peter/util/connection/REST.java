@@ -135,6 +135,7 @@ public class REST implements RequestType {
                 given().
                         headers(headers != null ? headers : new HashMap<>()).
                         params(params != null ? params : new HashMap<>()).
+                        auth().basic(this.user,this.password).
                         when().
                         get().
                         then().
