@@ -256,9 +256,21 @@ public class File {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
+    public String replaceTextFromFile(String regex, String replacement, Boolean replaceInFile) {
+        Path path = Paths.get(file.getAbsolutePath());
+        Charset charset = StandardCharsets.UTF_8;
+        String content = null;
+        try {
+            content = new String(Files.readAllBytes(path), charset);
+            content = content.replaceAll(regex, replacement);
+            if(replaceInFile) Files.write(path, content.getBytes(charset));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return content;
+    }
 
     public void removeLastCharacter() {
         Path path = Paths.get(file.getAbsolutePath());
