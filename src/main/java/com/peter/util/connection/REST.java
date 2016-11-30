@@ -1,6 +1,7 @@
 package com.peter.util.connection;
 
 import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.config.RestAssuredConfig;
 import com.jayway.restassured.response.Response;
 import com.peter.util.connection.request.RequestType;
 
@@ -21,6 +22,7 @@ public class REST implements RequestType {
     public String password="";
     public Response response;
     public Type type;
+    public RestAssuredConfig config;
     public URL uri;
 
     public enum ResponseInfo{statusCode,statusLine,responseHeaders,defaultCharset,content,message,contentType}
@@ -118,15 +120,7 @@ public class REST implements RequestType {
     public Response get(Map<String, String> headers, Map<String, String> params) {
         this.headers = headers;
         this.params = params;
-        response =
-                given().
-                        headers(headers).
-                        params(params).
-                        when().
-                        get().
-                        then().
-                        extract().
-                        response();
+        response =get();
         return response;
     }
 
@@ -136,6 +130,7 @@ public class REST implements RequestType {
                         headers(headers != null ? headers : new HashMap<>()).
                         params(params != null ? params : queryParams !=null ? queryParams :new HashMap<>()).
                         auth().basic(this.user,this.password).
+                        config(config != null ? config : null).
                         when().
                         get().
                         then().
@@ -183,4 +178,11 @@ public class REST implements RequestType {
         return response.prettyPrint();
     }
 
+    public RestAssuredConfig getConfig() {
+        return config;
+    }
+
+    public void setConfig(RestAssuredConfig config) {
+        this.config = config;
+    }
 }
