@@ -49,6 +49,15 @@ public class Time {
         return date;
     }
 
+    public static Date string2DateUTC(final String dateStr, String format, String timeZoneID) throws TechnicalException {
+        TimeZone timeZone = TimeZone.getTimeZone(timeZoneID);
+        int offsetHours = timeZone.getOffset(0) / 3600000;
+        LocalDateTime localDateTime = string2LocalDateTime(dateStr, format);
+        localDateTime=localDateTime.plusHours(offsetHours);
+        Date date = localDateTime.toDate();
+        return date;
+    }
+
     public static Date string2Date(final String dateStr, String format) throws TechnicalException {
         Date date = string2Date(dateStr, format, DEFAULT_TIME_ZONE);
         return date;
@@ -369,12 +378,12 @@ public class Time {
     public static java.time.LocalDateTime parseList(CharSequence dateStr, ArrayList<java.time.format.DateTimeFormatter> formats) {
         java.time.LocalDateTime localDateTime = null;
         java.time.format.DateTimeFormatter formatter = formats.get(0);
-        try{
-            localDateTime=java.time.LocalDateTime.parse(dateStr,formatter);
-        } catch(java.time.format.DateTimeParseException e) {
+        try {
+            localDateTime = java.time.LocalDateTime.parse(dateStr, formatter);
+        } catch (java.time.format.DateTimeParseException e) {
             formats.remove(formatter);
             if (formats.size() > 0) {
-                localDateTime=parseList(dateStr, formats);
+                localDateTime = parseList(dateStr, formats);
             } else {
                 e.printStackTrace();
             }
