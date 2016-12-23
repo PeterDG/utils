@@ -175,7 +175,7 @@ public class REST implements RequestType {
     @Override
     public String dispatch() {
         send();
-        return response.prettyPrint();
+        return response.asString();
     }
 
     public RestAssuredConfig getConfig() {
