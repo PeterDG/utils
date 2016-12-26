@@ -46,4 +46,20 @@ public class ValidateTest {
         validate = new Validate(received,expected);
         validate.equals();
     }
+
+    @Test
+    public void testRegexPositive() throws Exception {
+        String received="This is a test";
+        String expected="^This";
+        validate = new Validate(received,expected);
+        assertTrue(validate.regex());
+    }
+
+    @Test
+    public void testRegexNegative() throws Exception {
+        String received="This is a test";
+        String expected="^this";
+        validate = new Validate(received,expected);
+        assertFalse(validate.regex());
+    }
 }

@@ -6,18 +6,21 @@ package com.peter.util.error;
 
 import junit.framework.Assert;
 
-public class Validate {
-    public Object receivedValue;
-    public Object expectedValue;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Validate <T>{
+    public T receivedValue;
+    public T expectedValue;
     public String info;
     public String message;
 
-    public Validate(Object receivedValue, Object expectedValue) {
+    public Validate(T receivedValue, T expectedValue) {
         this.receivedValue = receivedValue;
         this.expectedValue = expectedValue;
     }
 
-    public Validate(Object receivedValue, Object expectedValue, String info) {
+    public Validate(T receivedValue, T expectedValue, String info) {
         this.receivedValue = receivedValue;
         this.expectedValue = expectedValue;
         this.info = info;
@@ -36,5 +39,17 @@ public class Validate {
         if(!receivedValue.equals(expectedValue))
             fail();
     }
+
+    public static boolean regexMatcher (String expected, String regex){
+        Pattern pattern = Pattern.compile(expected);
+        Matcher matcher = pattern.matcher(regex);
+        return matcher.find();
+    }
+
+    public boolean regex (){
+        return regexMatcher((String)expectedValue,(String)receivedValue);
+    }
+
+
 
 }
