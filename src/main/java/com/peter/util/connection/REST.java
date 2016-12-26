@@ -18,27 +18,27 @@ public class REST implements RequestType {
     public Map<String, String> params;
     public Map<String, String> queryParams;
     public String body;
-    public String user="";
-    public String password="";
+    public String user = "";
+    public String password = "";
     public Response response;
     public Type type;
     public RestAssuredConfig config;
     public URL uri;
 
-    public enum ResponseInfo{statusCode,statusLine,responseHeaders,defaultCharset,content,message,contentType}
+    public enum ResponseInfo {statusCode, statusLine, responseHeaders, defaultCharset, content, message, contentType}
 
     public REST(String host, String port, String service) {
-        uri=new URL(host+":"+port+"/"+service);
+        uri = new URL(host + ":" + port + "/" + service);
         init();
     }
 
     public REST(String host, String service) {
-        uri=new URL(host+"/"+service);
+        uri = new URL(host + "/" + service);
         init();
     }
 
     public REST(String url) {
-        uri=new URL(url);
+        uri = new URL(url);
         init();
     }
 
@@ -48,8 +48,8 @@ public class REST implements RequestType {
     }
 
     public void init() {
-        RestAssured.baseURI =  uri.getProtocol()+"://"+uri.getHost();
-        int port=uri.url.getPort();
+        RestAssured.baseURI = uri.getProtocol() + "://" + uri.getHost();
+        int port = uri.url.getPort();
         RestAssured.basePath = uri.getPath();
         queryParams(uri.getQueryParams());
         if (port != 0) RestAssured.port = port;
@@ -92,7 +92,7 @@ public class REST implements RequestType {
                         headers(headers).
                         params(params).
                         body(body).
-                        auth().basic(this.user,this.password).
+                        auth().basic(this.user, this.password).
                         when().
                         post().
                         then().
@@ -105,10 +105,10 @@ public class REST implements RequestType {
         response =
                 given().
                         headers(headers != null ? headers : new HashMap<>()).
-                        queryParameters(queryParams !=null ? queryParams :new HashMap<>()).
+                        queryParameters(queryParams != null ? queryParams : new HashMap<>()).
                         params(params != null ? params : new HashMap<>()).
                         body(body != null ? body : "").
-                        auth().basic(this.user,this.password).
+                        auth().basic(this.user, this.password).
                         when().
                         post().
                         then().
@@ -120,7 +120,7 @@ public class REST implements RequestType {
     public Response get(Map<String, String> headers, Map<String, String> params) {
         this.headers = headers;
         this.params = params;
-        response =get();
+        response = get();
         return response;
     }
 
@@ -128,8 +128,8 @@ public class REST implements RequestType {
         response =
                 given().
                         headers(headers != null ? headers : new HashMap<>()).
-                        params(params != null ? params : queryParams !=null ? queryParams :new HashMap<>()).
-                        auth().basic(this.user,this.password).
+                        params(params != null ? params : queryParams != null ? queryParams : new HashMap<>()).
+                        auth().basic(this.user, this.password).
                         config(config != null ? config : null).
                         when().
                         get().
@@ -139,11 +139,36 @@ public class REST implements RequestType {
         return response;
     }
 
+    public Response put() {
+        response =
+                given().
+                        headers(headers != null ? headers : new HashMap<>()).
+                        params(params != null ? params : queryParams != null ? queryParams : new HashMap<>()).
+                        auth().basic(this.user, this.password).
+                        config(config != null ? config : null).
+                        when().
+                        put().
+                        then().
+                        extract().
+                        response();
+        return response;
+    }
+
+
     public Response send() {
-        if (type.equals(Type.GET))
-            response = get();
-        if (type.equals(Type.POST))
-            response = post();
+        switch (type) {
+            case SOAP:
+                break;
+            case GET:
+                response = get();
+                break;
+            case POST:
+                response = post();
+                break;
+            case PUT:
+                response = put();
+                break;
+        }
         return response;
     }
 
@@ -167,9 +192,9 @@ public class REST implements RequestType {
         this.queryParams = queryParams;
     }
 
-    public void authentication(String user,String password){
-        this.user=user;
-        this.password=password;
+    public void authentication(String user, String password) {
+        this.user = user;
+        this.password = password;
     }
 
     @Override

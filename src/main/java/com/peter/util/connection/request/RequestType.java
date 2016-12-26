@@ -6,6 +6,6 @@ package com.peter.util.connection.request;
 
 
 public interface RequestType {
-    public enum Type {SOAP,GET, POST}
+    public enum Type {SOAP,GET, POST,PUT}
     String dispatch();
 }

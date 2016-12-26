@@ -97,6 +97,15 @@ public class RESTTest {
     }
 
     @Test
+    public void testPutWithHeaders() throws Exception {
+        rest = new REST("http://192.168.243.197:30/login_assessment/admin/context/pageSize/2", RequestType.Type.PUT);
+        Map<String, String> headersMaps = new HashMap<String,String>() {{put("caller-id", "4423c0ce:1567476ae48:-8000");}};
+        rest.headers(headersMaps);
+        Response response = rest.put();
+        assertTrue(response.getStatusCode()==200);
+    }
+
+    @Test
     public void testPostWithPathParametersInUrl() throws Exception {
         rest = new REST(urlB, RequestType.Type.POST);
         Response response = rest.post();
