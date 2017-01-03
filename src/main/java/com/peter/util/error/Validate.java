@@ -14,10 +14,17 @@ public class Validate <T>{
     public T expectedValue;
     public String info;
     public String message;
+    public boolean matcher;
 
     public Validate(T receivedValue, T expectedValue) {
         this.receivedValue = receivedValue;
         this.expectedValue = expectedValue;
+    }
+
+    public Validate(T receivedValue, T expectedValue, Boolean matcher) {
+        this.receivedValue = receivedValue;
+        this.expectedValue = expectedValue;
+        this.matcher = matcher;
     }
 
     public Validate(T receivedValue, T expectedValue, String info) {
@@ -40,16 +47,25 @@ public class Validate <T>{
             fail();
     }
 
-    public static boolean regexMatcher (String expected, String regex){
+    public Validate info(String info){
+        this.info=info;
+        return this;
+    }
+
+    public void matches(){
+        if(!matcher){
+            fail();
+        }
+    }
+
+    public static Validate regexMatcher (String expected, String regex){
         Pattern pattern = Pattern.compile(expected);
         Matcher matcher = pattern.matcher(regex);
-        return matcher.find();
+        Validate<String> validate = new Validate<>(expected, regex, matcher.find());
+        return validate;
     }
 
-    public boolean regex (){
-        return regexMatcher((String)expectedValue,(String)receivedValue);
+    public void regex (){
+        regexMatcher((String)expectedValue,(String)receivedValue);
     }
-
-
-
 }
