@@ -65,7 +65,7 @@ public class Validate <T>{
         return validate;
     }
 
-    public void regex (){
-        regexMatcher((String)expectedValue,(String)receivedValue);
+    public Boolean regex (){
+        return regexMatcher((String)expectedValue,(String)receivedValue).matcher;
     }
 }

@@ -6,7 +6,7 @@
 
     <groupId>com.peter.utils</groupId>
     <artifactId>utils-library</artifactId>
-    <version>1.1.5.0.0</version>
+    <version>1.1.5.1.0</version>
 
     <properties>
         <spring.version>4.2.5.RELEASE</spring.version>
@@ -156,6 +156,23 @@
             <version>4.12</version>
         </dependency>
         <!--XML Parser-->
+        <!--JSON Serializer-->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.2.5.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.6.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.6.2</version>
+        </dependency>
+        <!--JSON Serializer-->
         <!-- spring dependencies -->
     </dependencies>
 
