@@ -1,0 +1,98 @@
+package com.peter.util.data.serializable.json.hibernate.model;
+
+
+import org.hibernate.annotations.Type;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name="orders")
+public class Order {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
+
+	@Column(name = "SSN")
+	private String ssn;
+
+	@Column(name = "DESCRIPTION")
+	private String description;
+
+    @Type(type = "org.rayjars.hibernate.LabelsUserType")
+    @Column(name = "labels")
+	private List<Label> labels = new ArrayList<Label>();
+
+    @OneToMany(cascade=CascadeType.ALL)
+    @JoinColumn(name="ORDER_ID")
+    private List<Item> items = new ArrayList<Item>();
+
+	public Order() {
+	
+	}
+	
+	public Order addLabel(Label label){
+		if(label == null){
+			throw new NullPointerException();
+		}
+		
+		labels.add(label);
+        return this;
+	}
+
+    public Order addItem(Item item){
+        if(item == null){
+            throw new NullPointerException();
+        }
+
+        items.add(item);
+        return this;
+    }
+
+	public Long getId() {
+		return id;
+	}
+
+	public Order setId(Long id) {
+		this.id = id;
+        return this;
+	}
+
+	public String getSsn() {
+		return ssn;
+	}
+
+	public Order ssn(String sSN) {
+		ssn = sSN;
+        return this;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public Order description(String description) {
+		this.description = description;
+        return this;
+	}
+
+    public Order labels(List<Label> labels) {
+        this.labels = labels;
+        return this;
+    }
+
+    public List<Label> getLabels() {
+        return labels;
+    }
+
+
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Item> items) {
+        this.items = items;
+    }
+}
