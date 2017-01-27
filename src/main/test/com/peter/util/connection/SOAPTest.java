@@ -63,4 +63,16 @@ public class SOAPTest {
         assertTrue(soap.xmlSoapRequest.getElement("//sharedKey").equals("pv1"));
         assertTrue(soap.xmlSoapRequest.getElement("//clientEnvironment").equals("pv2"));
     }
+
+    @Test
+    public void constructorCNullData() throws Exception {
+        String pathXmlSoap=environment.rootPath + "src\\main\\resources\\templates\\WSRiskScoringService.xsl";
+        SOAPParams p1= new SOAPParams("sharedKey","<null>");
+        SOAPParams p2= new SOAPParams("clientEnvironment","<null>");
+        paramsList = new ArrayList<SOAPParams>();
+        paramsList.add(p1);
+        paramsList.add(p2);
+        soap = new SOAP(serviceUrl, paramsList,pathXmlSoap);
+        assertTrue(soap.xmlSoapRequest.getElement("//sharedKey").equals(""));
+    }
 }
